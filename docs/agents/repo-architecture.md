@@ -31,9 +31,9 @@ checkPaths:
   - scripts/lib/cli-launcher.mjs
   - package.json
   - pnpm-lock.yaml
-lastReviewedAt: 2026-09-13
-lastReviewedCommit: 2f8c863015afcf0d2302af2a6c609feb6ebeca22
-lastReviewedNote: "Reviewed for Skills #98: exact official Foundry 0.1.8 manifest/lock bind release abac241 and qualified CLI 0.1.14. Original bootstrap bytes and current task/reference/native-contract/no-replay boundaries are preserved; actual copied consumer qualification is required on all four platforms."
+lastReviewedAt: 2026-09-14
+lastReviewedCommit: 33dae1967d411ac33bacfc06affd57c0fff2f546
+lastReviewedNote: "Reviewed for agent-skills #102: the validator help example now points at the canonical ../cli workspace directory. Explicit --cli-dir and TIANGONG_LCA_CLI_DIR overrides, distribution and package identities, and self-consistent internal checkout fixtures are unchanged."
 related:
   - AGENTS.md
   - .docpact/config.yaml

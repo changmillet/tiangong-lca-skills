@@ -38,9 +38,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-09-13
-lastReviewedCommit: 2f8c863015afcf0d2302af2a6c609feb6ebeca22
-lastReviewedNote: "Reviewed for agent-skills #100: canonical self-distribution URLs, Docpact identity and the validation workflow's CLI checkout move to tiangong-lca/agent-skills and tiangong-lca/cli@a6c5815b. Published CLI 0.1.14, Foundry 0.1.8 bootstrap/adjacent lock bytes, four launcher bundles and external tiangong-ai sources are unchanged."
+lastReviewedAt: 2026-09-14
+lastReviewedCommit: 33dae1967d411ac33bacfc06affd57c0fff2f546
+lastReviewedNote: "Reviewed for agent-skills #102: the validator help example now points at the canonical ../cli workspace directory. Explicit --cli-dir and TIANGONG_LCA_CLI_DIR overrides, distribution and package identities, and self-consistent internal checkout fixtures are unchanged."
 related:
   - .docpact/config.yaml
   - docs/agents/repo-architecture.md
