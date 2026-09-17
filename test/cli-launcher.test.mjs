@@ -6,6 +6,7 @@ import {
   buildTiangongInvocation,
   expectedNodeVersion,
   expectedPnpmVersion,
+  expectedTidasSpecSource,
   normalizeCliRuntimeArgs,
   publishedCliCommand,
   publishedCliPackageSpec,
@@ -15,7 +16,7 @@ import {
 
 const supportedCliPackage = {
   name: '@tiangong-lca/cli',
-  version: '0.1.14',
+  version: '0.1.16',
   packageManager: 'pnpm@11.24.0',
   engines: {
     node: '>=24.19.0 <25',
@@ -41,7 +42,13 @@ function localCliFixture(cliDir, overrides = {}) {
     path.join(cliDir, 'bin', 'tiangong-lca.js'),
     path.join(cliDir, 'package.json'),
     path.join(cliDir, 'pnpm-lock.yaml'),
+    path.join(cliDir, 'assets'),
+    path.join(cliDir, 'assets', 'tidas-spec-source.json'),
+    path.join(cliDir, 'assets', 'tidas-schemas'),
   ]);
+  for (const schema of expectedTidasSpecSource.schemas) {
+    paths.add(path.join(cliDir, 'assets', 'tidas-schemas', schema.name));
+  }
 
   return {
     pathExists: (candidate) => paths.has(candidate),
@@ -51,6 +58,9 @@ function localCliFixture(cliDir, overrides = {}) {
       }
       if (candidate === path.join(cliDir, 'pnpm-lock.yaml')) {
         return overrides.lockfile ?? supportedLockfile;
+      }
+      if (candidate === path.join(cliDir, 'assets', 'tidas-spec-source.json')) {
+        return JSON.stringify(overrides.sourceManifest ?? expectedTidasSpecSource);
       }
       throw new Error(`Unexpected read: ${candidate}`);
     },
@@ -161,12 +171,12 @@ test('buildTiangongInvocation uses exact pnpm dlx argv for the published CLI con
     pathExists: () => false,
   });
 
-  assert.equal(publishedCliPackageSpec, '@tiangong-lca/cli@0.1.14');
+  assert.equal(publishedCliPackageSpec, '@tiangong-lca/cli@0.1.16');
   assert.equal(invocation.mode, 'published');
   assert.equal(invocation.command, process.platform === 'win32' ? 'pnpm.exe' : 'pnpm');
   assert.deepEqual(invocation.args, [
     'dlx',
-    '--package=@tiangong-lca/cli@0.1.14',
+    '--package=@tiangong-lca/cli@0.1.16',
     'tiangong-lca',
     'qa',
     'process',
@@ -174,7 +184,7 @@ test('buildTiangongInvocation uses exact pnpm dlx argv for the published CLI con
   ]);
   assert.equal(
     publishedCliCommand,
-    'pnpm dlx --package=@tiangong-lca/cli@0.1.14 tiangong-lca',
+    'pnpm dlx --package=@tiangong-lca/cli@0.1.16 tiangong-lca',
   );
 });
 
@@ -200,7 +210,7 @@ test('buildTiangongInvocation dispatches native pnpm.exe on Windows without chan
   assert.equal(invocation.command, 'pnpm.exe');
   assert.deepEqual(invocation.args.slice(0, 3), [
     'dlx',
-    '--package=@tiangong-lca/cli@0.1.14',
+    '--package=@tiangong-lca/cli@0.1.16',
     'tiangong-lca',
   ]);
 });
@@ -233,7 +243,7 @@ test('runTiangongCommand uses native Windows pnpm without a command shell', () =
       command: 'pnpm.exe',
       args: [
         'dlx',
-        '--package=@tiangong-lca/cli@0.1.14',
+        '--package=@tiangong-lca/cli@0.1.16',
         'tiangong-lca',
         'qa',
         'process',
@@ -260,7 +270,8 @@ test('buildTiangongInvocation accepts an exact supported local CLI checkout', ()
     'process',
     '--help',
   ]);
-  assert.equal(invocation.packageVersion, '0.1.14');
+  assert.equal(invocation.packageVersion, '0.1.16');
+  assert.deepEqual(invocation.tidasSpecSource, expectedTidasSpecSource);
   assert.equal(invocation.packageManifestPath, path.join(cliDir, 'package.json'));
   assert.equal(invocation.lockfilePath, path.join(cliDir, 'pnpm-lock.yaml'));
   assert.equal(path.isAbsolute(invocation.cliDir), true);
@@ -302,7 +313,21 @@ test('buildTiangongInvocation fails closed on mismatched local CLI package state
         cliDir,
         ...fixture,
       }),
-    /expected @tiangong-lca\/cli@0\.1\.14/u,
+    /expected @tiangong-lca\/cli@0\.1\.16/u,
+  );
+});
+
+test('buildTiangongInvocation fails closed on stale TIDAS source identity', () => {
+  const cliDir = fixturePath('tiangong-lca-cli-stale-source');
+  const staleSource = {
+    ...expectedTidasSpecSource,
+    source_commit: '0000000000000000000000000000000000000000',
+  };
+  const fixture = localCliFixture(cliDir, { sourceManifest: staleSource });
+
+  assert.throws(
+    () => buildTiangongInvocation(['--help'], { cliDir, ...fixture }),
+    /TIDAS source manifest mismatch/u,
   );
 });
 
