@@ -3,14 +3,15 @@ layout: repo
 # Review note, 2026-09-11: Skills #98 adopts the exact final Foundry 0.1.8 lock (a1383982) and manifest (7119c909), independently verified against release abac241 and successful upstream run34553822939. Original CLI0.1.14 bootstrap bytes remain unchanged. Existing routes and ownership remain enforced.
 # Review note, 2026-09-11: Skills #98 describes supported public reference-input snapshots and final-row native execution-contract selection. The qualified runtime schema gates availability; reviews/contracts grant no permission and consumed attempts retain original readback. No ownership or routing rule changes.
 # Review note, 2026-09-11: Skills #98 adopts independently qualified CLI 0.1.14 / bcc5dbee5b909dbb912e09d99ca07e858d3d7cec for shared/copied launchers and CI. The separate Foundry 0.1.7 entry lock and its release expectations remain intact until the combined Foundry successor is independently qualified. Existing ownership and rules are unchanged.
+# Review note, 2026-09-17: Skills #105 advances active shared/copied launchers and CI to CLI 0.1.16 / 4316c205453071c8cbb45e06480344f8eae5e041, and adds exact TIDAS source-manifest identity checks for local overrides. Historical Foundry 0.1.8 bootstrap bytes and release lock remain independent and unchanged; existing ownership and routing rules still apply.
 # Current release proof, 2026-09-10: Skills #94 aligns wrappers and all three identical bundles to verified CLI 0.1.13 / cli-v0.1.13 / b5e209259d3bb06205b9af131b1c0edc3fba6da2, including its original permission-preserving POSIX bootstrap. The adjacent final Foundry 0.1.7 lock is byte-identical to the independently verified public release; the copied-entry native matrix proves the installed package.
 # Release proof, 2026-09-02: Skills #91 pins verified CLI 0.1.8 / b4701984b4a86fe4680fa5995d0a0b6753dbdfd6; all three bundled launchers must remain byte-identical to their root authority.
 # Review note, 2026-09-02: Skills #91 adds self-contained, byte-checked launcher bundles for the three hybrid-search packages and CLI-owned Production bootstrap guidance under existing skill/validation/doc routes; no auth runtime ownership moves into Skills.
 # Review note, 2026-08-25: the existing validation-and-packaging contract now governs the pinned Node/pnpm package, frozen lockfile, shared CLI launcher/toolchain checks, and validation workflow; no separate rule was needed.
 # Review note, 2026-09-01: Skills #89 advances every active shared/default wrapper, immutable CI checkout, local override contract, fixture, and current skill reference to OAuth-only CLI 0.1.7 / merge cb5be8f1e209f69570f4c7ef4ef29d61af52eed7. Existing validation, packaging, skill, and documentation routes own the change; no ownership or rule split is required.
-lastReviewedAt: "2026-09-14"
-lastReviewedCommit: "33dae1967d411ac33bacfc06affd57c0fff2f546"
-lastReviewedNote: "Reviewed for agent-skills #102: the validator help example now points at the canonical ../cli workspace directory. Explicit --cli-dir and TIANGONG_LCA_CLI_DIR overrides, distribution and package identities, and self-consistent internal checkout fixtures are unchanged."
+lastReviewedAt: "2026-09-17"
+lastReviewedCommit: "972dc6c09031bc4802598440c763efabe63050cf"
+lastReviewedNote: "Reviewed for agent-skills #105: active launchers target published CLI 0.1.16 and reject local CLI checkouts without the exact TIDAS source manifest; historical Foundry 0.1.8 bootstrap qualification remains separate."
 
 catalog:
   repos:

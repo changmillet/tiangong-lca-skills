@@ -35,6 +35,6 @@ if (cliDir !== null) {
     throw new Error('--cli-dir must identify a non-empty local TianGong CLI path.');
   }
   console.log(
-    `Validated explicit local ${invocation.packageVersion} package and frozen lock evidence at ${invocation.cliDir}.`,
+    `Validated explicit local ${invocation.packageVersion} package, frozen lock, and source-bound TIDAS manifest evidence at ${invocation.cliDir}.`,
   );
 }

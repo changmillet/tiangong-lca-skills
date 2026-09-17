@@ -7,6 +7,17 @@ on:
       - "foundry-tidas-import/**"
       - "foundry-tidas-authoring/**"
       - "test/foundry-*.test.mjs"
+      - "scripts/lib/**"
+      - "flow-hybrid-search/**"
+      - "process-hybrid-search/**"
+      - "lifecyclemodel-resulting-process-builder/**"
+      - "process-automated-builder/**"
+      - "flow-governance-review/**"
+      - "test/**"
+      - "AGENTS.md"
+      - "README.md"
+      - "README.zh-CN.md"
+      - "docs/agents/**"
       - ".github/workflows/validate-skills.yml"
   workflow_dispatch:
 
@@ -37,7 +48,7 @@ jobs:
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
           repository: tiangong-lca/cli
-          ref: a6c5815b06903b2b424c5ab892e4e9f3c99b3001
+          ref: 4316c205453071c8cbb45e06480344f8eae5e041
           path: .ci/tiangong-lca-cli
 
       - name: Set up pnpm 11.24.0 and Node 24.19.0

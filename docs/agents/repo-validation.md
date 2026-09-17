@@ -31,9 +31,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-09-14
-lastReviewedCommit: 33dae1967d411ac33bacfc06affd57c0fff2f546
-lastReviewedNote: "Reviewed for agent-skills #102: the validator help example now points at the canonical ../cli workspace directory. Explicit --cli-dir and TIANGONG_LCA_CLI_DIR overrides, distribution and package identities, and self-consistent internal checkout fixtures are unchanged."
+lastReviewedAt: 2026-09-17
+lastReviewedCommit: 972dc6c09031bc4802598440c763efabe63050cf
+lastReviewedNote: "Reviewed for agent-skills #105: launcher validation now qualifies published CLI 0.1.16 and exact TIDAS source-manifest identity while retaining independent historical Foundry bootstrap proof."
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -52,7 +52,7 @@ pnpm prepush:gate
 Review note, 2026-06-04: external runtime source-evidence skill guidance remains documentation and instruction-layer work. The new top-level Foundry scenario skills are included in `scripts/validate-skills.mjs`; no new runtime validator path is required because the external Tiangong KB skill is not checked into this repository.
 Review note, 2026-08-25: validation now covers the immutable pnpm/Node/CLI consumer contract, exact published and local CLI cases, argv-only dispatch, and live CLI help checks for every flow-governance wrapper manifest route.
 
-The local `pre-push` hook runs docpact first, validates Node `24.19.0` / pnpm `11.24.0`, installs Skills from its frozen lockfile, and defaults to published CLI `0.1.14`. A local `tiangong-lca-cli` is installed/built only when explicitly selected and only after package/engine/lock evidence succeeds. The hook then runs the repository test/validation gate. The GitHub `validate-skills` workflow runs for Foundry package/test pull requests and manual dispatch; other changes retain the local push gate.
+The local `pre-push` hook runs docpact first, validates Node `24.19.0` / pnpm `11.24.0`, installs Skills from its frozen lockfile, and defaults to published CLI `0.1.16`. A local `tiangong-lca-cli` is installed/built only when explicitly selected and only after package/engine/lock/source-manifest evidence succeeds. The hook then runs the repository test/validation gate. The GitHub `validate-skills` workflow runs the four-platform contract matrix for runtime/launcher changes, Foundry package/test pull requests and manual dispatch.
 
 You may pass one or more skill directories to validate only the touched skill packages.
 
@@ -62,7 +62,7 @@ You may pass one or more skill directories to validate only the touched skill pa
 - Wrapper contract changes require checking the paired `agents/openai.yaml` and `SKILL.md` together.
 - Validation-script or test changes require running the full `pnpm prepush:gate` command when feasible.
 - New CLI-backed skills must be added to the default validation list when they are intended to ship as part of the standard checked-in skill set.
-- Wrapper-launcher changes require `pnpm test:launcher`, the pnpm consumer contract tests, an exact published `@tiangong-lca/cli@0.1.14` help case, and full skill validation against frozen, built CLI migration merge `a6c5815b06903b2b424c5ab892e4e9f3c99b3001` from canonical `tiangong-lca/cli`. The published bootstrap/provenance remains bound to its historical release source.
+- Wrapper-launcher changes require `pnpm test:launcher`, the pnpm consumer contract tests, an exact published `@tiangong-lca/cli@0.1.16` help case, source-manifest identity checks, and full skill validation against frozen, built CLI migration merge `4316c205453071c8cbb45e06480344f8eae5e041` from canonical `tiangong-lca/cli`. The published Foundry bootstrap/provenance remains bound to its historical release source.
 - Launcher filesystem fixtures and expected paths must use the host `node:path` implementation. A test that passes a synthetic `platform` may validate executable dispatch, but must not combine that target platform with host-resolved fake paths.
 - Repo-wide Markdown guards inventory only root-repository Git-tracked `*.md` paths through argv-based `git -C <root> ls-files -z`. Fixture and validator Git children remove inherited repository-location `GIT_*` variables first, so hook context cannot redirect their index or worktree; untracked or nested CI checkouts are not part of the Skills documentation contract.
 - Documentation-governance changes require docpact validation.
