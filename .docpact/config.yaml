@@ -1,5 +1,6 @@
 version: 1
 layout: repo
+# Review note, 2026-09-20: Skills #109 advances active wrappers and exact CI checkout to published CLI 0.1.17/spec 0.2.1, while leaving historical Foundry bootstrap and documentation ownership/routing unchanged. SDK 0.2.2 mixed-file removal remains downstream.
 # Review note, 2026-09-11: Skills #98 adopts the exact final Foundry 0.1.8 lock (a1383982) and manifest (7119c909), independently verified against release abac241 and successful upstream run34553822939. Original CLI0.1.14 bootstrap bytes remain unchanged. Existing routes and ownership remain enforced.
 # Review note, 2026-09-11: Skills #98 describes supported public reference-input snapshots and final-row native execution-contract selection. The qualified runtime schema gates availability; reviews/contracts grant no permission and consumed attempts retain original readback. No ownership or routing rule changes.
 # Review note, 2026-09-11: Skills #98 adopts independently qualified CLI 0.1.14 / bcc5dbee5b909dbb912e09d99ca07e858d3d7cec for shared/copied launchers and CI. The separate Foundry 0.1.7 entry lock and its release expectations remain intact until the combined Foundry successor is independently qualified. Existing ownership and rules are unchanged.
@@ -10,8 +11,8 @@ layout: repo
 # Review note, 2026-08-25: the existing validation-and-packaging contract now governs the pinned Node/pnpm package, frozen lockfile, shared CLI launcher/toolchain checks, and validation workflow; no separate rule was needed.
 # Review note, 2026-09-01: Skills #89 advances every active shared/default wrapper, immutable CI checkout, local override contract, fixture, and current skill reference to OAuth-only CLI 0.1.7 / merge cb5be8f1e209f69570f4c7ef4ef29d61af52eed7. Existing validation, packaging, skill, and documentation routes own the change; no ownership or rule split is required.
 lastReviewedAt: "2026-09-20"
-lastReviewedCommit: "1aab2c32d9815c2923601e1b1251621f5fd7aa55"
-lastReviewedNote: "Reviewed for agent-skills #107: the repo-level public-rule sync/verification script joins validation-and-packaging coverage; each selected skill keeps its own verified public-rule package and local workflow guidance."
+lastReviewedCommit: "a3710045967d0a1bdbf5e8183928f808ec277aca"
+lastReviewedNote: "Reviewed for agent-skills #109: active CLI release binding changes neither documentation routing nor the skill-local rule-asset and validation ownership boundaries."
 
 catalog:
   repos:

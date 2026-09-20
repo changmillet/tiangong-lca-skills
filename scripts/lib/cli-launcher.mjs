@@ -5,21 +5,21 @@ import process from 'node:process';
 
 export const expectedNodeVersion = '24.19.0';
 export const expectedPnpmVersion = '11.24.0';
-export const publishedCliPackageSpec = '@tiangong-lca/cli@0.1.16';
+export const publishedCliPackageSpec = '@tiangong-lca/cli@0.1.17';
 export const publishedCliCommand = `pnpm dlx --package=${publishedCliPackageSpec} tiangong-lca`;
 
 const expectedCliPackageName = '@tiangong-lca/cli';
-const expectedCliPackageVersion = '0.1.16';
+const expectedCliPackageVersion = '0.1.17';
 const expectedCliPackageManager = `pnpm@${expectedPnpmVersion}`;
 const expectedCliNodeEngine = '>=24.19.0 <25';
 export const expectedTidasSpecSource = Object.freeze({
   schema: 'tiangong-lca.cli-tidas-spec-source.v1',
   spec_repository: 'tiangong-lca/tidas-spec',
-  spec_commit: '6fb497bad562125ccc0c00a803351207b9ed438f',
-  spec_version: '0.1.0',
+  spec_commit: 'd4cb089c753ffd20b173db2e56fb553a364f48f4',
+  spec_version: '0.2.1',
   source_repository: 'https://github.com/tiangong-lca/tidas-toolkit',
   source_commit: '9c0d8b1c8ceb1841074f5bc6de5fbb7fcc9318f5',
-  manifest_sha256: 'fe82b77411e2a134469b206367556a52bf6be80419fcbc0749a2439dc785631b',
+  manifest_sha256: '16d4d5950496544b50cd6b1570789930da104af313a325bb9eaa466507ec6bb5',
   schemas: Object.freeze([
     ['tidas_contacts.json', 'f16868bcdb99b4785b03a9b36dfe103d8f3ec61a463be9274d22884e6b7d8bda'],
     ['tidas_contacts_category.json', '2d043a6686320b5fec5d4012dfd03bdb57897375002b25fc6a64df8ea10092b5'],
@@ -29,11 +29,11 @@ export const expectedTidasSpecSource = Object.freeze({
     ['tidas_flows.json', 'e773b188271174f834dba5ab410644b9e246385c8005fb6d02e4c7a0a073d283'],
     ['tidas_flows_elementary_category.json', 'e817d6e40dfa7b21cb947548027f32b393d1b06ee2a7326f7c59686a2cd3552d'],
     ['tidas_flows_product_category.json', 'e62e1f676dedaeb6028b05f0c1cc84f53c1c47058ae6e17897f77b2cb17b7cb2'],
-    ['tidas_lciamethods.json', '6a96fa34bda4d848eeaa1edb124a544f4511c824436514e62b58626919e57836'],
+    ['tidas_lciamethods.json', 'ccaee6c3f1ee48712b6280df07e973c9b8225d95b78dd441566ffcc4a2f9561e'],
     ['tidas_lciamethods_category.json', '83b4bbfb53a2ad1cb1f9c97c261cc867ea6f509020a8ea9041ffba08601eaac9'],
     ['tidas_lifecyclemodels.json', 'd3355d3c7910efadbee87fe36dacd6ca515c8fe1c5671f6dee2ba63d43c5d108'],
     ['tidas_locations_category.json', '415fe8c7ba4991a88bc66d9cd55541ee27b74f731541c64a9bc354679d109a71'],
-    ['tidas_processes.json', '8476530740d2af11fe3c607afbeab68a318c6b08d7558417ebcad8ac33f0efdd'],
+    ['tidas_processes.json', '385448c7f2f5f41aa31efad649a61758ef39fcfdc8e55984438fed1b56ccf6a7'],
     ['tidas_processes_category.json', 'cea1b97b46fd9faa2f7f4d7b911ff19f24a1655ff98b488ebaf5cc9ee6fdec64'],
     ['tidas_sources.json', '2f37df9004a05ed83f8c708b7edc5f482ec1f848c050fd9f54e1aad49687dd5d'],
     ['tidas_sources_category.json', 'dc22fa07e7a2b4742133ea642505b6a18011552459b84764908166d1994c985f'],
@@ -66,7 +66,7 @@ function sourceManifestShape(manifest) {
 export function assertTidasSpecSourceManifest(manifest) {
   if (JSON.stringify(sourceManifestShape(manifest)) !== JSON.stringify(expectedTidasSpecSource)) {
     throw new Error(
-      'Local TianGong CLI TIDAS source manifest mismatch: expected the published 0.1.16 source-bound identity.',
+      'Local TianGong CLI TIDAS source manifest mismatch: expected the published 0.1.17 source-bound identity.',
     );
   }
   return manifest;
