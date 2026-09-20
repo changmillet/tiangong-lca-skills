@@ -1,5 +1,10 @@
 # Flow Dataset Content Rules and Guidelines
 # 流量数据集内容规则与指南
+# public_rule_id is an exact lookup key in the packaged, hash-verified
+# tidas-spec@0.2.1 public-rules.v1.json. Read that rule through
+# `node scripts/read-public-rule.mjs --rule-id <id>` from this skill package.
+# Remaining <rules> are legacy workflow/context guidance, not a replacement
+# authority for the five reviewed public Flow definitions.
 #
 # Rule Structure:
 # <rules>: [
@@ -31,47 +36,7 @@ flowDataSet:
     dataSetInformation:
       name:
         baseName:
-          <rules>:
-            - language: "en"
-              naming_convention: |
-                provide the general descriptive name of the flow using technical language.
-                - State the substance, product, or waste exactly as used in industry or customer communication.
-                - Avoid abbreviations unless paired with the fully written term.
-                - Indicate relevant states or grades (e.g., gaseous, granulate, recycled) when needed for identification.
-              content_requirements:
-                - "Use commas to separate descriptors within the base name; do not use semicolons."
-                - "Prefer commonly accepted trivial names over rare chemical nomenclature for known substances."
-                - "Avoid including geographical, temporal, or quantitative data; capture those in dedicated fields."
-                - "For emissions, rely solely on the base name unless Rule 16 qualifiers are essential."
-              examples:
-                - "Polypropylene, PP, granulate"
-                - "Sulfur dioxide, gaseous"
-                - "Waste glass cullet, mixed colors"
-              best_practices:
-                - "Mirror terminology used in authoritative datasets to support searches."
-                - "Spell out acronyms on first use and retain the acronym after a comma if widely used."
-                - "Check for outdated terminology and update to current industry usage."
-
-            - language: "zh"
-              naming_convention: |
-                使用行业技术语言准确描述该流的通用名称。
-                - 先写全称，再根据需要补充常用缩写。
-                - 在必要时说明形态或等级（例如 气态、颗粒、再生料）。
-                - 避免不必要的地理、时间或定量信息。
-              content_requirements:
-                - "同一字段内使用逗号分隔描述，不使用分号。"
-                - "优先采用通用俗名；仅当需要时使用复杂化学命名。"
-                - "排除地理与时间信息，相关数据在其他字段填写。"
-                - "对排放类流量通常仅需基础名称，除非需要补充定量属性。"
-              examples:
-                - "聚丙烯，PP，颗粒料"
-                - "二氧化硫，气态"
-                - "废玻璃碎片，混色"
-              best_practices:
-                - "与权威数据集保持术语一致，方便检索。"
-                - "首次出现缩写时保留全称+缩写组合。"
-                - "定期核对术语，避免使用过时名称。"
-
+          public_rule_id: "tidas.flow.name.base-name.technical"
         treatmentStandardsRoutes:
           <rules>:
             - language: "en"
@@ -228,44 +193,7 @@ flowDataSet:
 
       classificationInformation:
         common:elementaryFlowCategorization:
-          <rules>:
-            - language: "en"
-              guidance: |
-                Use the ILCD elementary flow category hierarchy to classify elementary flows.
-                - Provide up to three levels (0–2) following the controlled vocabulary.
-                - Record the official category identifier (`@catId`) and the exact label text from `tidas_flows_elementary_category.json`.
-              content_requirements:
-                - "Select categories by referencing the maintained `tidas_flows_elementary_category.json` list; each level must use a valid `@catId`."
-                - "Ensure level numbering is continuous starting at level 0."
-                - "Use one entry per level; do not duplicate levels."
-                - "When a level is omitted, no deeper level may be provided (e.g., skip level 1 only if level 2 is also omitted)."
-              examples:
-                - level 0: "Emissions to air"
-                - level 1: "Emissions to air, non-methane VOC"
-                - level 2: "Emissions to air, aromatic compounds"
-              best_practices:
-                - "Verify category assignments with environmental experts when ambiguous."
-                - "Update categorisation promptly if the flow type changes."
-                - "Implement validation that checks the selected `@catId` values exist in the controlled list and match the base name's flow type (e.g., emissions, resource)."
-
-            - language: "zh"
-              guidance: |
-                根据 ILCD 基本流分类层级填写，最多提供 0–2 级。
-                - 使用 `tidas_flows_elementary_category.json` 中的分类标识和标准名称。
-                - 各层级仅填写一次，保持层级连贯。
-              content_requirements:
-                - "分类必须引用 `tidas_flows_elementary_category.json` 中的有效 `@catId`。"
-                - "层级编号自0开始，依次递增。"
-                - "如无更细分类，可省略更深层级，不能跳级。"
-              examples:
-                - "第0级：空气排放"
-                - "第1级：空气排放，非甲烷挥发性有机物"
-                - "第2级：空气排放，芳香族化合物"
-              best_practices:
-                - "对于难以归类的流量，先与专业人员确认。"
-                - "当流量属性发生变化时及时更新分类。"
-                - "建议在数据录入时校验 `@catId` 是否存在，并核对基础名称是否属于该分类类型。"
-
+          public_rule_id: "tidas.flow.classification.elementary.valid"
         common:classification:
           <rules>:
             - language: "en"
@@ -311,102 +239,17 @@ flowDataSet:
 
     quantitativeReference:
       referenceToReferenceFlowProperty:
-        <rules>:
-          - language: "all"
-            definition: |
-              Integer key pointing to the `@dataSetInternalID` of the reference flow property listed in `flowProperties`.
-              - Mandatory for every flow dataset.
-              - Typically links to the mass or energy flow property that represents the functional unit of the flow.
-            content_requirements:
-              - "Use a positive integer matching an existing `flowProperties.flowProperty.@dataSetInternalID`."
-              - "Ensure the referenced flow property has `meanValue = 1` relative to itself."
-              - "Whenever the reference property changes, update this link and all dependent ratios."
-            validation:
-              - "Reject IDs that are absent from the local `flowProperties` list."
-              - "Cross-verify that the referenced flow property is consistent with `modellingAndValidation.LCIMethod.typeOfDataSet` (e.g., mass for product flows, substance amount for elementary emissions)."
-            examples:
-              - "1  (points to flow property entry 1: Mass, kg)"
-              - "3  (points to flow property entry 3: Net calorific value, MJ)"
-
+        public_rule_id: "tidas.flow.reference-property-unit.required"
   flowProperties:
     flowProperty:
       referenceToFlowPropertyDataSet:
-        <rules>:
-          - language: "all"
-            definition: |
-              Global reference (`GlobalReferenceType`) to the flow property dataset defining the unit, quantity dimension, and conversion factors (e.g., mass, energy).
-            content_requirements:
-              - "Use maintained references (UUID + version) from the organisation's flow property catalogue."
-              - "Populate all required `GlobalReferenceType` fields: `@type`, `@refObjectId` (UUID), `@version`, `@uri`, and `common:shortDescription`."
-              - "Ensure the referenced dataset corresponds to the intended physical quantity."
-              - "Keep references updated if the canonical flow property dataset is revised."
-            validation:
-              - "Verify referenced datasets exist and are accessible."
-              - "Cross-check that unit symbols in name/meanValue match the referenced dataset's reference unit."
-              - "Validate UUID formatting against the 8-4-4-4-12 pattern."
-            examples:
-              - "UUID: 123e4567-e89b-12d3-a456-426614174000; version 01.00.000 (Mass, kg)"
-              - "UUID: 223e4567-e89b-12d3-a456-426614174111; version 01.00.000 (Energy, MJ)"
-
+        public_rule_id: "tidas.flow.reference-property-unit.required"
       meanValue:
-        <rules>:
-          - language: "en"
-            definition: |
-              Numerical relation expressing how the flow amount converts between the reference flow property and the current property.
-            content_requirements:
-              - "Set to 1.0 for the reference flow property (the one pointed to by `referenceToReferenceFlowProperty`)."
-              - "For additional properties, provide conversion ratios (e.g., net calorific value per kg)."
-              - "Use significant figures that reflect measurement accuracy; avoid trailing precision beyond data quality."
-            validation:
-              - "Ensure values are positive real numbers."
-              - "For energy or composition properties, cross-check with laboratory or literature sources."
-              - "If uncertainty fields are provided, confirm their ranges align with the mean value."
-            examples:
-              - "1.0"
-              - "42.5"
-              - "0.85"
-
-          - language: "zh"
-            definition: |
-              表示参考流属性与当前属性之间换算关系的数值。
-            content_requirements:
-              - "被定量参考指向的流属性应设置为 1.0。"
-              - "其他属性填写换算系数，例如 每千克对应的净热值。"
-              - "保留的有效数字需与测量精度相符。"
-            validation:
-              - "数值需为正实数。"
-              - "能量或组分属性须与实验或文献数据核对。"
-              - "若填写不确定性字段，应与该平均值的量级保持一致。"
-            examples:
-              - "1.0"
-              - "42.5"
-              - "0.85"
-
+        public_rule_id: "tidas.flow.flow-property.mean-value.positive"
   modellingAndValidation:
     LCIMethod:
       typeOfDataSet:
-        <rules>:
-          - language: "all"
-            definition: |
-              Mandatory ILCD field indicating whether the flow is an "Elementary flow", "Product flow", or "Waste flow".
-            valid_values:
-              - "Elementary flow"
-              - "Product flow"
-              - "Waste flow"
-            content_requirements:
-              - "Select exactly one value from the allowed list; do not customise."
-              - "Elementary flow: substances exchanged with the environment without human transformation."
-              - "Product flow: goods or services entering/exiting the technosphere as products."
-              - "Waste flow: outputs destined for treatment or disposal services."
-              - "Ensure consistency with `classificationInformation` and the chosen reference flow property (e.g., emissions require elementary flow)."
-            validation:
-              - "Enforce completion before publication."
-              - "Add rule-based checks comparing the chosen value with classification IDs and base name phrasing."
-            examples:
-              - "\"Elementary flow\""
-              - "\"Product flow\""
-              - "\"Waste flow\""
-
+        public_rule_id: "tidas.flow.type.required"
     complianceDeclarations:
       compliance:
         referenceToComplianceSystem:

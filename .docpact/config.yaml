@@ -9,9 +9,9 @@ layout: repo
 # Review note, 2026-09-02: Skills #91 adds self-contained, byte-checked launcher bundles for the three hybrid-search packages and CLI-owned Production bootstrap guidance under existing skill/validation/doc routes; no auth runtime ownership moves into Skills.
 # Review note, 2026-08-25: the existing validation-and-packaging contract now governs the pinned Node/pnpm package, frozen lockfile, shared CLI launcher/toolchain checks, and validation workflow; no separate rule was needed.
 # Review note, 2026-09-01: Skills #89 advances every active shared/default wrapper, immutable CI checkout, local override contract, fixture, and current skill reference to OAuth-only CLI 0.1.7 / merge cb5be8f1e209f69570f4c7ef4ef29d61af52eed7. Existing validation, packaging, skill, and documentation routes own the change; no ownership or rule split is required.
-lastReviewedAt: "2026-09-17"
-lastReviewedCommit: "972dc6c09031bc4802598440c763efabe63050cf"
-lastReviewedNote: "Reviewed for agent-skills #105: active launchers target published CLI 0.1.16 and reject local CLI checkouts without the exact TIDAS source manifest; historical Foundry 0.1.8 bootstrap qualification remains separate."
+lastReviewedAt: "2026-09-20"
+lastReviewedCommit: "1aab2c32d9815c2923601e1b1251621f5fd7aa55"
+lastReviewedNote: "Reviewed for agent-skills #107: the repo-level public-rule sync/verification script joins validation-and-packaging coverage; each selected skill keeps its own verified public-rule package and local workflow guidance."
 
 catalog:
   repos:
@@ -54,6 +54,7 @@ ownership:
           - pnpm-lock.yaml
           - scripts/check-toolchain.mjs
           - scripts/lib/cli-launcher.mjs
+          - scripts/sync-tidas-public-rules.mjs
           - scripts/validate-skills.mjs
           - test/**
           - .github/workflows/validate-skills.yml
@@ -80,6 +81,7 @@ coverage:
     - pnpm-lock.yaml
     - scripts/check-toolchain.mjs
     - scripts/lib/cli-launcher.mjs
+    - scripts/sync-tidas-public-rules.mjs
     - AGENTS.md
     - README.md
     - README.zh-CN.md
@@ -133,6 +135,7 @@ routing:
         - pnpm-lock.yaml
         - scripts/check-toolchain.mjs
         - scripts/lib/cli-launcher.mjs
+        - scripts/sync-tidas-public-rules.mjs
         - scripts/validate-skills.mjs
         - test/**
         - .github/workflows/validate-skills.yml
@@ -151,6 +154,7 @@ routing:
         - pnpm-lock.yaml
         - scripts/check-toolchain.mjs
         - scripts/lib/cli-launcher.mjs
+        - scripts/sync-tidas-public-rules.mjs
         - scripts/validate-skills.mjs
         - test/**
         - .github/workflows/validate-skills.yml
@@ -258,6 +262,8 @@ rules:
         kind: toolchain-validation
       - path: scripts/lib/cli-launcher.mjs
         kind: cli-launcher
+      - path: scripts/sync-tidas-public-rules.mjs
+        kind: public-rule-packaging
       - path: scripts/validate-skills.mjs
         kind: validation-script
       - path: test/**

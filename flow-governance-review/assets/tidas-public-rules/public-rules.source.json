@@ -1,0 +1,8 @@
+{
+  "package": "@tiangong-lca/tidas-spec",
+  "version": "0.2.1",
+  "commit": "d4cb089c753ffd20b173db2e56fb553a364f48f4",
+  "archive_sha256": "f11b29a1a06195704cd6e554cc96e25d04d518b4aa6de3be17d4ff886b48116c",
+  "rules_version": "2026.09.20",
+  "index_sha256": "d8f1e90777fe0c675d1e24cbd7f1141ee776d3ebda9d8b24c91f714779540dec"
+}

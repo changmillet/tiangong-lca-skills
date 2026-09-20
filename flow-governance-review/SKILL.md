@@ -7,6 +7,8 @@ description: "Run the CLI-backed flow governance commands for QA, remediation, d
 
 Keep local JSON or JSONL payloads as the system of record. This skill is a thin wrapper around the supported CLI governance commands.
 
+For the five reviewed public Flow rules, `references/tidas_flows.yaml` contains only stable `public_rule_id` pointers. Before applying one, run `node scripts/read-public-rule.mjs --rule-id <id>` from this skill package and use its verified definition. The packaged index is mechanically copied from released `@tiangong-lca/tidas-spec@0.2.1`; the reader rejects a modified bundle or an incompatible explicit `--rules-dir`. CLI QA findings, evidence gates, identity decisions, authorization and publish policy remain CLI/Foundry-owned; reading a public definition never grants an operation.
+
 Do not use this skill for:
 
 - arbitrary remote CRUD outside the explicit CLI commit commands

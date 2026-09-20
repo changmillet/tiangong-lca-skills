@@ -22,6 +22,7 @@ checkPaths:
   - scripts/validate-skills.mjs
   - scripts/check-toolchain.mjs
   - scripts/lib/cli-launcher.mjs
+  - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
   - test/**
@@ -31,9 +32,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-09-17
-lastReviewedCommit: 972dc6c09031bc4802598440c763efabe63050cf
-lastReviewedNote: "Reviewed for agent-skills #105: launcher validation now qualifies published CLI 0.1.16 and exact TIDAS source-manifest identity while retaining independent historical Foundry bootstrap proof."
+lastReviewedAt: 2026-09-20
+lastReviewedCommit: 1aab2c32d9815c2923601e1b1251621f5fd7aa55
+lastReviewedNote: "Reviewed for agent-skills #107: selected public-rule copies and readers are validated in isolated skill packages against exact published tidas-spec 0.2.1 identity and tamper-negative cases."
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -59,6 +60,7 @@ You may pass one or more skill directories to validate only the touched skill pa
 ## Required Validation Shape
 
 - Skill instruction changes require validating the touched skill package.
+- Public-rule asset changes require `node scripts/sync-tidas-public-rules.mjs` verification and `node --test test/public-rules-package.test.mjs`; the latter checks isolated copies and rejects altered index/source identity.
 - Wrapper contract changes require checking the paired `agents/openai.yaml` and `SKILL.md` together.
 - Validation-script or test changes require running the full `pnpm prepush:gate` command when feasible.
 - New CLI-backed skills must be added to the default validation list when they are intended to ship as part of the standard checked-in skill set.

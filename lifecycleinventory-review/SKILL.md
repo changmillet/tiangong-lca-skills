@@ -7,6 +7,8 @@ description: "QA process-level or lifecyclemodel-level lifecycle inventory outpu
 
 当前保留 `process` 和 `lifecyclemodel` 两个 CLI-backed QA profile；规则文档按 profile 收敛在各自的 `profiles/*/references/` 下。
 
+Process 的两条已裁决公共命名规则不再由本技能手工定义。需要解释命名要求时，先从本技能包执行 `node scripts/read-public-rule.mjs --rule-id <id>` 读取已发布 spec 0.2.1 的校验索引；显式 `--rules-dir` 覆盖也必须通过同一身份与哈希校验。`profiles/process/references/process-review-rules.md` 只保留冻结输入、证据、QA 与修复建议的技能流程；公共规则不授予写入或 waiver 权限。
+
 ## Profiles
 - `process`（默认）：通过统一 CLI 执行 process_from_flow 产物 QA。
 - `lifecyclemodel`：通过统一 CLI 执行 lifecyclemodel build run QA。
