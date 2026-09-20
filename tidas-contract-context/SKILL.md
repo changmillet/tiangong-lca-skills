@@ -1,6 +1,6 @@
 ---
 name: tidas-contract-context
-description: Fetch SDK-backed TIDAS schema, methodology YAML, runtime ruleset, and AI context-pack artifacts through the tiangong-lca CLI. Use before AI authoring or repairing TIDAS process, flow, source, contact, unitgroup, flowproperty, lifecyclemodel, or lciamethod data.
+description: Fetch source-bound TIDAS schema, methodology YAML, CLI-owned runtime ruleset projection, and AI context-pack artifacts through the tiangong-lca CLI. Use before AI authoring or repairing TIDAS process, flow, source, contact, unitgroup, flowproperty, lifecyclemodel, or lciamethod data.
 ---
 
 # TIDAS Contract Context
@@ -10,6 +10,7 @@ Use this skill when an agent needs the authoritative TIDAS contract for AI data 
 ## Boundaries
 
 - This skill is a thin wrapper over `tiangong-lca dataset context-pack` and `tiangong-lca dataset contract get`.
+- Public rule definitions are sourced from released TIDAS spec assets; profile policy and runtime-ruleset projection belong to the CLI. The SDK 0.2.2 legacy mixed ruleset file remains a package-load compatibility dependency until the SDK retirement task is released.
 - Do not copy schema, methodology YAML, or ruleset files into this skill.
 - Do not generate or mutate TIDAS rows here. Authoring and conversion should use CLI or Foundry workflows after the context pack exists.
 
