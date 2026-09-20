@@ -5,11 +5,11 @@ import process from 'node:process';
 
 export const expectedNodeVersion = '24.19.0';
 export const expectedPnpmVersion = '11.24.0';
-export const publishedCliPackageSpec = '@tiangong-lca/cli@0.1.17';
+export const publishedCliPackageSpec = '@tiangong-lca/cli@0.1.18';
 export const publishedCliCommand = `pnpm dlx --package=${publishedCliPackageSpec} tiangong-lca`;
 
 const expectedCliPackageName = '@tiangong-lca/cli';
-const expectedCliPackageVersion = '0.1.17';
+const expectedCliPackageVersion = '0.1.18';
 const expectedCliPackageManager = `pnpm@${expectedPnpmVersion}`;
 const expectedCliNodeEngine = '>=24.19.0 <25';
 export const expectedTidasSpecSource = Object.freeze({
@@ -66,7 +66,7 @@ function sourceManifestShape(manifest) {
 export function assertTidasSpecSourceManifest(manifest) {
   if (JSON.stringify(sourceManifestShape(manifest)) !== JSON.stringify(expectedTidasSpecSource)) {
     throw new Error(
-      'Local TianGong CLI TIDAS source manifest mismatch: expected the published 0.1.17 source-bound identity.',
+      'Local TianGong CLI TIDAS source manifest mismatch: expected the published 0.1.18 source-bound identity.',
     );
   }
   return manifest;

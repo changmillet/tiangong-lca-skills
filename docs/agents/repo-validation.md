@@ -33,8 +33,8 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-09-20
-lastReviewedCommit: a3710045967d0a1bdbf5e8183928f808ec277aca
-lastReviewedNote: "Reviewed for agent-skills #109: active wrappers and four-platform CI bind published CLI 0.1.17 with exact spec 0.2.1 source identity; SDK legacy-file absence remains a downstream release test."
+lastReviewedCommit: 3beacfcc873febd3f1f9ce789ac0e3315d630818
+lastReviewedNote: "Reviewed for agent-skills #111: active wrappers and four-platform CI bind CLI 0.1.18/SDK 0.3.0 with exact spec 0.2.1 identity and installed no-old-file proof."
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -53,7 +53,7 @@ pnpm prepush:gate
 Review note, 2026-06-04: external runtime source-evidence skill guidance remains documentation and instruction-layer work. The new top-level Foundry scenario skills are included in `scripts/validate-skills.mjs`; no new runtime validator path is required because the external Tiangong KB skill is not checked into this repository.
 Review note, 2026-08-25: validation now covers the immutable pnpm/Node/CLI consumer contract, exact published and local CLI cases, argv-only dispatch, and live CLI help checks for every flow-governance wrapper manifest route.
 
-The local `pre-push` hook runs docpact first, validates Node `24.19.0` / pnpm `11.24.0`, installs Skills from its frozen lockfile, and defaults to published CLI `0.1.17`. A local `tiangong-lca-cli` is installed/built only when explicitly selected and only after package/engine/lock/source-manifest evidence succeeds. The hook then runs the repository test/validation gate. The GitHub `validate-skills` workflow runs the four-platform contract matrix for runtime/launcher changes, Foundry package/test pull requests and manual dispatch.
+The local `pre-push` hook runs docpact first, validates Node `24.19.0` / pnpm `11.24.0`, installs Skills from its frozen lockfile, and defaults to published CLI `0.1.18`. A local `tiangong-lca-cli` is installed/built only when explicitly selected and only after package/engine/lock/source-manifest evidence succeeds. The hook then runs the repository test/validation gate. The GitHub `validate-skills` workflow runs the four-platform contract matrix for runtime/launcher changes, Foundry package/test pull requests and manual dispatch.
 
 You may pass one or more skill directories to validate only the touched skill packages.
 
@@ -64,8 +64,8 @@ You may pass one or more skill directories to validate only the touched skill pa
 - Wrapper contract changes require checking the paired `agents/openai.yaml` and `SKILL.md` together.
 - Validation-script or test changes require running the full `pnpm prepush:gate` command when feasible.
 - New CLI-backed skills must be added to the default validation list when they are intended to ship as part of the standard checked-in skill set.
-- Wrapper-launcher changes require `pnpm test:launcher`, the pnpm consumer contract tests, an exact published `@tiangong-lca/cli@0.1.17` help case, source-manifest identity checks, and full skill validation against frozen, built CLI release merge `4c4c6d13f235dfb88c85f54b926ccdfce7cf4fc3` from canonical `tiangong-lca/cli`. The published Foundry bootstrap/provenance remains bound to its historical release source.
-- A no-old-SDK-file installed test is deferred to SDK #144 and a compatible CLI release because published SDK 0.2.2 statically imports that file; normal published-package Process/Flow context-pack validation remains required now.
+- Wrapper-launcher changes require `pnpm test:launcher`, the pnpm consumer contract tests, an exact published `@tiangong-lca/cli@0.1.18` help case, source-manifest identity checks, and full skill validation against frozen, built CLI release merge `340c15df11692688467e1e3e1cdc9688b8240268` from canonical `tiangong-lca/cli`. The published Foundry bootstrap/provenance remains bound to its historical release source.
+- Validate the installed CLI 0.1.18 + SDK 0.3.0 Process/Flow context packs with the retired mixed SDK JSON/schema absent, and reject altered public-rule source identity. The earlier SDK 0.2.2 static-import limitation is historical evidence, not an active requirement.
 - Launcher filesystem fixtures and expected paths must use the host `node:path` implementation. A test that passes a synthetic `platform` may validate executable dispatch, but must not combine that target platform with host-resolved fake paths.
 - Repo-wide Markdown guards inventory only root-repository Git-tracked `*.md` paths through argv-based `git -C <root> ls-files -z`. Fixture and validator Git children remove inherited repository-location `GIT_*` variables first, so hook context cannot redirect their index or worktree; untracked or nested CI checkouts are not part of the Skills documentation contract.
 - Documentation-governance changes require docpact validation.
