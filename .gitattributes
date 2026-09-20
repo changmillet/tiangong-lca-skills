@@ -3,3 +3,7 @@ foundry-tidas-import/scripts/tiangong-runtime-bootstrap.sh -text
 foundry-tidas-import/scripts/tiangong-runtime-bootstrap.ps1 -text
 foundry-tidas-import/assets/licenses/tiangong-cli-LICENSE -text
 foundry-tidas-import/scripts/bootstrap-lock.json -text
+
+# Public-rule snapshots are source-hashed release bytes, not newline-normalized JSON.
+flow-governance-review/assets/tidas-public-rules/*.json -text
+lifecycleinventory-review/assets/tidas-public-rules/*.json -text
