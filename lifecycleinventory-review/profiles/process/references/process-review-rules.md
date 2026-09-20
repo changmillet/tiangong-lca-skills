@@ -70,22 +70,16 @@
 - classification 默认不做 taxonomy 语义裁定，但 schema-required 的 classification 容器缺失时，仍记为结构缺陷。
 
 ### 2. Process / Reference Flow Naming
-来源：
-- Rule 12-17
-- Rule 20
+公共定义由已发布 `@tiangong-lca/tidas-spec@0.2.1` 的版本化索引承担，不由本文件重新定义。先在本技能包中运行：
 
-检查点：
-- 单一 reference flow 的 process，名称应与 reference flow 一致。
-- 名称应使用技术性、结构化表达，不要保留 customs/catalog/legal enumeration 风格。
-- `processDataSet.processInformation.dataSetInformation.name` 默认按以下四个字段审查与填写，不得把整串 short description 全塞进 `baseName`：
-  - `baseName`：只写核心对象/产品/服务本体，不混入路线、mix、规格、电压、交付地点。
-  - `treatmentStandardsRoutes`：写工艺路线、处理方式、技术路径、标准/子类型等“做法”信息。
-  - `mixAndLocationTypes`：写 `production mix` / `technology mix` / `at plant` / `at farm gate` 等混合或交付/地点语义。
-  - `functionalUnitFlowProperties`：写电压、等级、状态、品质、库容、粒径等功能单位或流属性限定。
-- `baseName`、`treatmentStandardsRoutes`、`mixAndLocationTypes` 在当前 TIDAS process schema 和前端 `requiredFields` 中都按 required 处理；QA 时不得省略这三个键。
-- 若只有 2-3 段语义适用，只在适用字段填写文本；不适用但 schema-required 的字段也要保留为空多语言数组或等价 schema-safe 空结构。不要因为缺 1 个字段就把全部内容回退到 `baseName`，也不要直接删键。
-- `flowProperties` 不是默认兜底垃圾桶；没有明确流属性语义时，不要为了凑字段把 route/location 文案塞进去。
-- 地理信息不应混进过程/流名称本体，应放在专门字段。
+```bash
+node scripts/read-public-rule.mjs --rule-id tidas.process.name.base-name.align-reference-flow
+node scripts/read-public-rule.mjs --rule-id tidas.process.name.qualifiers.structured
+```
+
+读取器校验精确 source commit、规则版本和索引 SHA-256；若使用显式 `--rules-dir` 覆盖，身份不一致或文件被改动时必须停止。公共规则的 statement、applicability、locations 与正反例以校验后的输出为准。Rule 12–17/20 是历史来源线索，不是第二份规范文本。
+
+技能本地 QA 操作仍需：将冻结的 process 名称与 reference flow、来源资料及 CLI findings 并排审查；区分公共命名问题、source-backed 语义拆分问题和 schema-required 键缺失。`baseName`、`treatmentStandardsRoutes`、`mixAndLocationTypes` 的 requiredness 必须由当前已安装 Schema 实测，不由本 rubric 额外创设。无法判断分段时保留证据不足结论，不自动修复或放宽阻断。
 
 典型问题：
 - 名称过长；
@@ -94,14 +88,14 @@
 - `baseName` 里直接写成 `Alternating current; hydropower; technology mix; 35-330kV`，而 `treatmentStandardsRoutes` / `mixAndLocationTypes` / `functionalUnitFlowProperties` 全空。
 - `baseName` 里直接写成 `Alfalfa for forage and silage; Fresh, unprocessed produce; Production mix, at farm gate`，没有把“鲜品，未加工”和“生产混合，在农场”拆到对应字段。
 
-修改动作：
-- 用 reference flow 名称回写 process 名称；
-- 按四字段拆开写：
+技能本地修复计划示例（必须先经上述公共规则与当前 Schema 验证，不能直接当成规范定义）：
+- 对 source-backed 的 reference flow 名称差异提出修复建议；
+- 在修复计划中按字段列出候选值，例如：
   - `Alternating current; hydropower; technology mix; 35-330kV`
     应拆为 `baseName=Alternating current`、`treatmentStandardsRoutes=hydropower`、`mixAndLocationTypes=technology mix`、`functionalUnitFlowProperties=35-330kV`。
   - `Alfalfa for forage and silage; Fresh, unprocessed produce; Production mix, at farm gate`
     应至少拆为 `baseName=Alfalfa for forage and silage`、`treatmentStandardsRoutes=[]`、`functionalUnitFlowProperties=Fresh, unprocessed produce`、`mixAndLocationTypes=Production mix, at farm gate`。
-- 把不必要的条目式修饰词移到合适字段或删除。
+- 对条目式修饰词给出来源、保留或移动建议；实际写入仍走 Foundry/CLI 的授权与验证。
 
 ### 3. Dataset Type and Linked Flow Integrity
 来源：

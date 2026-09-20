@@ -29,11 +29,12 @@ checkPaths:
   - scripts/install-git-hooks.sh
   - scripts/check-toolchain.mjs
   - scripts/lib/cli-launcher.mjs
+  - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
-lastReviewedAt: 2026-09-17
-lastReviewedCommit: 972dc6c09031bc4802598440c763efabe63050cf
-lastReviewedNote: "Reviewed for agent-skills #105: active shared/copied launchers target CLI 0.1.16 and carry the exact TIDAS source identity; historical Foundry bootstrap ownership remains separate."
+lastReviewedAt: 2026-09-20
+lastReviewedCommit: 1aab2c32d9815c2923601e1b1251621f5fd7aa55
+lastReviewedNote: "Reviewed for agent-skills #107: package-local copies of selected published TIDAS rules are verified data assets, not skill-owned public definitions or executable product policy."
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -54,6 +55,7 @@ Review note, 2026-08-25: the repository adds only a pnpm validation package and 
 - `*/agents/openai.yaml` contains wrapper contracts used by the skills CLI.
 - `*/scripts/**`, `*/references/**`, and `*/assets/**` are skill-local support files intentionally shipped with a skill package.
 - `scripts/validate-skills.mjs` and `test/**` define repo-level validation for wrappers and packaging rules.
+- `scripts/sync-tidas-public-rules.mjs` binds the selected skill-local public-rule copies to one exact published `tidas-spec` source/version/hash; package-local readers fail closed on altered assets or overrides.
 - `package.json` and `pnpm-lock.yaml` pin the validation-only Node `24.19.0` / pnpm `11.24.0` package contract; this does not turn the skill packages into a TypeScript runtime.
 - `scripts/lib/cli-launcher.mjs` owns exact local/published CLI selection, package evidence checks, frozen local preparation, and argv-only process dispatch.
 - `README.md` and `README.zh-CN.md` explain installation and usage.

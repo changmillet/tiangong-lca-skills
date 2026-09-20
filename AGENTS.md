@@ -30,6 +30,7 @@ checkPaths:
   - scripts/validate-skills.mjs
   - scripts/check-toolchain.mjs
   - scripts/lib/cli-launcher.mjs
+  - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
   - test/**
@@ -38,9 +39,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-09-17
-lastReviewedCommit: 972dc6c09031bc4802598440c763efabe63050cf
-lastReviewedNote: "Reviewed for agent-skills #105: active launchers target published CLI 0.1.16 and reject local CLI checkouts without the exact TIDAS source manifest; historical Foundry 0.1.8 bootstrap qualification remains separate."
+lastReviewedAt: 2026-09-20
+lastReviewedCommit: 1aab2c32d9815c2923601e1b1251621f5fd7aa55
+lastReviewedNote: "Reviewed for agent-skills #107: selected Flow and Process public rule definitions are pinned to independently verified tidas-spec 0.2.1 assets; skill-local workflow policy remains here."
 related:
   - .docpact/config.yaml
   - docs/agents/repo-architecture.md
@@ -58,6 +59,7 @@ Review note, 2026-06-02: dataset import curation queue guidance remains skill in
 Review note, 2026-08-29: CLI-backed package execution is pinned to Node 24.19.0, pnpm 11.24.0, and published CLI 0.1.3; external Vercel `npx skills` commands remain outside this package-manager migration.
 Review note, 2026-09-01: Skills #89 advances the active wrapper contract to published OAuth-only CLI 0.1.7 and immutable release merge `cb5be8f1e209f69570f4c7ef4ef29d61af52eed7`; no wrapper floats through `latest`, discovers a sibling checkout, owns authentication logic, or provisions a password-encoded credential.
 Review note, 2026-09-17: Skills #105 advances the active wrapper contract to published CLI 0.1.16 and CLI commit `4316c205453071c8cbb45e06480344f8eae5e041`. Explicit local CLI overrides now fail closed unless the CLI carries the exact TIDAS source manifest for spec `6fb497bad562125ccc0c00a803351207b9ed438f`, semantic source `9c0d8b1c8ceb1841074f5bc6de5fbb7fcc9318f5`, and all 18 schemas; the historical Foundry 0.1.8 bootstrap remains intentionally bound to CLI 0.1.14.
+Review note, 2026-09-20: Skills #107 bundles the selected published TIDAS public rules in each affected skill. Their readers verify source/version/hash before use; source synchronization is repo-level packaging, while review sequence and repair permissions stay skill-local.
 
 ## AI Load Order
 
