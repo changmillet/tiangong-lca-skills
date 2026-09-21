@@ -211,7 +211,7 @@ const benignFixtures = [
   'If the installed runtime still emits a numeric sentinel such as `9999`, or its report carries no validation-layer fields, stop and report that qualified adoption is incomplete.',
   'Never hand-fabricate, overwrite or delete the empty array in the dataset.',
   'Never edit or discard the runtime report. Never bypass its gate.',
-  'The pinned published CLI `0.1.18` and the historical qualified Foundry `0.1.8` bootstrap predate the unknown-`[]` behavior, so neither guarantees it.',
+  'The pinned published CLI `0.1.20` and the qualified Foundry `0.1.10` lock predate nothing that matters here; the installed runtime is still the authority to observe.',
 ];
 
 test('negative fixtures: the detectors reject the pre-#104 guidance and its paraphrases', () => {
@@ -284,7 +284,8 @@ test('immutable identities, property conversion and private runtime boundaries s
 
   const importSkill = read('foundry-tidas-import/SKILL.md');
   assert.match(importSkill, /Do not discover a sibling checkout/iu);
-  assert.match(importSkill, /not in a published package/iu);
+  assert.match(importSkill, /bounded existing-owner-draft repair lane/iu);
+  assert.match(importSkill, /next_actions/iu);
 
   const skill = read('process-automated-builder/SKILL.md');
   assert.match(skill, /Names, descriptions and comments state domain facts only/iu);
@@ -292,7 +293,7 @@ test('immutable identities, property conversion and private runtime boundaries s
 
 test('the pinned-runtime gap is an explicit stop condition, never a hand-fabrication instruction', () => {
   const skill = read('process-automated-builder/SKILL.md');
-  assert.match(skill, /pinned published CLI `0\.1\.18`/iu);
+  assert.match(skill, /pinned published CLI `0\.1\.20`/iu);
   assert.match(skill, /qualified adoption is incomplete/iu);
   assert.match(skill, /merged source behavior and published support separate/iu);
 
@@ -307,7 +308,7 @@ test('the pinned-runtime gap is an explicit stop condition, never a hand-fabrica
 
   const importSkill = read('foundry-tidas-import/SKILL.md');
   assert.match(importSkill, /qualified adoption (as )?incomplete/iu);
-  assert.match(importSkill, /pinned published CLI `0\.1\.18`/iu);
+  assert.match(importSkill, /pinned published CLI `0\.1\.20`/iu);
 
   const playbook = read('process-automated-builder/references/operations-playbook.md');
   assert.match(playbook, /qualified adoption as incomplete/iu);
@@ -322,7 +323,10 @@ test('the pinned-runtime gap is an explicit stop condition, never a hand-fabrica
   assert.match(opsPrompt, /qualified adoption as incomplete/iu);
   assert.match(opsPrompt, /never hand-fabricate the empty array or bypass its gate/iu);
 
-  // The unreleased-source follow-ups stay holds rather than claimed support.
-  assert.match(skill, /CLI #283 is not in a published package/iu);
+  // The bounded repair lane is a released owner fact; the CLI #318 conversion path stays a hold
+  // rather than claimed support.
+  assert.match(skill, /existing-owner-draft metadata repair lane is released/iu);
+  assert.match(skill, /CLI #283/iu);
+  assert.match(skill, /next_actions/iu);
   assert.match(read('process-automated-builder/references/ilcd_method_guardrails.md'), /CLI #318/u);
 });

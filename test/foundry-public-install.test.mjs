@@ -9,8 +9,8 @@ import { fileURLToPath } from "node:url";
 
 const entry = fileURLToPath(new URL("../foundry-tidas-import/", import.meta.url));
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
-const version = "0.1.8";
-const source = "abac241b9dd9a302c4dc9a985f798d0eb77f62f3";
+const version = "0.1.10";
+const source = "1e4f48bf8359f5e9bacba5741d15b7ff78f2eb41";
 
 test("copied Foundry skill runs the public locked runtime and rejects changed installation inputs", {
   timeout: 1_200_000,
@@ -20,7 +20,7 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
   const lock = JSON.parse(fs.readFileSync(lockPath, "utf8"));
   assert.equal(lock.schema, "tiangong-lca.runtime-bootstrap-lock.v1");
   assert.equal(lock.manifest_url,
-    `https://github.com/tiangong-lca/data-foundry/releases/download/foundry-runtime-v${version}/runtime-manifest.json`);
+    `https://github.com/tiangong-lca/foundry/releases/download/foundry-runtime-v${version}/runtime-manifest.json`);
   const platform = `${process.platform}-${process.arch}`;
   assert.ok(["linux-x64", "linux-arm64", "darwin-arm64", "win32-x64"].includes(platform));
   const root = fs.mkdtempSync(path.join(os.tmpdir(), "foundry-public-skill-"));
@@ -96,9 +96,9 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
   assert.equal(doctor.runtime_identity.foundry.package_version, version);
   const qualification = doctor.runtime_identity.qualification;
   assert.equal(qualification.status, "ready");
-  assert.equal(qualification.identity.cli.package_version, "0.1.14");
+  assert.equal(qualification.identity.cli.package_version, "0.1.19");
   assert.equal(qualification.identity.cli.node_version, "24.19.0");
-  assert.equal(qualification.identity.tidas.binary_version, "0.3.0");
+  assert.equal(qualification.identity.tidas.binary_version, "0.3.2");
   assert.deepEqual(fs.readdirSync(path.join(cache, "components")).sort(), componentKeys);
   const application = manifest.components.find((component) => component.id === "foundry" && component.platform === platform);
   assert.ok(application);
@@ -120,7 +120,11 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
   assert.equal(provenance.source.commit, source);
   assert.equal(provenance.package.version, version);
   assert.equal(provenance.published_package.source.gitCommit, source);
-  assert.equal(provenance.cli.source.gitCommit, "bcc5dbee5b909dbb912e09d99ca07e858d3d7cec");
+  // The Foundry owner bundles its own CLI (0.1.19, tag cli-v0.1.19); that is not the wrapper
+  // launcher's published pin, and the two owner versions are never conflated.
+  assert.equal(provenance.cli.package.version, "0.1.19");
+  assert.equal(provenance.cli.source.ref, "refs/tags/cli-v0.1.19");
+  assert.equal(provenance.cli.source.gitCommit, "7f7b313cebc30c96154860df30f5d666963bc0b7");
 
   // This is a credential-free local cleanup task, not the live RC01–RC06 account case.
   const selected = path.join(workspace, "source.jsonl");

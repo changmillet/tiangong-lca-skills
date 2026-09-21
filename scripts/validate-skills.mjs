@@ -319,9 +319,27 @@ const requiredDocPatterns = [
   },
   {
     file: "process-automated-builder/SKILL.md",
-    pattern: /pinned published CLI `?0\.1\.18/iu,
+    pattern: /pinned published CLI `?0\.1\.20/iu,
     message:
       "process-automated-builder should distinguish the pinned published CLI from the merged source behavior (Issue #104).",
+  },
+  {
+    file: "foundry-tidas-import/SKILL.md",
+    pattern: /bounded existing-owner-draft repair lane/iu,
+    message:
+      "the Foundry entry should state the released bounded existing-owner-draft repair lane (Issue #104).",
+  },
+  {
+    file: "foundry-tidas-authoring/references/semantic-work.md",
+    pattern: /existing-owner-draft metadata repair lane is released/iu,
+    message:
+      "semantic work should state the released bounded existing-owner-draft repair lane (Issue #104).",
+  },
+  {
+    file: "process-automated-builder/SKILL.md",
+    pattern: /existing-owner-draft metadata repair lane is released/iu,
+    message:
+      "process-automated-builder should state the released bounded existing-owner-draft repair lane (Issue #104).",
   },
   {
     file: "foundry-tidas-import/SKILL.md",

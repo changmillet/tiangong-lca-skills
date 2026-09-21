@@ -16,7 +16,7 @@ import {
 
 const supportedCliPackage = {
   name: '@tiangong-lca/cli',
-  version: '0.1.18',
+  version: '0.1.20',
   packageManager: 'pnpm@11.24.0',
   engines: {
     node: '>=24.19.0 <25',
@@ -171,12 +171,12 @@ test('buildTiangongInvocation uses exact pnpm dlx argv for the published CLI con
     pathExists: () => false,
   });
 
-  assert.equal(publishedCliPackageSpec, '@tiangong-lca/cli@0.1.18');
+  assert.equal(publishedCliPackageSpec, '@tiangong-lca/cli@0.1.20');
   assert.equal(invocation.mode, 'published');
   assert.equal(invocation.command, process.platform === 'win32' ? 'pnpm.exe' : 'pnpm');
   assert.deepEqual(invocation.args, [
     'dlx',
-    '--package=@tiangong-lca/cli@0.1.18',
+    '--package=@tiangong-lca/cli@0.1.20',
     'tiangong-lca',
     'qa',
     'process',
@@ -184,7 +184,7 @@ test('buildTiangongInvocation uses exact pnpm dlx argv for the published CLI con
   ]);
   assert.equal(
     publishedCliCommand,
-    'pnpm dlx --package=@tiangong-lca/cli@0.1.18 tiangong-lca',
+    'pnpm dlx --package=@tiangong-lca/cli@0.1.20 tiangong-lca',
   );
 });
 
@@ -210,7 +210,7 @@ test('buildTiangongInvocation dispatches native pnpm.exe on Windows without chan
   assert.equal(invocation.command, 'pnpm.exe');
   assert.deepEqual(invocation.args.slice(0, 3), [
     'dlx',
-    '--package=@tiangong-lca/cli@0.1.18',
+    '--package=@tiangong-lca/cli@0.1.20',
     'tiangong-lca',
   ]);
 });
@@ -243,7 +243,7 @@ test('runTiangongCommand uses native Windows pnpm without a command shell', () =
       command: 'pnpm.exe',
       args: [
         'dlx',
-        '--package=@tiangong-lca/cli@0.1.18',
+        '--package=@tiangong-lca/cli@0.1.20',
         'tiangong-lca',
         'qa',
         'process',
@@ -270,7 +270,7 @@ test('buildTiangongInvocation accepts an exact supported local CLI checkout', ()
     'process',
     '--help',
   ]);
-  assert.equal(invocation.packageVersion, '0.1.18');
+  assert.equal(invocation.packageVersion, '0.1.20');
   assert.deepEqual(invocation.tidasSpecSource, expectedTidasSpecSource);
   assert.equal(invocation.packageManifestPath, path.join(cliDir, 'package.json'));
   assert.equal(invocation.lockfilePath, path.join(cliDir, 'pnpm-lock.yaml'));
@@ -313,7 +313,7 @@ test('buildTiangongInvocation fails closed on mismatched local CLI package state
         cliDir,
         ...fixture,
       }),
-    /expected @tiangong-lca\/cli@0\.1\.18/u,
+    /expected @tiangong-lca\/cli@0\.1\.20/u,
   );
 });
 
