@@ -135,7 +135,7 @@ node scripts/run-process-automated-builder.mjs complete-required-fields \
   --default-unit MJ
 ```
 
-The CLI owns the deterministic writer. For `annualSupplyOrProductionVolume`, use an explicit evidence value when present. If there is no evidence value, derive the value from the quantitative reference flow's `meanAmount` first, then `resultingAmount`, and write the field with the reference unit per year. Do not invent production-volume figures in the skill.
+The CLI owns the deterministic writer. `annualSupplyOrProductionVolume` must come from explicit annual source evidence: a real annualized quantity with its unit and period. Never derive it from the quantitative reference flow's `meanAmount`/`resultingAmount`, from a default unit, from a per-year assumption of an unstated basis, or from a sentinel such as `9999`. When the source does not prove an annual volume, keep it unknown: the CLI's supported unknown representation (`[]`) with the row-level evidence gap its report records, and the open evidence need stated where the task tracks gaps. Structural validity is not evidence quality — read the CLI report's `validation_layers` (schema, authoring_evidence, content, multilingual) and its evidence-gap entries instead of re-implementing validation in the skill, treat such a row as neither publication-ready nor provider-weight eligible, and never let an LLM choose fresh weights per run. The bounded existing-owner-draft metadata repair lane is released: qualified Foundry 0.1.10 provides it (Foundry #171, released by #185 as `1e4f48bf8359f5e9bacba5741d15b7ff78f2eb41`) and it consumes the bounded existing-Process metadata admission from CLI #283, published since CLI 0.1.19. Run that repair only through the bounded lane and the `next_actions` the installed runtime returns: fresh before-image and the exact owner/state authorization the lane requires, one consumed attempt, no replay, unknown outcomes read back, publication left false, and no scientific field touched — the owners' recorded repair changed only the row's ownership-reference text. Never write the repair contract or its report yourself, and never claim a lane the runtime does not return. Installed support stays separate from merged source behavior: the pinned published CLI `0.1.20` and the Foundry entry's adjacent lock for independently qualified Foundry `0.1.10` (whose bundled CLI is the Foundry owner's own `0.1.19`, not the wrapper pin) carry the unknown-`[]` behavior, the validation-layer report and that repair entry in their released sources, but the runtime you actually invoke is the authority. If that runtime still emits a numeric sentinel such as `9999` for a missing annual volume, or its report carries no validation-layer/evidence-gap fields, stop and report that qualified adoption is incomplete. Never hand-write, overwrite or delete the empty array in the dataset. Never rewrite or drop the runtime's report. Never bypass its gate. Keep merged source behavior and published support separate in every handoff.
 
 6. Keep authored rows source-language only for import/publish handoff unless a separate post-import language-completion task explicitly requests additional language fields.
 
@@ -176,7 +176,7 @@ node scripts/run-process-automated-builder.mjs evidence-search plan --query "中
 
 ## Runtime Requirements
 
-- The wrapper runs the exact published CLI by default through `pnpm dlx --package=@tiangong-lca/cli@0.1.18 tiangong-lca`.
+- The wrapper runs the exact published CLI by default through `pnpm dlx --package=@tiangong-lca/cli@0.1.20 tiangong-lca`.
 - Set `TIANGONG_LCA_CLI_DIR` or pass `--cli-dir` only when you need a local CLI working tree for dev/CI.
 - The wrapper requires explicit output paths instead of relying on `cwd/artifacts/...` defaults.
 - For repeatable runs, use an explicit output root such as `/abs/path/artifacts/<case_slug>/...`.
@@ -188,6 +188,7 @@ node scripts/run-process-automated-builder.mjs evidence-search plan --query "中
 - Any generated process payload must preserve the four-part process name object:
   `name.baseName`, `name.treatmentStandardsRoutes`, `name.mixAndLocationTypes`, `name.functionalUnitFlowProperties`.
 - `baseName`, `treatmentStandardsRoutes`, and `mixAndLocationTypes` are schema-required in current TianGong process payloads. Keep the keys even when one field is semantically empty; do not collapse the whole reference-flow short description back into `baseName`.
+- Names, descriptions and comments state domain facts only. Never put workflow status, approval counters, revision or resume histories, queue/action-item text, or "pending confirmation" chatter into dataset prose; that belongs in the task's operational evidence.
 - When name splitting is ambiguous, align with `../lifecycleinventory-review/profiles/process/references/process-review-rules.md` instead of inventing a one-off local convention.
 
 ## Fast Troubleshooting

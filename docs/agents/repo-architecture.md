@@ -32,9 +32,9 @@ checkPaths:
   - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
-lastReviewedAt: 2026-09-20
-lastReviewedCommit: 3beacfcc873febd3f1f9ce789ac0e3315d630818
-lastReviewedNote: "Reviewed for agent-skills #111: active wrappers bind CLI 0.1.18 and SDK 0.3.0; public definitions and CLI-owned profile projection remain separate."
+lastReviewedAt: 2026-09-21
+lastReviewedCommit: 862e104
+lastReviewedNote: 'Reviewed for Skills #104 (final guidance phase): the pinned-runtime hold stays at the instruction layer with the paired agents/openai.yaml prompts; no module, wrapper, invocation or ownership boundary changes, and the CLI #283/#318 holds remain.'
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -47,6 +47,10 @@ related:
 
 Review note, 2026-06-02: dataset import curation queue changes keep this repository at the workflow-instruction layer; executable queue and curation gate behavior stays in CLI and Foundry.
 Review note, 2026-06-04: Foundry now has two checked-in top-level scenario skills, `external-dataset-curated-import` and `source-evidence-dataset-development`. They coordinate existing CLI/child-skill surfaces and must not grow package parsing, database write, or evidence retrieval implementations.
+Review note, 2026-09-21: Skills #104 keeps the authoring contract at the instruction layer. `process-automated-builder` writes annual supply only from explicit annual evidence, `foundry-tidas-authoring` keeps an unknown volume unknown and reads the runtime's validation-layer report instead of re-implementing validation, `tiangong-lca-remote-ops` keeps one unpublished draft identity and demands explicit provider/reference evidence before any new version, and the secondary-property guardrail records the unreleased CLI #318 conversion path as a hold. Paired `agents/openai.yaml` prompts carry the changed admission semantics. No runtime, dependency, lock or release behavior is added.
+
+Review note, 2026-09-21: Skills #104 (final guidance phase) records the pinned-runtime hold inside the existing authoring/import/remote-operation instructions: the pinned published CLI `0.1.18` and the historical qualified Foundry `0.1.8` bootstrap predate the unknown-`[]` behavior, the validation-layer report and the CLI #283 repair entry, so a runtime that still emits the `9999` sentinel or lacks those layers is a stop-and-report (qualified adoption incomplete) instead of an invitation to hand-edit the payload or bypass the runtime. No module, wrapper, invocation or ownership boundary changes; the paired agent prompts only carry the same hold.
+
 Review note, 2026-08-25: the repository adds only a pnpm validation package and shared JavaScript launcher contract; it does not add a first-party TypeScript compiler or move CLI business logic into Skills.
 
 ## Owned Surfaces
@@ -83,9 +87,9 @@ If a Foundry/source-evidence workflow needs an external Tiangong KB research ski
 
 Current-account dataset review is owned here only as a skill package and wrapper contract. Its durable runtime behavior belongs in public `tiangong-lca` CLI commands such as dataset validation, reference rewriting, lifecyclemodel save-draft, and lifecyclemodel graph export.
 
-The shared wrapper launcher defaults to pinned published `@tiangong-lca/cli@0.1.18` and never discovers sibling directories. CI checks out canonical `tiangong-lca/cli` at release merge `340c15df11692688467e1e3e1cdc9688b8240268`, which carries package version 0.1.18 and the source-bound TIDAS manifest for spec `d4cb089c753ffd20b173db2e56fb553a364f48f4` (0.2.1) and semantic source `9c0d8b1c8ceb1841074f5bc6de5fbb7fcc9318f5`. An explicit `--cli-dir` or `TIANGONG_LCA_CLI_DIR` may select an exact matching local checkout; only after package/engine/lock/source-manifest evidence passes may the launcher prepare it with `pnpm install --frozen-lockfile` and `pnpm run build` when source files are newer than `dist/src/main.js`. All execution stays argv-authoritative with `shell: false`, using native `pnpm.exe` on Windows. This is a developer-experience guard for stale local checkouts, not permission for skills to duplicate CLI implementation.
+The shared wrapper launcher defaults to pinned published `@tiangong-lca/cli@0.1.20` and never discovers sibling directories. CI checks out canonical `tiangong-lca/cli` at release merge `c498906a13fa345eebebbadc87e3a773abb1be6a`, which carries package version 0.1.20 and the source-bound TIDAS manifest for spec `8a9470a7dd4c074ae246bb9967b3bfae3e371e32` (0.2.2) and semantic source `9c0d8b1c8ceb1841074f5bc6de5fbb7fcc9318f5`. An explicit `--cli-dir` or `TIANGONG_LCA_CLI_DIR` may select an exact matching local checkout; only after package/engine/lock/source-manifest evidence passes may the launcher prepare it with `pnpm install --frozen-lockfile` and `pnpm run build` when source files are newer than `dist/src/main.js`. All execution stays argv-authoritative with `shell: false`, using native `pnpm.exe` on Windows. This is a developer-experience guard for stale local checkouts, not permission for skills to duplicate CLI implementation.
 
-Public rules are spec-owned; runtime-ruleset profile projection is CLI-owned. Published SDK 0.3.0 has retired the legacy mixed-file static import; active CLI 0.1.18 consumes the public contract API.
+Public rules are spec-owned; runtime-ruleset profile projection is CLI-owned. Published SDK 0.3.0 has retired the legacy mixed-file static import; active CLI 0.1.20 consumes the public contract API.
 
 ## Integration Semantics
 
@@ -99,7 +103,7 @@ The internal `foundry-tidas-authoring` package is data-only guidance over an exi
 
 `foundry-tidas-import` owns ordinary task instructions for both packaged imports and source-evidence development. Its self-contained public workflow reference describes task/semantic selection and current-action consumption; it carries no state machine or database logic. A missing internal authoring skill can be handled from the runtime-generated work item and template without a sibling-directory dependency. The distributed final lock selects the independently qualified Foundry 0.1.8 release, and the marketplace lists this complete entry first.
 
-The Foundry entry distributes byte-identical POSIX/PowerShell bootstrap scripts from the historical CLI `cli-v0.1.14` commit `bcc5dbee5b909dbb912e09d99ca07e858d3d7cec`. Skills owns their packaging, not their implementation. Path-specific Git attributes prevent checkout newline conversion for both scripts, the retained license and the adjacent final lock. The original scripts select only their adjacent lock; the adjacent final lock is copied byte-for-byte from independently qualified `foundry-runtime-v0.1.8`. Its manifest SHA-256 is `7119c9098408ebaa108fddb36bafb7c57e13b51d713f5ce4ba6772af3078fe2b`, binding Foundry source `abac241b9dd9a302c4dc9a985f798d0eb77f62f3`, Node 24.19.0, historical CLI 0.1.14 and TIDAS 0.3.0. This F1 package is intentionally independent from the shared wrapper's current CLI 0.1.18; the independently copied package test verifies the public installed runtime against its historical source and content identity.
+The Foundry entry distributes byte-identical POSIX/PowerShell bootstrap scripts from the historical CLI `cli-v0.1.14` commit `bcc5dbee5b909dbb912e09d99ca07e858d3d7cec`. Skills owns their packaging, not their implementation. Path-specific Git attributes prevent checkout newline conversion for both scripts, the retained license and the adjacent final lock. The original scripts select only their adjacent lock; the adjacent final lock is copied byte-for-byte from independently qualified `foundry-runtime-v0.1.10`. Its manifest SHA-256 is `a429da4903c7f05ecc26130eda03cf55100461f556622c311f9f73d377b6b615`, binding Foundry source `1e4f48bf8359f5e9bacba5741d15b7ff78f2eb41`, Node 24.19.0, the Foundry owner's bundled CLI 0.1.19 (tag `cli-v0.1.19`, commit `7f7b313cebc30c96154860df30f5d666963bc0b7`) and TIDAS 0.3.2. This package is intentionally independent from the shared wrapper's current CLI 0.1.20: the two owner versions are never conflated, and the independently copied package test verifies the public installed runtime, its warm start and its returned-action resume against that source and content identity.
 
 The independently copied Foundry entry retains the original C1 copyright/license text at `assets/licenses/tiangong-cli-LICENSE` beside its bundled scripts. Its bytes are checked with the script pins; this adds no user-facing license command or confirmation flow.
 

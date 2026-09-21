@@ -5,21 +5,21 @@ import process from 'node:process';
 
 export const expectedNodeVersion = '24.19.0';
 export const expectedPnpmVersion = '11.24.0';
-export const publishedCliPackageSpec = '@tiangong-lca/cli@0.1.18';
+export const publishedCliPackageSpec = '@tiangong-lca/cli@0.1.20';
 export const publishedCliCommand = `pnpm dlx --package=${publishedCliPackageSpec} tiangong-lca`;
 
 const expectedCliPackageName = '@tiangong-lca/cli';
-const expectedCliPackageVersion = '0.1.18';
+const expectedCliPackageVersion = '0.1.20';
 const expectedCliPackageManager = `pnpm@${expectedPnpmVersion}`;
 const expectedCliNodeEngine = '>=24.19.0 <25';
 export const expectedTidasSpecSource = Object.freeze({
   schema: 'tiangong-lca.cli-tidas-spec-source.v1',
   spec_repository: 'tiangong-lca/tidas-spec',
-  spec_commit: 'd4cb089c753ffd20b173db2e56fb553a364f48f4',
-  spec_version: '0.2.1',
+  spec_commit: '8a9470a7dd4c074ae246bb9967b3bfae3e371e32',
+  spec_version: '0.2.2',
   source_repository: 'https://github.com/tiangong-lca/tidas-toolkit',
   source_commit: '9c0d8b1c8ceb1841074f5bc6de5fbb7fcc9318f5',
-  manifest_sha256: '16d4d5950496544b50cd6b1570789930da104af313a325bb9eaa466507ec6bb5',
+  manifest_sha256: '620e2e389d91af7a774e92e1d7c67e282ccb910e0c2e9f9391926cbe1c5e5f09',
   schemas: Object.freeze([
     ['tidas_contacts.json', 'f16868bcdb99b4785b03a9b36dfe103d8f3ec61a463be9274d22884e6b7d8bda'],
     ['tidas_contacts_category.json', '2d043a6686320b5fec5d4012dfd03bdb57897375002b25fc6a64df8ea10092b5'],
@@ -33,7 +33,7 @@ export const expectedTidasSpecSource = Object.freeze({
     ['tidas_lciamethods_category.json', '83b4bbfb53a2ad1cb1f9c97c261cc867ea6f509020a8ea9041ffba08601eaac9'],
     ['tidas_lifecyclemodels.json', 'd3355d3c7910efadbee87fe36dacd6ca515c8fe1c5671f6dee2ba63d43c5d108'],
     ['tidas_locations_category.json', '415fe8c7ba4991a88bc66d9cd55541ee27b74f731541c64a9bc354679d109a71'],
-    ['tidas_processes.json', '385448c7f2f5f41aa31efad649a61758ef39fcfdc8e55984438fed1b56ccf6a7'],
+    ['tidas_processes.json', '8297261f5ce1e3bbc9287febeebae256c11f011a3c878fdfe4d8d33fcdad69c6'],
     ['tidas_processes_category.json', 'cea1b97b46fd9faa2f7f4d7b911ff19f24a1655ff98b488ebaf5cc9ee6fdec64'],
     ['tidas_sources.json', '2f37df9004a05ed83f8c708b7edc5f482ec1f848c050fd9f54e1aad49687dd5d'],
     ['tidas_sources_category.json', 'dc22fa07e7a2b4742133ea642505b6a18011552459b84764908166d1994c985f'],
@@ -66,7 +66,7 @@ function sourceManifestShape(manifest) {
 export function assertTidasSpecSourceManifest(manifest) {
   if (JSON.stringify(sourceManifestShape(manifest)) !== JSON.stringify(expectedTidasSpecSource)) {
     throw new Error(
-      'Local TianGong CLI TIDAS source manifest mismatch: expected the published 0.1.18 source-bound identity.',
+      'Local TianGong CLI TIDAS source manifest mismatch: expected the published 0.1.20 source-bound identity.',
     );
   }
   return manifest;
