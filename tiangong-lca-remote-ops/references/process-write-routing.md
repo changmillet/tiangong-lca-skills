@@ -30,15 +30,19 @@ Treat `state_code=0` as an unpublished current-user draft under active editing.
 
 Required write semantics:
 
+- prefer reusing a semantically suitable existing row over creating anything new
 - keep the same `id`
 - keep the same `version`
 - update the current row in place
-- save only after the complete-dataset gate passes
+- save only after the complete-dataset gate passes and the current evidence is bound to the exact row
 
 Reason:
 
 - avoid creating many pre-publication versions for the same draft
 - keep unpublished editing history simple and reduce review noise
+- one unpublished draft carries one stable `id` + `version`; resuming, retrying or re-running a task
+  continues that same draft and never increments the version or mints a new UUID just because a run
+  resumed
 
 Tooling implication:
 
@@ -53,7 +57,12 @@ Treat `state_code=100` as a public dataset revision task.
 Required write semantics:
 
 - keep the same `id`
-- increment `version`
+- create the next `version` only when the published content must genuinely change; editorial noise,
+  a resumed run or an uncertain write never justifies a new version
+- a scientific change or a necessary new version requires explicit complete reference/provider-impact
+  evidence first: the affected references and consumers, the intended reference/provider selection and
+  the exact source/property/unit basis. Missing or partial evidence stays an explicit gap and the
+  change is held instead of published
 - publish the revised content as the next version in the same lineage
 - save only after the complete-dataset gate passes
 
@@ -61,6 +70,8 @@ Reason:
 
 - avoid producing multiple UUIDs that represent the same process with only editorial differences
 - preserve a clean public version chain for downstream reuse and traceability
+- an unreleased consumer or repair path is never treated as support for the change; record it as an
+  owner follow-up
 
 Tooling implication:
 
@@ -75,6 +86,8 @@ If the available tool cannot satisfy the required lineage behavior:
 - stop treating that tool as the default write path for this state
 - record CLI or auth friction with the exact response and blocker
 - keep the artifact-first plan and verification flow unchanged
+- when the runtime cannot yet express the reviewed unknown-value behavior — for example an installed CLI/Foundry pair that still emits a numeric missing-volume sentinel such as `9999`, or a report without the current validation-layer/evidence-gap fields — stop and report qualified adoption as incomplete. Do not hand-fabricate, overwrite or delete the empty array in the payload. Do not edit or discard the runtime report. Do not bypass the gate to make the row look complete
+- keep the reviewed source behavior and the pinned published support separate: a behavior that is merged in source but absent from the pinned published packages is not available to this run, and never hand-edit it into the payload
 
 ## 5. Reporting
 

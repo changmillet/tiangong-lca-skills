@@ -23,6 +23,19 @@
 - Validate that `flowProperty` and reference unit are coherent and intentionally chosen (e.g. `Mass + kg` or `Number of items + item`).
 - Treat silent basis switches as blocking issues for publish.
 
+### Rule G4 — Secondary properties on an existing Product/Waste Flow
+- Adding or qualifying a secondary property on an existing Product/Waste Flow is allowed only through
+  existing native/CLI conversion evidence with complete conditions: source property, source unit and
+  source amount; reference property, reference unit and reference quantity; and the explicit
+  conversion relation between them. The Flow's own reference property and its identity stay unchanged,
+  and every unchanged property object (comments, uncertainty) is preserved.
+- Never substitute a fixed reference internal id (for example `0`) or an array-first property, never
+  equate a literal unit label with a qualified relation, and never apply a per-kilogram value to a
+  larger Process reference output.
+- A missing physical relation, missing conditions, or disagreeing source units is an explicit gap:
+  hold the change and record it as an owner follow-up. The native physical-conversion path is not
+  released (CLI #318); until it is, this skill must not fabricate conversion support in text.
+
 ## 2) Comparability Guardrails (for batch/benchmark usage)
 
 ### Rule C1 — Comparison must be based on relevant FU

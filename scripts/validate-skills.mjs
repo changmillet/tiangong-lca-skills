@@ -188,6 +188,60 @@ const docGuards = [
     message:
       "process-dedup-review prompt metadata should describe grouped JSON input, not a workbook runtime.",
   },
+  {
+    file: "process-automated-builder/SKILL.md",
+    pattern: /derive the value from the quantitative reference flow/iu,
+    message:
+      "process-automated-builder must not derive annual supply from the reference flow amount (Issue #104).",
+  },
+  {
+    file: "process-automated-builder/SKILL.md",
+    pattern: /reference unit per year/iu,
+    message:
+      "process-automated-builder must not turn an unstated basis into a per-year annual volume (Issue #104).",
+  },
+  {
+    file: "process-automated-builder/references/operations-playbook.md",
+    pattern: /then reference-flow `?meanAmount/iu,
+    message:
+      "ops playbook must not keep a reference meanAmount/resultingAmount fallback for annual supply (Issue #104).",
+  },
+  {
+    file: "foundry-tidas-authoring/references/semantic-work.md",
+    pattern: /deterministic `?9999 missing-data-sentinel\/year`? policy/iu,
+    message:
+      "semantic work must describe the historical sentinel as a read-only marker, never as Foundry policy (Issue #104).",
+  },
+  {
+    file: "tiangong-lca-remote-ops/references/process-write-routing.md",
+    pattern: /increment `?version`?[^.]{0,60}(every|each) (draft )?edit/iu,
+    message:
+      "write routing must not inflate the draft version for each edit (Issue #104).",
+  },
+  {
+    file: "process-automated-builder/SKILL.md",
+    pattern: /\b(hand-?(write|edit|fabricate)|manually (write|set|edit|patch))\b[^.]{0,60}\ban empty array/iu,
+    message:
+      "process-automated-builder must not instruct hand-fabricating the unknown empty array (Issue #104).",
+  },
+  {
+    file: "foundry-tidas-import/SKILL.md",
+    pattern: /\b(hand-?(write|edit|fabricate)|manually (write|set|edit|patch))\b[^.]{0,60}\ban empty array/iu,
+    message:
+      "the Foundry entry must not instruct hand-fabricating the unknown empty array (Issue #104).",
+  },
+  {
+    file: "tiangong-lca-remote-ops/references/process-write-routing.md",
+    pattern: /\b(bypass|ignore|skip|work around)\b[^.]{0,40}\b(and|then|to)\s+(continue|proceed|write|save|submit|dispatch)/iu,
+    message:
+      "write routing must not instruct bypassing the runtime gate to continue a write (Issue #104).",
+  },
+  {
+    file: "foundry-tidas-authoring/references/semantic-work.md",
+    pattern: /\b(bypass|ignore|skip|work around)\b[^.]{0,40}\b(and|then|to)\s+(continue|proceed|write|save|submit|dispatch)/iu,
+    message:
+      "semantic work must not instruct bypassing the runtime gate to continue a write (Issue #104).",
+  },
 ];
 
 const requiredDocPatterns = [
@@ -232,6 +286,60 @@ const requiredDocPatterns = [
     pattern: /tiangong-lca process dedup-review/u,
     message:
       "process-dedup-review should document the canonical tiangong-lca process dedup-review command.",
+  },
+  {
+    file: "process-automated-builder/SKILL.md",
+    pattern: /explicit annual source evidence/iu,
+    message:
+      "process-automated-builder should keep annual supply evidence-based (Issue #104).",
+  },
+  {
+    file: "foundry-tidas-authoring/references/semantic-work.md",
+    pattern: /unknown volume stays unknown/iu,
+    message:
+      "semantic work should keep an unknown annual volume unknown (Issue #104).",
+  },
+  {
+    file: "tiangong-lca-remote-ops/references/process-write-routing.md",
+    pattern: /never increments the version/iu,
+    message:
+      "write routing should keep one stable unpublished draft version across resumes (Issue #104).",
+  },
+  {
+    file: "process-automated-builder/references/ilcd_method_guardrails.md",
+    pattern: /CLI #318/u,
+    message:
+      "the secondary-property guardrail should record the unreleased conversion path as an explicit hold (Issue #104).",
+  },
+  {
+    file: "process-automated-builder/SKILL.md",
+    pattern: /qualified adoption is incomplete/iu,
+    message:
+      "process-automated-builder should hold the pinned-runtime gap as an explicit stop condition (Issue #104).",
+  },
+  {
+    file: "process-automated-builder/SKILL.md",
+    pattern: /pinned published CLI `?0\.1\.18/iu,
+    message:
+      "process-automated-builder should distinguish the pinned published CLI from the merged source behavior (Issue #104).",
+  },
+  {
+    file: "foundry-tidas-import/SKILL.md",
+    pattern: /qualified adoption (as )?incomplete/iu,
+    message:
+      "the Foundry entry should hold the pinned-runtime gap as an explicit stop condition (Issue #104).",
+  },
+  {
+    file: "foundry-tidas-authoring/references/semantic-work.md",
+    pattern: /qualified adoption incomplete/iu,
+    message:
+      "semantic work should hold the pinned-runtime gap as an explicit stop condition (Issue #104).",
+  },
+  {
+    file: "tiangong-lca-remote-ops/references/process-write-routing.md",
+    pattern: /qualified adoption as incomplete/iu,
+    message:
+      "write routing should hold the pinned-runtime gap as an explicit stop condition (Issue #104).",
   },
 ];
 

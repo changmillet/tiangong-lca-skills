@@ -32,9 +32,9 @@ checkPaths:
   - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
-lastReviewedAt: 2026-09-20
-lastReviewedCommit: 3beacfcc873febd3f1f9ce789ac0e3315d630818
-lastReviewedNote: "Reviewed for agent-skills #111: active wrappers bind CLI 0.1.18 and SDK 0.3.0; public definitions and CLI-owned profile projection remain separate."
+lastReviewedAt: 2026-09-21
+lastReviewedCommit: 862e104
+lastReviewedNote: 'Reviewed for Skills #104 (final guidance phase): the pinned-runtime hold stays at the instruction layer with the paired agents/openai.yaml prompts; no module, wrapper, invocation or ownership boundary changes, and the CLI #283/#318 holds remain.'
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -47,6 +47,10 @@ related:
 
 Review note, 2026-06-02: dataset import curation queue changes keep this repository at the workflow-instruction layer; executable queue and curation gate behavior stays in CLI and Foundry.
 Review note, 2026-06-04: Foundry now has two checked-in top-level scenario skills, `external-dataset-curated-import` and `source-evidence-dataset-development`. They coordinate existing CLI/child-skill surfaces and must not grow package parsing, database write, or evidence retrieval implementations.
+Review note, 2026-09-21: Skills #104 keeps the authoring contract at the instruction layer. `process-automated-builder` writes annual supply only from explicit annual evidence, `foundry-tidas-authoring` keeps an unknown volume unknown and reads the runtime's validation-layer report instead of re-implementing validation, `tiangong-lca-remote-ops` keeps one unpublished draft identity and demands explicit provider/reference evidence before any new version, and the secondary-property guardrail records the unreleased CLI #318 conversion path as a hold. Paired `agents/openai.yaml` prompts carry the changed admission semantics. No runtime, dependency, lock or release behavior is added.
+
+Review note, 2026-09-21: Skills #104 (final guidance phase) records the pinned-runtime hold inside the existing authoring/import/remote-operation instructions: the pinned published CLI `0.1.18` and the historical qualified Foundry `0.1.8` bootstrap predate the unknown-`[]` behavior, the validation-layer report and the CLI #283 repair entry, so a runtime that still emits the `9999` sentinel or lacks those layers is a stop-and-report (qualified adoption incomplete) instead of an invitation to hand-edit the payload or bypass the runtime. No module, wrapper, invocation or ownership boundary changes; the paired agent prompts only carry the same hold.
+
 Review note, 2026-08-25: the repository adds only a pnpm validation package and shared JavaScript launcher contract; it does not add a first-party TypeScript compiler or move CLI business logic into Skills.
 
 ## Owned Surfaces

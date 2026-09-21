@@ -111,7 +111,7 @@ Use this when:
 - the next step should be unified publish handoff
 - downstream publish should go through `tiangong-lca publish run`, not a skill-private path
 
-Before this step, run `process complete-required-fields` or `process build-plan materialize` as appropriate. For annual supply or production volume, the CLI must use explicit evidence first, then reference-flow `meanAmount`, then reference-flow `resultingAmount`; the skill should only supply evidence and context.
+Before this step, run `process complete-required-fields` or `process build-plan materialize` as appropriate. For annual supply or production volume the CLI writes only explicit annual source evidence; there is no reference-flow `meanAmount`/`resultingAmount` fallback, no default unit and no sentinel. When the source does not prove an annual volume, the field stays at the supported unknown representation and the report records the evidence gap — the skill supplies evidence and context only, consumes the CLI report's validation layers, and treats the row as not publication-ready until the gap is closed. If the installed runtime instead still emits a numeric sentinel such as `9999`, or returns a report without those validation layers, stop and report qualified adoption as incomplete; never hand-edit an empty array or bypass the runtime.
 
 ## Prepare A Batch
 

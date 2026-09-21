@@ -1,3 +1,5 @@
+# Review note, 2026-09-21: Skills #104 adds the pinned-runtime hold to the authoring/import/remote-operation guidance: the pinned published CLI 0.1.18 and the historical qualified Foundry 0.1.8 lock predate the unknown-`[]` policy, the validation-layer report and the repair entry, so an installed runtime that still emits the `9999` sentinel or lacks those layers is an explicit stop-and-report (qualified adoption incomplete) and never a reason to hand-fabricate the empty array or bypass the gate. Four more negative doc guards, five required doc patterns and the extended semantic contract test enforce it through the existing validate/test routes; no version, dependency, lock or ownership change.
+# Review note, 2026-09-21: Skills #104 aligns authoring/import/remote-operation guidance (evidence-based annual supply, stable draft versions, immutable Elementary/LCIA identities, qualified secondary-property conversion) and adds the negative doc guards plus the semantic contract test. Existing validation and wrapper routes own the change; no dependency, version, lock or ownership rule changes.
 version: 1
 layout: repo
 # Review note, 2026-09-20: Skills #111 advances active wrappers and exact CI checkout to published CLI 0.1.18/SDK 0.3.0/spec 0.2.1. Historical Foundry bootstrap and documentation ownership/routing remain unchanged.
@@ -10,9 +12,9 @@ layout: repo
 # Review note, 2026-09-02: Skills #91 adds self-contained, byte-checked launcher bundles for the three hybrid-search packages and CLI-owned Production bootstrap guidance under existing skill/validation/doc routes; no auth runtime ownership moves into Skills.
 # Review note, 2026-08-25: the existing validation-and-packaging contract now governs the pinned Node/pnpm package, frozen lockfile, shared CLI launcher/toolchain checks, and validation workflow; no separate rule was needed.
 # Review note, 2026-09-01: Skills #89 advances every active shared/default wrapper, immutable CI checkout, local override contract, fixture, and current skill reference to OAuth-only CLI 0.1.7 / merge cb5be8f1e209f69570f4c7ef4ef29d61af52eed7. Existing validation, packaging, skill, and documentation routes own the change; no ownership or rule split is required.
-lastReviewedAt: "2026-09-20"
-lastReviewedCommit: "3beacfcc873febd3f1f9ce789ac0e3315d630818"
-lastReviewedNote: "Reviewed for agent-skills #111: published CLI/SDK adoption changes no documentation routing, skill-local rule-asset ownership, or validation responsibility."
+lastReviewedAt: "2026-09-21"
+lastReviewedCommit: "862e104"
+lastReviewedNote: 'Reviewed for Skills #104 (final guidance phase): the pinned-runtime hold and its guards stay inside the existing validation, wrapper and governed-doc routes; no rule, dependency, version, lock or ownership boundary changes.'
 
 catalog:
   repos:

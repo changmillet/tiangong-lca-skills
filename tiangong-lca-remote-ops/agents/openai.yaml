@@ -1,4 +1,4 @@
 interface:
   display_name: "TianGong LCA Remote Ops"
   short_description: "Run CLI-backed remote process maintenance and post-write verification"
-  default_prompt: "Use $tiangong-lca-remote-ops through the CLI OAuth session. Check auth status, require doctor-auth before apply, hand login to the human, and never request a password, code, token, or legacy API key."
+  default_prompt: "Use $tiangong-lca-remote-ops through the CLI OAuth session. Check auth status, require doctor-auth before apply, hand login to the human, and never request a password, code, token, or legacy API key. Keep one stable unpublished draft id/version through resumes, and require explicit complete reference/provider-impact evidence before any new version. Stop and report qualified adoption as incomplete when the installed runtime cannot express the reviewed unknown-value behavior; never hand-fabricate the empty array or bypass its gate."
