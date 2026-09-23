@@ -32,9 +32,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-09-21
-lastReviewedCommit: 862e104
-lastReviewedNote: 'Reviewed for Skills #104 (final guidance phase): four negative doc guards and five required doc patterns join the existing validate route and the extended semantic contract test adds violation/corrective fixtures; the hold guards were proven load-bearing (temporary violating text failed validate with its exact message) and the full canonical pre-push gate including the cold-install proof remains required.'
+lastReviewedAt: 2026-09-23
+lastReviewedCommit: 7da7f6aaaa8ff0462a76749ef7f1e4be2310c2ba
+lastReviewedNote: 'Current skill validation, runtime pins, and Docpact checks are reviewed.'
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -50,10 +50,7 @@ pnpm install --frozen-lockfile
 pnpm prepush:gate
 ```
 
-Review note, 2026-06-04: external runtime source-evidence skill guidance remains documentation and instruction-layer work. The new top-level Foundry scenario skills are included in `scripts/validate-skills.mjs`; no new runtime validator path is required because the external Tiangong KB skill is not checked into this repository.
-Review note, 2026-08-25: validation now covers the immutable pnpm/Node/CLI consumer contract, exact published and local CLI cases, argv-only dispatch, and live CLI help checks for every flow-governance wrapper manifest route.
-
-The local `pre-push` hook runs docpact first, validates Node `24.19.0` / pnpm `11.24.0`, installs Skills from its frozen lockfile, and defaults to published CLI `0.1.20`. A local `tiangong-lca-cli` is installed/built only when explicitly selected and only after package/engine/lock/source-manifest evidence succeeds. The hook then runs the repository test/validation gate. The GitHub `validate-skills` workflow runs the four-platform contract matrix for runtime/launcher changes, Foundry package/test pull requests and manual dispatch.
+The local `pre-push` hook runs docpact first, validates Node `24.19.0` / pnpm `11.24.0`, installs Skills from its frozen lockfile, and defaults to published CLI `0.1.20`. A local `tiangong-lca/cli` is installed/built only when explicitly selected and only after package/engine/lock/source-manifest evidence succeeds. The hook then runs the repository test/validation gate. The GitHub `validate-skills` workflow runs the four-platform contract matrix for runtime/launcher changes, Foundry package/test pull requests and manual dispatch.
 
 You may pass one or more skill directories to validate only the touched skill packages.
 
@@ -100,10 +97,6 @@ Default validation now includes all 23 source skill directories: the original 21
 `test/foundry-bootstrap-package.test.mjs` checks both script SHA-256 values against the immutable C1 source and executes an isolated host bootstrap without its lock to prove refusal before installation or application launch. POSIX syntax is checked with `sh -n`; Run the PowerShell execution case on Windows without execution-policy bypass. These negative/source checks do not count as final public bootstrap qualification.
 
 Marketplace changes must resolve every listed skill to a real package, preserve existing group memberships, and list the ordinary Foundry entry before its internal semantic role. Check the two-language installation guidance together. Catalogue presence alone does not qualify a missing F1 lock or replace four-platform public bootstrap tests.
-
-Review note, 2026-09-21: Skills #104 adds two complementary guidance checks that run in the existing gates. `scripts/validate-skills.mjs` gains five per-file negative doc guards (reference-amount annual derivation, reference-unit-per-year, the meanAmount/resultingAmount fallback, the sentinel-as-policy sentence, per-edit version bumps) and four required doc patterns (evidence-based annual supply, unknown stays unknown, stable draft versions, the CLI #318 hold), all proven load-bearing against the pre-#104 text. `test/authoring-guidance-contract.test.mjs` adds sentence-level detectors with the pre-#104 instructions as negative fixtures, corrective guidance as must-not-flag fixtures, and a repo scan over the active authoring/import/remote-operation documents. Neither check replaces the runtime no-replay or packaging proofs.
-
-Review note, 2026-09-21: Skills #104 (final guidance phase) adds four negative doc guards (hand-fabricated unknown array, bypass-to-continue in the write-routing and semantic-work contracts) and five required doc patterns (the pinned-runtime hold plus the pinned-version/source distinction) to `pnpm validate`, and extends the semantic contract test with the `fabricated-unknown-or-bypass` detector, four violation fixtures and four corrective fixtures. Both mechanisms were proven load-bearing by temporarily restoring violating text — `pnpm validate` failed with its exact message and the repo scan failed — and passing again after restore. The full canonical pre-push gate, including the cold-install network proof, remains required.
 
 For retained import/source-evidence helpers, review both invocation contexts: an independent CLI workflow keeps its original command/evidence capabilities, while a registered Foundry task consumes only current work items/actions and cannot enter the standalone checkpoint/queue procedure. Validate the changed skill and paired prompt together; this instruction review does not replace runtime no-replay tests.
 

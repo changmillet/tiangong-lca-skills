@@ -8,7 +8,7 @@ owner: skills
 language: en
 whenToUse:
   - when a task may add, remove, rename, or restructure a checked-in TianGong skill
-  - when deciding whether work belongs in this repository, in tiangong-lca-cli, or in a product/runtime repo
+  - when deciding whether work belongs in this repository, in tiangong-lca/cli, or in a product/runtime repo
   - when routing from the workspace root into the skills repository
 whenToUpdate:
   - when skill packaging rules or validation flow change
@@ -39,9 +39,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-09-21
-lastReviewedCommit: 4ff7716
-lastReviewedNote: 'Reviewed for Skills #104 at head 4ff7716 (qualified adoption): the shared launcher binds published CLI 0.1.20 with its exact source-bound TIDAS identity, and the Foundry entry ships the independently qualified 0.1.10 runtime lock beside the byte-identical original bootstrap scripts, with the Foundry owner bundled CLI 0.1.19 kept separate from the wrapper pin; the pinned-runtime hold, the never-hand-fabricate rules and the CLI #318 hold are unchanged.'
+lastReviewedAt: 2026-09-23
+lastReviewedCommit: 7da7f6aaaa8ff0462a76749ef7f1e4be2310c2ba
+lastReviewedNote: 'Current skill ownership, pinned CLI and Foundry runtimes, wrapper safety, and validation gates are reviewed.'
 related:
   - .docpact/config.yaml
   - docs/agents/repo-architecture.md
@@ -53,18 +53,7 @@ related:
 
 # AGENTS.md — skills AI Working Guide
 
-`tiangong-lca-skills` owns checked-in skill wrappers and skill packaging metadata for TianGong agent workflows. Start here when the task may change `SKILL.md`, `agents/openai.yaml`, validation rules, or the thin wrappers that connect skills to the unified CLI.
-
-Review note, 2026-06-02: dataset import curation queue guidance remains skill instruction only; CLI and Foundry own queue construction, curation package assembly, and deterministic gates.
-Review note, 2026-08-29: CLI-backed package execution is pinned to Node 24.19.0, pnpm 11.24.0, and published CLI 0.1.3; external Vercel `npx skills` commands remain outside this package-manager migration.
-Review note, 2026-09-01: Skills #89 advances the active wrapper contract to published OAuth-only CLI 0.1.7 and immutable release merge `cb5be8f1e209f69570f4c7ef4ef29d61af52eed7`; no wrapper floats through `latest`, discovers a sibling checkout, owns authentication logic, or provisions a password-encoded credential.
-Review note, 2026-09-17: Skills #105 advances the active wrapper contract to published CLI 0.1.16 and CLI commit `4316c205453071c8cbb45e06480344f8eae5e041`. Explicit local CLI overrides now fail closed unless the CLI carries the exact TIDAS source manifest for spec `6fb497bad562125ccc0c00a803351207b9ed438f`, semantic source `9c0d8b1c8ceb1841074f5bc6de5fbb7fcc9318f5`, and all 18 schemas; the historical Foundry 0.1.8 bootstrap remains intentionally bound to CLI 0.1.14.
-Review note, 2026-09-21: Skills #104 aligns the authoring, import and remote-operation guidance without changing any invocation surface: annual supply is evidence-based only (no reference `meanAmount`/`resultingAmount`, default unit, per-year assumption or sentinel; unknown stays the supported empty array with the reported evidence gap), the stored draft and the published lineage keep one stable id/version (a new version needs explicit complete reference/provider-impact evidence), Elementary Flow and LCIA identities stay immutable in routine authoring, secondary properties of an existing Product/Waste Flow need existing native/CLI conversion evidence with complete conditions, and a draft list of scan-level contract guards plus a semantic detector test enforce these in `pnpm validate` and `pnpm test`. The published CLI 0.1.18 and the historical qualified Foundry 0.1.8 lock stay byte-unchanged; no dependency, version or lock is edited, and the unreleased CLI #283 repair entry and CLI #318 conversion path are recorded as owner follow-ups rather than claimed support.
-
-Review note, 2026-09-21: Skills #104 qualified adoption advances the two owner pins without changing any wrapper invocation surface. The shared launcher now binds published `@tiangong-lca/cli@0.1.20` (release merge `c498906a13fa345eebebbadc87e3a773abb1be6a`) with its exact source-bound TIDAS identity (spec `8a9470a7dd4c074ae246bb9967b3bfae3e371e32` / 0.2.2 / manifest `620e2e38…`), and the Foundry entry ships the independently qualified `foundry-runtime-v0.1.10` lock (manifest `a429da49…`, release source `1e4f48bf8359f5e9bacba5741d15b7ff78f2eb41`) beside the byte-identical original bootstrap scripts. The Foundry owner's bundled CLI 0.1.19 (tag `cli-v0.1.19`) is deliberately not the wrapper pin, and the guidance now states that the released sources carry the unknown-`[]` behavior, the validation-layer report and the bounded CLI #283 repair admission while the installed runtime remains the authority to observe; the stop-and-report rule, the never-hand-fabricate rules and the CLI #318 hold are unchanged. The Foundry owner has since confirmed the bounded existing-owner-draft repair lane as a released capability of qualified 0.1.10 (Foundry #171, released by #185; official release run 35600036424; recorded no-op and single bounded metadata repair evidence), consuming the published CLI 0.1.19 bounded Process metadata admission — so the guidance states that released lane and the runtime's `next_actions` instead of holding it as an owner follow-up, while every runtime limit stays (unknown annual `[]`, publication false, fresh before-image and exact owner/state authorization, one consumed attempt, no replay, no fabricated contract or report, no scientific field change) and the CLI #318 conversion path stays a hold. The copied-entry qualification proves cold install, warm start, returned-action resume and every tamper refusal against the new lock.
-Review note, 2026-09-21: Skills #104 (final guidance phase) adds the pinned-runtime hold. The pinned published CLI `0.1.18` and the historical qualified Foundry `0.1.8` lock predate the unknown-`[]` policy, the `validation_layers` report and the bounded CLI #283 repair entry, so they do not guarantee them: an installed runtime that still emits a numeric sentinel such as `9999` for a missing annual volume, or whose report lacks the validation-layer/evidence-gap fields, is an explicit stop condition — report qualified adoption as incomplete, never hand-fabricate, overwrite or delete the empty array, never edit or discard the runtime report, never bypass its gate. Merged source behavior and published support stay separate in every handoff, the CLI #318 conversion hold and the unreleased CLI #283 entry hold remain unchanged, and the paired `agents/openai.yaml` prompts that gate invocation carry the same hold. Enforcement stays at the instruction layer: four new negative doc guards, five new required doc patterns and extended semantic fixtures inside the existing `pnpm validate` / `pnpm test` routes. No dependency, version, lock, bootstrap or ownership change.
-
-Review note, 2026-09-20: Skills #107 bundles the selected published TIDAS public rules in each affected skill. Their readers verify source/version/hash before use; source synchronization is repo-level packaging, while review sequence and repair permissions stay skill-local.
+`tiangong-lca/agent-skills` owns checked-in skill wrappers and skill packaging metadata for TianGong agent workflows. Start here when the task may change `SKILL.md`, `agents/openai.yaml`, validation rules, or the thin wrappers that connect skills to the unified CLI.
 
 ## AI Load Order
 
@@ -101,7 +90,7 @@ This repo does not own:
 
 Route those tasks to:
 
-- `tiangong-lca-cli` for new native `tiangong-lca <noun> <verb>` commands
+- `tiangong-lca/cli` for new native `tiangong-lca <noun> <verb>` commands
 - `tiangong-ai/skills` consumed through `npx skills` for external Tiangong KB research skills
 - the owning product/runtime repo for business logic or API changes
 - `lca-workspace` for root integration after merge
@@ -110,7 +99,7 @@ Route those tasks to:
 
 - Repo-local documentation governance is encoded in `.docpact/config.yaml` and enforced locally by the pre-push docpact gate; `.github/workflows/ai-doc-lint.yml` is manual-dispatch fallback.
 - This repo is distribution-oriented; each skill should stay a thin wrapper over the unified CLI or a data-only semantic role over current Foundry work items
-- If a capability is missing, add it to `tiangong-lca-cli` first, then update the skill wrapper here
+- If a capability is missing, add it to `tiangong-lca/cli` first, then update the skill wrapper here
 - Current-account dataset review skills may orchestrate frozen local inputs through public CLI commands, but must not own direct database access, credential parsing, or private account runtime logic.
 - Active remote skills must check `tiangong-lca auth status --json`, hand `auth login` to a human-controlled trusted terminal when required, and use `auth doctor-auth` before account-sensitive commits. They never collect or emit usernames, passwords, authorization codes, tokens, or legacy API keys.
 - Official Production public configuration belongs to the CLI and needs no Skills env setup. Only complete custom project URL/key/client/callback tuples override it; headless tokens require an explicit destination/key and must not implicitly select Production.
@@ -121,7 +110,7 @@ Route those tasks to:
 - Dataset maintenance under user RLS must use CLI-owned maintenance plans and readback verification. Skills must not add direct Supabase CRUD, service-role paths, or broad delete filters.
 - Node package execution is pinned to Node `24.19.0` and pnpm `11.24.0`; the default runtime is the exact published `@tiangong-lca/cli@0.1.20` and must never float through `@latest`.
 - Never auto-discover or execute a sibling CLI checkout. Local execution is opt-in only through `--cli-dir` or `TIANGONG_LCA_CLI_DIR`; `--published-cli` explicitly overrides a local CLI environment.
-- Local CLI checkouts selected by wrappers must match the pinned CLI package/engine/lockfile evidence. When their source is newer than `dist/src/main.js`, wrappers install with `pnpm install --frozen-lockfile` before `pnpm run build`; wrappers should still keep the CLI command surface in `tiangong-lca-cli`.
+- Local CLI checkouts selected by wrappers must match the pinned CLI package/engine/lockfile evidence. When their source is newer than `dist/src/main.js`, wrappers install with `pnpm install --frozen-lockfile` before `pnpm run build`; wrappers should still keep the CLI command surface in `tiangong-lca/cli`.
 - CLI child processes use authoritative argv arrays with `shell: false` and preserve child exit/stdout/stderr.
 - The canonical local validation command is `pnpm validate` after `pnpm install --frozen-lockfile`.
 - You may pass one or more skill paths to validate only the touched skills
@@ -137,11 +126,11 @@ Route those tasks to:
 
 ## Workspace Integration
 
-A merged PR in `tiangong-lca-skills` is repo-complete, not delivery-complete.
+A merged PR in `tiangong-lca/agent-skills` is repo-complete, not delivery-complete.
 
 If the change must ship through the workspace:
 
-1. merge the child PR into `tiangong-lca-skills`
+1. merge the child PR into `tiangong-lca/agent-skills`
 2. update the `lca-workspace` submodule pointer deliberately
 3. complete any later workspace-level validation that depends on the updated skill set
 
