@@ -33,7 +33,7 @@ checkPaths:
   - package.json
   - pnpm-lock.yaml
 lastReviewedAt: 2026-09-23
-lastReviewedCommit: 9520170f2b6abdccdf59865b7968c48c555d7cef
+lastReviewedCommit: 889fdbb778bfd468a795673ae932a68c56b37ea1
 lastReviewedNote: 'Current skill package ownership, CLI boundaries, and integration semantics are reviewed.'
 related:
   - AGENTS.md

@@ -40,6 +40,7 @@ test('answers are registered, adopted in scope and remain separate from scientif
   assert.match(workflow, /expected_state_sha256: null[\s\S]*current indexed `interaction-state\.json` artifact/iu);
   assert.match(workflow, /`question`, `answer` or `assumption`/iu);
   assert.match(workflow, /`raw_answer`[\s\S]*`adopted_decision`[\s\S]*`disposition`/iu);
+  assert.match(workflow, /`supersedes_decision_id`[\s\S]*first answer uses `null`[\s\S]*current prior `decision_id`/iu);
   assert.match(workflow, /only `investigate` may use `adopted_decision: null`/iu);
   assert.match(workflow, /inspect the new current result and confirm that the answer is active and reaches the affected work item/iu);
   assert.match(workflow, /Do not place a general answer in `--semantic-input`/iu);

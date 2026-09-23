@@ -33,7 +33,7 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-09-23
-lastReviewedCommit: 9520170f2b6abdccdf59865b7968c48c555d7cef
+lastReviewedCommit: 889fdbb778bfd468a795673ae932a68c56b37ea1
 lastReviewedNote: 'Current skill validation, runtime pins, and Docpact checks are reviewed.'
 related:
   - AGENTS.md
