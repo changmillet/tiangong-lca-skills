@@ -14,7 +14,7 @@ Initialization and doctor do not log in, grant writes or create business records
 
 ## Start with selected evidence
 
-Write a JSON spec in the user workspace with exactly these fields:
+For the currently distributed Foundry 0.1.10, write a JSON spec in the user workspace with exactly these fields:
 
 | Field | Selection |
 | --- | --- |
@@ -28,6 +28,8 @@ Write a JSON spec in the user workspace with exactly these fields:
 | `account_intent` | `null` for local preparation without an account, or the intended `project_ref`, `user_id`, `session_reference` (path or `null`) and optional `account_mode` (`ordinary` or `production-test`). No credential contents. |
 | `preparation` | Normally `null`, so Foundry drives the full workflow. Use a selected cleanup preparation only when that is the intended local operation. |
 
+A qualified runtime with the #190 public interaction contract also accepts an optional inline `brief` in the same `tiangong-foundry.task-start.v1` spec. When present, supply all seven keys: `original_request` is bounded raw user wording or `null` when the request is represented only in external caller evidence; `goal` is a nonempty string; `intended_use` and `scope` are strings or `null`; `deliverables`, `user_constraints` and `ai_assumptions` are string arrays that may be empty. Omit the entire `brief` for legacy tasks. Derive it from the original request and selected material, retaining their provenance and marking inferences as AI assumptions. Never make the user restate information already present. Do not add `brief` to a start spec sent to the distributed 0.1.10 runtime.
+
 Select account intent before starting work that needs remote identity checks or writes; do not guess it from an unrelated logged-in session. Paths in the spec resolve against the explicit workspace. Foundry captures input bytes and binds revisions; editing files in a registered task is not how to select changed inputs.
 
 ```text
@@ -37,16 +39,39 @@ tiangong-foundry task resume --workspace <absolute-workspace> --task <returned-t
 
 One resume advances one registered stage. Conversion, context, rows, assessment, identity preflight, finalization, authorization and execution may require successive current actions. Preserve the returned task ID and status; unchanged blockers need the stated input, not repeated unchanged resumes. Changed selected input creates a retained revision, and earlier consumed attempts still require their original recovery.
 
+## Human decisions and recovery
+
+Read the whole current result and its registered question, brief, decision and assessment artifacts when supplied. A `human` action may need a missing source or a person's choice; technical errors require diagnosis through current actions. Surface a real human decision promptly, even when other assessment work remains. Say what is missing, which result is affected, the recommended next step, and the exact answer needed. Offer a small number of choices when useful and accept free text, supplied evidence, or “unknown; investigate first.” Keep the original answer and the interpreted decision separate, with provenance and object/evidence scope. An unanswered recommendation does not close a blocker. A partial assessment cannot authorize finalization, and independent current actions may still advance while a question is pending.
+
+For example: “The source gives one electricity total for products A and B, so their separate electricity use cannot yet be calculated. Do you have separate meter readings for this period? You can provide them, describe another documented split, or say ‘I don't know; investigate first.’” Include any decision-critical limit on a proposed split in the default question, and leave the underlying row, report and citations available for inspection. Do not ask the person to infer a method from an internal error code.
+
+For a qualified runtime that exposes the new public contract, select a `tiangong-foundry.interaction-input.v1` JSON descriptor through `task resume --interaction-input <descriptor-file>`. It contains exactly `schema`, `task_id`, `actor_id`, `expected_state_sha256` and ordered `events`. Each event has a `kind` of `question`, `answer` or `assumption`, plus the fields below. Use `expected_state_sha256: null` for the first interaction, before a state artifact exists. Later use the SHA-256 of the current indexed `interaction-state.json` artifact; a stale digest is a conflict to inspect, not a reason to overwrite task state.
+
+| Event | Required fields and selection |
+| --- | --- |
+| Question | `id`, `dataset_type`, `missing`, `impact`, `recommendation`, `ask`, `choices`, `evidence_sha256`, `supersedes`. State the concrete missing fact/choice and its effect. Use `dataset_type: null` for task-wide scope, `choices: []` when free answer is enough, and `supersedes: null` for a new question. |
+| Answer | `question_id`, `decision_id`, `raw_answer`, `adopted_decision`, `disposition`, `evidence_sha256`, `supersedes_decision_id`. Retain the person's actual words in `raw_answer`; state the executable interpretation separately. The first answer uses `null` for `supersedes_decision_id`; a later correction for the same question must name the current prior `decision_id`. `disposition` is `decided` or `investigate`; only `investigate` may use `adopted_decision: null` and it keeps the unresolved fact open. |
+| Assumption | `id`, `dataset_type`, `statement`, `impact`, `evidence_sha256`, `supersedes`. Mark the conclusion as AI-made, with affected scope and consequences; use null scope or predecessor only where appropriate. |
+
+Every event's `evidence_sha256` is an array of current registered source/artifact hashes (or `[]` when none is relevant), never an invented citation. Keep event fields and optional/null values exactly as the selected runtime's public schema requires. Submit the descriptor as its own current action, not as a semantic decision file or a write grant. The adjacent 0.1.10 release lock does not qualify this newer interaction contract. If the selected runtime has no registered channel to persist an answer and project it into authoring, report that limitation. Do not place a general answer in `--semantic-input`, edit indexed artifacts, infer a private flag from source code, or rely on chat history for cross-process recovery. After a registered reply, inspect the new current result and confirm that the answer is active and reaches the affected work item before claiming the blocker resolved. “Investigate first” keeps the missing fact open.
+
+```text
+tiangong-foundry task resume --workspace <absolute-workspace> --task <task-id> --actor <actor-id> --interaction-input <descriptor-file> --json
+```
+
+When a goal, principle or source changes, register the correction through the current public action, preserve the superseded decision and follow the returned reassessment scope. Recheck dependent outputs; broaden the review if the dependency boundary is uncertain. Keep original attempts and required readback for any prior write. Resume/status should show the current brief and active decisions, so questions already answered under unchanged evidence are not repeated.
+
 ## Submit current semantic work
 
-The descriptor selected by `--semantic-input` contains exactly `schema`, `task_id`, `actor_id`, `assessment_sha256` and `submissions`. Use schema `tiangong-foundry.semantic-input.v1`; take the assessment digest from the current registered artifact. Each submission contains exactly:
+The descriptor selected by `--semantic-input` contains `schema`, `task_id`, `actor_id`, `assessment_sha256` and `submissions`, plus optional `interaction_sha256` for the qualified interaction-aware runtime. Use schema `tiangong-foundry.semantic-input.v1`; take the assessment digest from the current registered artifact. When a current interaction state exists, `interaction_sha256` is required and must equal the SHA-256 of the current indexed `interaction-state.json` artifact. Omit it when no interaction state exists. Each submission contains the four base fields below and may also contain `decision_ids`:
 
 - `kind`: `patch`, `classification`, `location` or `identity`;
 - `authoring_task_sha256`: the current work-item digest;
 - `file`: the selected decision/patch file, resolved against the workspace;
 - `sha256`: the SHA-256 of that file's actual bytes.
+- `decision_ids`: exactly the currently applicable `decision_id`s for this work item. Use `[]` or omit this field only when none apply; a decided answer from another scope or an obsolete decision is not applicable.
 
-Use each owner's generated template and required full-context evidence. Select one owner per row type, then reassess before another owner uses the changed rows. Do not insert illustrative or historical hashes. A rejected proposal leaves the current rows unchanged and retains diagnostics.
+Use each owner's generated template and required full-context evidence. The authoring role returns applicable decision IDs with its file; the invoking workflow places them in that file's submission descriptor rather than adding unsupported fields to the data file. Foundry verifies the current interaction binding and exact decision set, then records actual adoption as `adopted_decisions` in `semantic-result`. Select one owner per row type, then reassess before another owner uses the changed rows. Do not insert illustrative or historical hashes. A rejected proposal leaves the current rows unchanged and retains diagnostics. The distributed 0.1.10 lock does not qualify these optional semantic interaction fields; follow the selected runtime's verified schema.
 
 ```text
 tiangong-foundry task resume --workspace <absolute-workspace> --task <task-id> --actor <actor-id> --semantic-input <descriptor-file> --json

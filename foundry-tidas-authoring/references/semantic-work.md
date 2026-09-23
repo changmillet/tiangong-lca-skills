@@ -6,9 +6,13 @@ Apply the current task's schema and template. The field names below explain thei
 
 For completed non-test work, provide a concrete basis and structured evidence identifying the source/context plus a quote, trace, file/field path or citation. List the context kinds actually reviewed. Full-context tasks require the supplied schema, methodology YAML, ruleset, classification/location schema, source row, entity payload and applicable profile/dependency context.
 
+When present, read the current task brief and only the registered decisions applicable to this work item's entities and evidence. Keep user statements, the runtime's interpreted decision, AI assumptions and independent source facts distinct in reasoning and returned evidence. Return the applicable decision IDs and adoption or non-adoption reason with each produced file; the invoking entry lists exactly those IDs in the semantic submission's `decision_ids`. Do not invent extra fields in a decision/patch file. A changed principle or source may invalidate only some outputs, but use the runtime's dependency and reassessment actions to establish that scope. If the scope cannot be established, ask for broader review instead of silently reusing old work.
+
 Preserve `authoring_package` and its hash, task-specific `authoring_context.context_bundle_sha256`, and each required `closes_action_items` association. A shared bundle saves repeated reading; it does not replace entity evidence or the task's own context digest. Do not mark an unreviewed context kind as used.
 
 Use `decision_status: completed` or `patch_status: completed` only when the work is complete. Keep an unresolved item explicit instead of supplying a plausible placeholder.
+
+When the supplied record leaves a material human choice open, return a question to the invoking entry in ordinary language: what is missing, the consequence for the specific result, a justified recommended next step, and the precise answer or evidence needed. Offer a small set of meaningful options if appropriate, allow free text and “investigate first,” and disclose decision-critical limitations. Do not claim that choosing a method supplies missing measurements. The entry presents and registers the answer; this authoring role does not invent a chat-only resolution or treat silence as agreement.
 
 ## Identity decisions
 
