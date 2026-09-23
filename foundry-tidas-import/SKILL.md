@@ -36,6 +36,8 @@ Unknown values stay unknown. `annualSupplyOrProductionVolume` is written only fr
 
 Submit decision or patch files through the current `--semantic-input` contract described in the reference. Foundry validates their evidence, context and hashes, applies them deterministically, and reassesses the resulting rows. Do not edit registered source/final rows, reports or task indexes to make a gate pass.
 
+On a qualified interaction-aware runtime, bind the semantic descriptor to the current indexed interaction-state SHA-256 and include exactly the applicable decision IDs for each submitted work item. Use the IDs returned with the authoring files; do not infer adoption from a chat answer or add unsupported fields to the decision/patch file. Confirm the accepted semantic result records the adopted decisions. Keep the distributed Foundry 0.1.10 lock's older semantic schema separate from this newer contract.
+
 ## Select reference evidence
 
 When the current task needs explicit Process QA references or a reviewed exact-reference choice, use the public `--reference-input` descriptor in the workflow reference. Select the actual task/actor/current row manifest and every file digest; keep reference reviews separate from write approval. Use the qualified runtime's supplied schema and owner-produced consumer payload facts. Do not infer an exception, discover sibling files or replace a missing reference with a guessed version.

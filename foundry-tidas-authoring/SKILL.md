@@ -25,7 +25,7 @@ Use the work item's template and output path. Read [semantic work](references/se
 
 Preserve source-language information and add evidence-backed English for required multilingual fields. Do not invent scientific values or put mandatory fields into a trace to make a gate appear passed. If evidence cannot resolve an item, retain a specific blocker; use a deferral only when that item explicitly permits it.
 
-Make the effect of every applicable decision traceable in the output through the work item's supplied evidence/adoption fields. Do not add fields or hashes the template does not support. A user's method choice guides authoring but does not prove an absent measurement, waive validation or authorize a database write. When a conflict truly needs human judgment, return the missing fact, its effect, a justified next step and the exact question to the invoking entry; the entry handles the human exchange through current registered actions.
+Make the effect of every applicable decision traceable in the returned work-item association. Return the applicable decision IDs alongside each produced file so the invoking entry can cite them in that file's semantic submission. Do not add fields or hashes the data template does not support. A user's method choice guides authoring but does not prove an absent measurement, waive validation or authorize a database write. When a conflict truly needs human judgment, return the missing fact, its effect, a justified next step and the exact question to the invoking entry; the entry handles the human exchange through current registered actions.
 
 ## Return to the workflow
 

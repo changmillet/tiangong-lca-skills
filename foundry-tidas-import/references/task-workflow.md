@@ -63,14 +63,15 @@ When a goal, principle or source changes, register the correction through the cu
 
 ## Submit current semantic work
 
-The descriptor selected by `--semantic-input` contains exactly `schema`, `task_id`, `actor_id`, `assessment_sha256` and `submissions`. Use schema `tiangong-foundry.semantic-input.v1`; take the assessment digest from the current registered artifact. Each submission contains exactly:
+The descriptor selected by `--semantic-input` contains `schema`, `task_id`, `actor_id`, `assessment_sha256` and `submissions`, plus optional `interaction_sha256` for the qualified interaction-aware runtime. Use schema `tiangong-foundry.semantic-input.v1`; take the assessment digest from the current registered artifact. When a current interaction state exists, `interaction_sha256` is required and must equal the SHA-256 of the current indexed `interaction-state.json` artifact. Omit it when no interaction state exists. Each submission contains the four base fields below and may also contain `decision_ids`:
 
 - `kind`: `patch`, `classification`, `location` or `identity`;
 - `authoring_task_sha256`: the current work-item digest;
 - `file`: the selected decision/patch file, resolved against the workspace;
 - `sha256`: the SHA-256 of that file's actual bytes.
+- `decision_ids`: exactly the currently applicable `decision_id`s for this work item. Use `[]` or omit this field only when none apply; a decided answer from another scope or an obsolete decision is not applicable.
 
-Use each owner's generated template and required full-context evidence. Select one owner per row type, then reassess before another owner uses the changed rows. Do not insert illustrative or historical hashes. A rejected proposal leaves the current rows unchanged and retains diagnostics.
+Use each owner's generated template and required full-context evidence. The authoring role returns applicable decision IDs with its file; the invoking workflow places them in that file's submission descriptor rather than adding unsupported fields to the data file. Foundry verifies the current interaction binding and exact decision set, then records actual adoption as `adopted_decisions` in `semantic-result`. Select one owner per row type, then reassess before another owner uses the changed rows. Do not insert illustrative or historical hashes. A rejected proposal leaves the current rows unchanged and retains diagnostics. The distributed 0.1.10 lock does not qualify these optional semantic interaction fields; follow the selected runtime's verified schema.
 
 ```text
 tiangong-foundry task resume --workspace <absolute-workspace> --task <task-id> --actor <actor-id> --semantic-input <descriptor-file> --json

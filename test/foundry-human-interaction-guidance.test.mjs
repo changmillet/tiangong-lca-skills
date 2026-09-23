@@ -44,8 +44,19 @@ test('answers are registered, adopted in scope and remain separate from scientif
   assert.match(workflow, /inspect the new current result and confirm that the answer is active and reaches the affected work item/iu);
   assert.match(workflow, /Do not place a general answer in `--semantic-input`/iu);
   assert.match(authoring, /user requirements and raw answers from their interpreted decisions, AI assumptions and source facts/iu);
-  assert.match(semantic, /Bind a decision's ID\/revision and adoption or non-adoption reason through the exact fields supplied/iu);
+  assert.match(semantic, /Return the applicable decision IDs and adoption or non-adoption reason with each produced file/iu);
   assert.match(authoringPrompt, /never treat an answer as missing scientific evidence or write permission/iu);
+});
+
+test('semantic submissions bind current interaction state and exactly applicable decisions', () => {
+  assert.match(workflow, /`interaction_sha256`[\s\S]*current indexed `interaction-state\.json` artifact/iu);
+  assert.match(workflow, /`decision_ids`[\s\S]*exactly the currently applicable `decision_id`s/iu);
+  assert.match(workflow, /`adopted_decisions` in `semantic-result`/iu);
+  assert.match(authoring, /return the applicable decision IDs alongside each produced file/iu);
+  assert.match(semantic, /semantic submission's `decision_ids`/iu);
+  assert.match(entryPrompt, /bind semantic input to the current interaction-state SHA-256 and each work item's exact decision IDs/iu);
+  assert.match(authoringPrompt, /return each file with its applicable decision IDs/iu);
+  assert.doesNotMatch(workflow, /contains exactly `schema`, `task_id`, `actor_id`, `assessment_sha256` and `submissions`\./iu);
 });
 
 test('the shipped entry remains honest about capability, partial work and later corrections', () => {
