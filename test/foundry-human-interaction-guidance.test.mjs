@@ -5,7 +5,8 @@ import test from 'node:test';
 import { fileURLToPath } from 'node:url';
 
 const root = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
-const read = (relative) => readFileSync(path.join(root, relative), 'utf8');
+const normalizeLineEndings = (content) => content.replace(/\r\n?/gu, '\n');
+const read = (relative) => normalizeLineEndings(readFileSync(path.join(root, relative), 'utf8'));
 
 const entry = read('foundry-tidas-import/SKILL.md');
 const workflow = read('foundry-tidas-import/references/task-workflow.md');
@@ -17,6 +18,15 @@ const managedHelpers = [
   'external-dataset-curated-import',
   'source-evidence-dataset-development',
 ];
+
+test('managed-task sections read identically from LF and Windows CRLF files', () => {
+  for (const name of managedHelpers) {
+    const lf = read(`${name}/SKILL.md`);
+    const crlf = lf.replace(/\n/gu, '\r\n');
+    assert.equal(normalizeLineEndings(crlf), lf);
+    assert.ok(normalizeLineEndings(crlf).split('## Managed Foundry tasks\n')[1]?.split('## Boundaries\n')[0]);
+  }
+});
 
 test('the entry derives scope and asks for current human decisions in a usable form', () => {
   assert.match(entry, /why the result is needed[\s\S]*objects and boundaries[\s\S]*deliverables/iu);
