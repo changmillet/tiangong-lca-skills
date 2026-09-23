@@ -40,7 +40,7 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-09-23
-lastReviewedCommit: 7da7f6aaaa8ff0462a76749ef7f1e4be2310c2ba
+lastReviewedCommit: 66db1b1123031bcbf869196ead969db58593fae7
 lastReviewedNote: 'Current skill ownership, pinned CLI and Foundry runtimes, wrapper safety, and validation gates are reviewed.'
 related:
   - .docpact/config.yaml

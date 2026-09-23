@@ -11,6 +11,8 @@ Use this top-level skill when the input is a packaged or semi-structured LCA dat
 
 When the caller supplies a registered public Foundry task and its current result, use this skill as a domain helper. Review the selected package, profile and conversion evidence, or prepare the current requested semantic input. Keep the supplied workspace, task, actor and account intent. Return newly authored input files through the current public semantic/action contract and let Foundry register and validate them.
 
+Use the current task brief and only the applicable registered decisions supplied by the caller. Distinguish a user's instruction from an AI assumption and the package's source facts; neither a choice nor a recommendation supplies missing measurements or write authority. Return a material unresolved gap to the ordinary Foundry entry with its affected result, evidence and precise question or next investigation. This managed-task guidance does not change the independent CLI workflow below.
+
 Advance the task only through its supplied structured `next_actions`, preserving executable, argv, CWD and binding. Do not run the standalone queue procedure below inside that task, overwrite registered rows or reports, write `checkpoint.json` yourself, or recreate a task after an uncertain write. Follow the original task's readback/recovery action. Task and account permission remain bound to the existing scope.
 
 `foundry-tidas-import` is the ordinary entry for starting and continuing managed Foundry work. This helper can consume a supplied task result without requiring another skill directory to be installed. The remaining procedure applies to an independent CLI workflow whose state is outside the managed public task protocol.

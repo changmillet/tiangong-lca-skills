@@ -11,6 +11,8 @@ Use this internal, on-demand role for an existing Foundry semantic work item. Or
 
 Read the task JSON/Markdown, its authoring package, action items, target rows, source evidence and referenced dependency/identity reports. Read the shared context bundle once, then each entity's distinct context. Use the supplied schema, methodology, ruleset and category/location text where present; do not infer a missing contract from an old checkout or earlier task.
 
+Read the current task brief and applicable registered decisions when the work item's package supplies them. Separate user requirements and raw answers from their interpreted decisions, AI assumptions and source facts. Use a decision only within its recorded object/evidence scope and current revision; a recommendation, unanswered question or superseded decision does not become authority. If these inputs are needed but missing or stale, return a concrete blocker to the invoking Foundry entry rather than reconstructing them from conversation history.
+
 Retain the supplied task, actor, assessment, work-item and context hashes. A missing, stale or `blocked_missing_full_context` package needs corrected context from the invoking workflow. Do not manufacture hashes, missing preflight results or evidence of review.
 
 ## Author the requested artifact
@@ -22,6 +24,8 @@ Use the work item's template and output path. Read [semantic work](references/se
 - **Field repair:** write only supported patch operations that resolve the listed action items, with source evidence and the required resolution metadata.
 
 Preserve source-language information and add evidence-backed English for required multilingual fields. Do not invent scientific values or put mandatory fields into a trace to make a gate appear passed. If evidence cannot resolve an item, retain a specific blocker; use a deferral only when that item explicitly permits it.
+
+Make the effect of every applicable decision traceable in the output through the work item's supplied evidence/adoption fields. Do not add fields or hashes the template does not support. A user's method choice guides authoring but does not prove an absent measurement, waive validation or authorize a database write. When a conflict truly needs human judgment, return the missing fact, its effect, a justified next step and the exact question to the invoking entry; the entry handles the human exchange through current registered actions.
 
 ## Return to the workflow
 
