@@ -32,9 +32,9 @@ checkPaths:
   - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
-lastReviewedAt: 2026-09-21
-lastReviewedCommit: 862e104
-lastReviewedNote: 'Reviewed for Skills #104 (final guidance phase): the pinned-runtime hold stays at the instruction layer with the paired agents/openai.yaml prompts; no module, wrapper, invocation or ownership boundary changes, and the CLI #283/#318 holds remain.'
+lastReviewedAt: 2026-09-23
+lastReviewedCommit: 7da7f6aaaa8ff0462a76749ef7f1e4be2310c2ba
+lastReviewedNote: 'Current skill package ownership, CLI boundaries, and integration semantics are reviewed.'
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -43,15 +43,7 @@ related:
 
 # skills Repo Architecture
 
-`tiangong-lca-skills` owns checked-in skill packages and CLI-backed agent workflow wrappers for TianGong workflows.
-
-Review note, 2026-06-02: dataset import curation queue changes keep this repository at the workflow-instruction layer; executable queue and curation gate behavior stays in CLI and Foundry.
-Review note, 2026-06-04: Foundry now has two checked-in top-level scenario skills, `external-dataset-curated-import` and `source-evidence-dataset-development`. They coordinate existing CLI/child-skill surfaces and must not grow package parsing, database write, or evidence retrieval implementations.
-Review note, 2026-09-21: Skills #104 keeps the authoring contract at the instruction layer. `process-automated-builder` writes annual supply only from explicit annual evidence, `foundry-tidas-authoring` keeps an unknown volume unknown and reads the runtime's validation-layer report instead of re-implementing validation, `tiangong-lca-remote-ops` keeps one unpublished draft identity and demands explicit provider/reference evidence before any new version, and the secondary-property guardrail records the unreleased CLI #318 conversion path as a hold. Paired `agents/openai.yaml` prompts carry the changed admission semantics. No runtime, dependency, lock or release behavior is added.
-
-Review note, 2026-09-21: Skills #104 (final guidance phase) records the pinned-runtime hold inside the existing authoring/import/remote-operation instructions: the pinned published CLI `0.1.18` and the historical qualified Foundry `0.1.8` bootstrap predate the unknown-`[]` behavior, the validation-layer report and the CLI #283 repair entry, so a runtime that still emits the `9999` sentinel or lacks those layers is a stop-and-report (qualified adoption incomplete) instead of an invitation to hand-edit the payload or bypass the runtime. No module, wrapper, invocation or ownership boundary changes; the paired agent prompts only carry the same hold.
-
-Review note, 2026-08-25: the repository adds only a pnpm validation package and shared JavaScript launcher contract; it does not add a first-party TypeScript compiler or move CLI business logic into Skills.
+`tiangong-lca/agent-skills` owns checked-in skill packages and CLI-backed agent workflow wrappers for TianGong workflows.
 
 ## Owned Surfaces
 
@@ -72,12 +64,12 @@ Top-level Foundry scenario skills are allowed in this repository when they only 
 
 ## Non-Owner Boundaries
 
-- `tiangong-lca-cli` owns the native public command surface, low-level command semantics, REST clients, and auth behavior.
+- `tiangong-lca/cli` owns the native public command surface, low-level command semantics, REST clients, and auth behavior.
 - External source-evidence research skill repositories, such as `tiangong-ai/skills`, own fast-moving Tiangong KB retrieval skills.
 - Product/runtime repositories own business logic and API behavior.
 - `lca-workspace` owns root integration state and submodule pointer updates.
 
-If a skill needs a capability that does not exist in the CLI, add the capability to `tiangong-lca-cli` first and keep the skill as a thin wrapper over that CLI surface.
+If a skill needs a capability that does not exist in the CLI, add the capability to `tiangong-lca/cli` first and keep the skill as a thin wrapper over that CLI surface.
 
 Remote authentication follows the same boundary. Skills may invoke `auth status`, instruct a human to run browser `auth login`, and require live redacted `doctor-auth`, but they never inspect session files or handle passwords, codes, or tokens. Explicit headless and multi-account configuration remain CLI/orchestrator responsibilities. The validator rejects password-equivalent invocation examples in active Markdown.
 
@@ -93,7 +85,7 @@ Public rules are spec-owned; runtime-ruleset profile projection is CLI-owned. Pu
 
 ## Integration Semantics
 
-A merged PR in this repository is repo-complete only. If the updated skill set must ship through the workspace, root integration must deliberately update the `tiangong-lca-skills` submodule pointer after merge.
+A merged PR in this repository is repo-complete only. If the updated skill set must ship through the workspace, root integration must deliberately update the `tiangong-lca/agent-skills` submodule pointer after merge.
 
 ## Local Docpact Push Gate
 
