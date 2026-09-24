@@ -13,8 +13,8 @@ const stableJson = (value) => Array.isArray(value) ? value.map(stableJson)
   : value && typeof value === "object" ? Object.fromEntries(Object.keys(value).sort()
     .map((key) => [key, stableJson(value[key])])) : value;
 const rowHash = (row) => hash(Buffer.from(JSON.stringify(stableJson(row))));
-const version = "0.1.12";
-const source = "0733a8c7688f8ad85215fdead19aba99bab3d723";
+const version = "0.1.13";
+const source = "bb6ab1c155a41da0bb58c9faf6a73650aa348a1d";
 
 test("copied Foundry skill runs the public locked runtime and rejects changed installation inputs", {
   timeout: 1_800_000,
@@ -113,9 +113,9 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
   assert.equal(doctor.runtime_identity.foundry.package_version, version);
   const qualification = doctor.runtime_identity.qualification;
   assert.equal(qualification.status, "ready");
-  assert.equal(qualification.identity.cli.package_version, "0.1.19");
+  assert.equal(qualification.identity.cli.package_version, "0.1.22");
   assert.equal(qualification.identity.cli.node_version, "24.19.0");
-  assert.equal(qualification.identity.tidas.binary_version, "0.3.2");
+  assert.equal(qualification.identity.tidas.binary_version, "0.3.3");
   assert.deepEqual(fs.readdirSync(path.join(cache, "components")).sort(), componentKeys);
   const application = manifest.components.find((component) => component.id === "foundry" && component.platform === platform);
   assert.ok(application);
@@ -137,11 +137,11 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
   assert.equal(provenance.source.commit, source);
   assert.equal(provenance.package.version, version);
   assert.equal(provenance.published_package.source.gitCommit, source);
-  // The Foundry owner bundles its own CLI (0.1.19, tag cli-v0.1.19); that is not the wrapper
+  // The Foundry owner bundles its own CLI (0.1.22, tag cli-v0.1.22); that is not the wrapper
   // launcher's published pin, and the two owner versions are never conflated.
-  assert.equal(provenance.cli.package.version, "0.1.19");
-  assert.equal(provenance.cli.source.ref, "refs/tags/cli-v0.1.19");
-  assert.equal(provenance.cli.source.gitCommit, "7f7b313cebc30c96154860df30f5d666963bc0b7");
+  assert.equal(provenance.cli.package.version, "0.1.22");
+  assert.equal(provenance.cli.source.ref, "refs/tags/cli-v0.1.22");
+  assert.equal(provenance.cli.source.gitCommit, "ba286d42db5a48f8b70fd649162fb45586e7cfa2");
 
   const diagnoseNativeAssessment = async (prior, taskId) => {
     const rows = artifact(prior, "process.rows.json");
@@ -203,7 +203,7 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
     return diagnostic;
   };
 
-  // The installed 0.1.12 copied entry must prove interaction and adoption.
+  // The installed 0.1.13 copied entry must prove interaction and adoption.
   {
     const actor = "synthetic-skill-qualifier";
     const id = "66666666-6666-4666-8666-666666666666";
