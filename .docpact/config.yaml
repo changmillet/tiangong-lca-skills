@@ -2,9 +2,9 @@ version: 1
 layout: repo
 # Current release proof, 2026-09-10: Skills #94 aligns wrappers and all three identical bundles to verified CLI 0.1.13 / cli-v0.1.13 / b5e209259d3bb06205b9af131b1c0edc3fba6da2, including its original permission-preserving POSIX bootstrap. The adjacent final Foundry 0.1.7 lock is byte-identical to the independently verified public release; the copied-entry native matrix proves the installed package.
 # Release proof, 2026-09-02: Skills #91 pins verified CLI 0.1.8 / b4701984b4a86fe4680fa5995d0a0b6753dbdfd6; all three bundled launchers must remain byte-identical to their root authority.
-lastReviewedAt: "2026-09-23"
-lastReviewedCommit: "44dcc0e88990828d9c27f757f8855000a4f36fc2"
-lastReviewedNote: 'Current Skills documentation routing, coverage, and package ownership are reviewed.'
+lastReviewedAt: "2026-09-25"
+lastReviewedCommit: "bdf0c9db7754215cc33b038bf57d4fb8a0ff2ccc"
+lastReviewedNote: 'Reviewed Skills #118 public Foundry 0.1.13 lock, object-scope guidance and copied-entry validation routing; governance rules unchanged.'
 
 catalog:
   repos:

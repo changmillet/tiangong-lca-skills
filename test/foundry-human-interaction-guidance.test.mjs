@@ -71,8 +71,9 @@ test('semantic submissions bind current interaction state and exactly applicable
 });
 
 test('the shipped entry remains honest about capability, partial work and later corrections', () => {
-  assert.match(workflow, /Do not add `brief` to a start spec sent to the distributed 0\.1\.10 runtime/iu);
-  assert.match(workflow, /adjacent 0\.1\.10 release lock does not qualify (a|this) newer interaction contract/iu);
+  assert.match(workflow, /qualified 0\.1\.13 runtime accepts an optional inline `brief`/iu);
+  assert.match(workflow, /adjacent 0\.1\.13 release lock qualifies this interaction contract/iu);
+  assert.doesNotMatch(workflow, /distributed 0\.1\.10/iu);
   assert.match(entry, /If the selected runtime lacks the required interaction contract, report the capability gap/iu);
   assert.match(workflow, /partial assessment cannot authorize finalization/iu);
   assert.match(entry, /reconsider the affected work and downstream checks/iu);
