@@ -406,7 +406,8 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
             "common:UUID": id,
             name: { baseName: { "@xml:lang": "en", "#text": `Synthetic heat ${id === p1 ? "P1" : "P2"}` } },
             classificationInformation: { "common:classification": { "common:class": [
-              { "@level": "0", "@classId": "INVALID", "#text": "Synthetic invalid class" },
+              { "@level": "0", "@classId": "INVALID",
+                "#text": "Electricity, gas, steam and air conditioning supply" },
             ] } },
           },
           geography: { locationOfOperationSupplyOrProduction: { "@location": "Invalid region" } },
@@ -456,7 +457,16 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
       && action.instructions.includes("Which evidenced category applies to P1?")
       && !action.instructions.includes(scope.row_sha256)));
     const initialState = indexedJson(question, "current_interaction_state");
-    const assessed = operation("object-independent-assessment", ["task", "resume", ...args, "--json"], 2);
+    const assess = async (phase, prior) => {
+      const result = operation(phase, ["task", "resume", ...args, "--json"], [0, 1, 2]);
+      if (result.status === "failed") {
+        const diagnostic = windows ? await diagnoseNativeAssessment(prior, started.task_id) : null;
+        assert.fail(`${phase}: ${JSON.stringify({ blockers: result.blockers, diagnostic })}`);
+      }
+      assert.equal(result.status, "needs_input", `${phase}: P1 still awaits its answer`);
+      return result;
+    };
+    const assessed = await assess("object-independent-assessment", question);
     assert.ok(assessed.artifacts.some((item) => item.role === "object_interaction_context"
       && item.value?.object_scope?.entity_id === p2 && item.value.pending_questions.length === 0));
     assert.ok(assessed.next_actions.some((action) => action.kind === "human"
@@ -505,7 +515,7 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
     const afterP2Rows = currentRows(p2Applied);
     assert.deepEqual(afterP2Rows[0], registeredRows[0]);
     assert.notDeepEqual(afterP2Rows[1], registeredRows[1]);
-    const reassessed = operation("object-after-p2-reassessment", ["task", "resume", ...args, "--json"], 2);
+    const reassessed = await assess("object-after-p2-reassessment", p2Applied);
     const baseline = indexedJson(reassessed, "foundry-assessment.json");
     const p2BaselineSet = baseline.value.sets.find((item) => item.type === "process");
     const p2BaselineManifest = JSON.parse(fs.readFileSync(p2BaselineSet.authoring_manifest, "utf8"));
