@@ -11,8 +11,8 @@ const scripts = fileURLToPath(new URL("../foundry-tidas-import/scripts/", import
 // Immutable cli-v0.1.14 source: bcc5dbee5b909dbb912e09d99ca07e858d3d7cec.
 // These original CLI scripts are distributed unchanged; F1 supplies the adjacent lock.
 const expected = {
-  // Independently verified final foundry-runtime-v0.1.12 public asset.
-  "bootstrap-lock.json": "1161c536a5bb41d5314427cd528586555714b14c679aa90231abf54077da9f13",
+  // Independently verified final foundry-runtime-v0.1.13 public asset.
+  "bootstrap-lock.json": "c8f64b0a47012ca8178d793014f7c9716640532cd7f433c529158ac26f189cd3",
   "../assets/licenses/tiangong-cli-LICENSE": "5ca31e8840557caad889b275beef7c9d56e67efede031e71228c5ff8f0d4135e",
   "tiangong-runtime-bootstrap.sh": "7aa826448f7b0e1d25f59a19a6f8c906621a82f0ee956124d9f93484885b9fac",
   "tiangong-runtime-bootstrap.ps1": "a797bc5269386a0f45fbc5bebb7d634b37fc8a164500aaaa4905be5e61bf8f65",
