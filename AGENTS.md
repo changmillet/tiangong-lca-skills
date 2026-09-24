@@ -39,9 +39,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-09-23
-lastReviewedCommit: 44dcc0e88990828d9c27f757f8855000a4f36fc2
-lastReviewedNote: 'Current skill ownership, pinned CLI and Foundry runtimes, wrapper safety, and validation gates are reviewed.'
+lastReviewedAt: 2026-09-24
+lastReviewedCommit: ef352e56386de268aa63edeece0d9059c5f30355
+lastReviewedNote: 'Reviewed Skills #118 guidance and copied-entry preparation; the shipped Foundry 0.1.10 lock, CLI pin, bootstrap scripts, and ownership boundaries are unchanged.'
 related:
   - .docpact/config.yaml
   - docs/agents/repo-architecture.md

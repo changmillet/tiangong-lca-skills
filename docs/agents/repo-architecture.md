@@ -32,9 +32,9 @@ checkPaths:
   - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
-lastReviewedAt: 2026-09-23
-lastReviewedCommit: 44dcc0e88990828d9c27f757f8855000a4f36fc2
-lastReviewedNote: 'Current skill package ownership, CLI boundaries, and integration semantics are reviewed.'
+lastReviewedAt: 2026-09-24
+lastReviewedCommit: ef352e56386de268aa63edeece0d9059c5f30355
+lastReviewedNote: 'Reviewed Skills #118 interaction guidance and the read-only qualification versus data#33 repair boundary; package ownership and CLI boundary are unchanged.'
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -98,5 +98,7 @@ The internal `foundry-tidas-authoring` package is data-only guidance over an exi
 The Foundry entry distributes byte-identical POSIX/PowerShell bootstrap scripts from the historical CLI `cli-v0.1.14` commit `bcc5dbee5b909dbb912e09d99ca07e858d3d7cec`. Skills owns their packaging, not their implementation. Path-specific Git attributes prevent checkout newline conversion for both scripts, the retained license and the adjacent final lock. The original scripts select only their adjacent lock; the adjacent final lock is copied byte-for-byte from independently qualified `foundry-runtime-v0.1.10`. Its manifest SHA-256 is `a429da4903c7f05ecc26130eda03cf55100461f556622c311f9f73d377b6b615`, binding Foundry source `1e4f48bf8359f5e9bacba5741d15b7ff78f2eb41`, Node 24.19.0, the Foundry owner's bundled CLI 0.1.19 (tag `cli-v0.1.19`, commit `7f7b313cebc30c96154860df30f5d666963bc0b7`) and TIDAS 0.3.2. This package is intentionally independent from the shared wrapper's current CLI 0.1.20: the two owner versions are never conflated, and the independently copied package test verifies the public installed runtime, its warm start and its returned-action resume against that source and content identity.
 
 The independently copied Foundry entry retains the original C1 copyright/license text at `assets/licenses/tiangong-cli-LICENSE` beside its bundled scripts. Its bytes are checked with the script pins; this adds no user-facing license command or confirmation flow.
+
+The ordinary entry may use a copied source record to demonstrate a current runtime's interaction behavior without changing that record. For Skills #118, the credential-free synthetic Process fixture is preparatory while the distributed lock stays at 0.1.10; it and the planned read-only mine-water case become qualification evidence only when run against the exact successor release. The actual mine-water XML repair is owned by `tiangong-lca/data#33`, with its own scientific evidence, review and workspace integration; this skill package cannot make that data delivery complete. User answers such as “暂不确定，先调查” stay unresolved investigation requests until a supported source or an explicit decision closes the gap.
 
 The retained `external-dataset-curated-import` and `source-evidence-dataset-development` skills support independent CLI workflows. Within a registered public Foundry task they act as domain helpers over current work items and supplied actions; they return selected input files and cannot manually advance queues, checkpoints, registered artifacts or attempts. Their paired agent prompts preserve this boundary.
