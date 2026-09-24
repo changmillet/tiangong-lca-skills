@@ -19,9 +19,9 @@ checkPaths:
   - scripts/validate-skills.mjs
   - "*/SKILL.md"
   - "*/scripts/**"
-lastReviewedAt: 2026-09-21
-lastReviewedCommit: 4ff7716
-lastReviewedNote: "Reviewed for Skills #104（正式采用）：活动 wrapper 绑定已发布 CLI 0.1.20，Foundry 入口随包提供已独立认证的 0.1.10 bootstrap lock，其自带 CLI 0.1.19 属另一 owner 版本。"
+lastReviewedAt: 2026-09-24
+lastReviewedCommit: df3d541c2a40592101c8d015046e63d33b7ae320
+lastReviewedNote: "Reviewed for Skills #118（正式采用）：活动 wrapper 仍绑定已发布 CLI 0.1.20，Foundry 入口随包提供已独立认证的 0.1.12 bootstrap lock，其自带 CLI 0.1.19 属另一 owner 版本。"
 ---
 
 # 天工 LCA Skills
@@ -115,7 +115,7 @@ npx skills add https://github.com/tiangong-lca/agent-skills --skill foundry-tida
 
 `lca-foundry-workflows` marketplace 包首先列出此入口。`foundry-tidas-authoring` 仅在当前语义工作项需要时加载，是内部角色；日常入口也能直接使用运行时提供的工作项说明，无须依赖另一个已安装技能目录。
 
-完整入口随包提供 [Foundry 0.1.10](https://github.com/tiangong-lca/foundry/releases/tag/foundry-runtime-v0.1.10)（release source `1e4f48bf8359f5e9bacba5741d15b7ff78f2eb41`）的最终发行锁，其中自带 CLI 0.1.19、Node 24.19.0 和 TIDAS 0.3.2。公开运行时已通过 macOS arm64、Linux x64/arm64 和 Windows x64 验证。共享 wrapper 与 hybrid-search 包当前固定已发布 CLI 0.1.20；Foundry 入口自己的 bootstrap 脚本/lock 与活动 wrapper 相互独立，两个 owner 的 CLI 版本不得互相套用。安装或复制入口时，保持随包脚本与相邻 lock 完整。安装、登录不授予数据写入权限；继续执行任务当前的授权与恢复动作。
+完整入口随包提供 [Foundry 0.1.12](https://github.com/tiangong-lca/foundry/releases/tag/foundry-runtime-v0.1.12)（release source `0733a8c7688f8ad85215fdead19aba99bab3d723`）的最终发行锁，其中自带 CLI 0.1.19、Node 24.19.0 和 TIDAS 0.3.2。公开运行时已通过 macOS arm64、Linux x64/arm64 和 Windows x64 验证。此版本支持绑定任务简介、即时人类提问、持久保存原话、按范围采用语义决定及如实呈现部分完成回顾。共享 wrapper 与 hybrid-search 包当前固定已发布 CLI 0.1.20；Foundry 入口自己的 bootstrap 脚本/lock 与活动 wrapper 相互独立，两个 owner 的 CLI 版本不得互相套用。安装或复制入口时，保持随包脚本与相邻 lock 完整。安装、登录不授予数据写入权限；继续执行任务当前的授权与恢复动作。
 
 ### 专项工作流
 
@@ -158,7 +158,7 @@ pnpm dlx --package=@tiangong-lca/cli@0.1.20 tiangong-lca auth status --json
   ```bash
   pnpm validate lifecycleinventory-qa process-hybrid-search
   ```
-- CI 会在 `.github/workflows/validate-skills.yml` 中 checkout 活动 CLI commit `c498906a13fa345eebebbadc87e3a773abb1be6a`（发布包 0.1.20），用 frozen pnpm lockfile 安装两个仓库并构建 CLI，然后运行同一套校验；Foundry 入口的 bootstrap 仍按它自己已认证的 0.1.10 发行锁与自带 CLI 0.1.19 测试。
+- CI 会在 `.github/workflows/validate-skills.yml` 中 checkout 活动 CLI commit `c498906a13fa345eebebbadc87e3a773abb1be6a`（发布包 0.1.20），用 frozen pnpm lockfile 安装两个仓库并构建 CLI，然后运行同一套校验；Foundry 入口的 bootstrap 按它自己已认证的 0.1.12 发行锁与自带 CLI 0.1.19 测试。
 
 ## 执行说明
 

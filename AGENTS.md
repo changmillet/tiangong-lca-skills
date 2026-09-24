@@ -40,8 +40,8 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-09-24
-lastReviewedCommit: ef352e56386de268aa63edeece0d9059c5f30355
-lastReviewedNote: 'Reviewed Skills #118 guidance and copied-entry preparation; the shipped Foundry 0.1.10 lock, CLI pin, bootstrap scripts, and ownership boundaries are unchanged.'
+lastReviewedCommit: df3d541c2a40592101c8d015046e63d33b7ae320
+lastReviewedNote: 'Reviewed Skills #118 adoption of the independently verified Foundry 0.1.12 lock and installed copied-entry interaction proof; the wrapper CLI 0.1.20 pin, original bootstrap scripts, and owner boundaries remain unchanged.'
 related:
   - .docpact/config.yaml
   - docs/agents/repo-architecture.md
@@ -146,6 +146,6 @@ The `pre-push` hook runs `scripts/docpact-gate.sh`, which delegates CLI lookup t
 
 `foundry-tidas-authoring` is an internal on-demand semantic package. It reads supplied current task/context evidence and returns decision/patch files; it owns no runtime, credential parsing, deterministic apply or database operation. Its explicit-only policy is part of the approved Foundry entry migration.
 
-`foundry-tidas-import` is the ordinary TianGong Foundry entry. Its instructions consume the public task protocol and current structured actions; the internal authoring role stays on demand. Its bundled bootstrap scripts and adjacent final lock select independently qualified Foundry 0.1.10 (release source `1e4f48bf8359f5e9bacba5741d15b7ff78f2eb41`), whose own bundled CLI is 0.1.19 — an owner version separate from the wrapper launcher's published 0.1.20 pin. The four-platform copied-entry test must prove actual installation and task operation before delivery; source validation alone does not establish installability.
+`foundry-tidas-import` is the ordinary TianGong Foundry entry. Its instructions consume the public task protocol and current structured actions; the internal authoring role stays on demand. Its bundled bootstrap scripts and adjacent final lock select independently qualified Foundry 0.1.12 (release source `0733a8c7688f8ad85215fdead19aba99bab3d723`), whose own bundled CLI is 0.1.19 — an owner version separate from the wrapper launcher's published 0.1.20 pin. The four-platform copied-entry test must prove actual installation and task operation before delivery; source validation alone does not establish installability.
 
 The retained `external-dataset-curated-import` and `source-evidence-dataset-development` skills support independent CLI workflows. Within a registered public Foundry task they act as domain helpers over current work items and supplied actions; they return selected input files and cannot manually advance queues, checkpoints, registered artifacts or attempts. Their paired agent prompts preserve this boundary.

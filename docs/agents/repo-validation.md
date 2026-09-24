@@ -33,8 +33,8 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-09-24
-lastReviewedCommit: ef352e56386de268aa63edeece0d9059c5f30355
-lastReviewedNote: 'Reviewed Skills #118 synthetic interaction fixture and read-only case limits; the successor runtime lock still awaits independent qualification.'
+lastReviewedCommit: df3d541c2a40592101c8d015046e63d33b7ae320
+lastReviewedNote: 'Reviewed Skills #118 adoption of the verified 0.1.12 release lock, copied-entry synthetic interaction proof, and read-only case limits.'
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -61,7 +61,7 @@ You may pass one or more skill directories to validate only the touched skill pa
 - Wrapper contract changes require checking the paired `agents/openai.yaml` and `SKILL.md` together.
 - Validation-script or test changes require running the full `pnpm prepush:gate` command when feasible.
 - New CLI-backed skills must be added to the default validation list when they are intended to ship as part of the standard checked-in skill set.
-- Wrapper-launcher changes require `pnpm test:launcher`, the pnpm consumer contract tests, an exact published `@tiangong-lca/cli@0.1.20` help case, source-manifest identity checks, and full skill validation against frozen, built CLI release merge `c498906a13fa345eebebbadc87e3a773abb1be6a` from canonical `tiangong-lca/cli`. The published Foundry bootstrap/provenance remains bound to its own qualified release source (0.1.10, bundled CLI 0.1.19).
+- Wrapper-launcher changes require `pnpm test:launcher`, the pnpm consumer contract tests, an exact published `@tiangong-lca/cli@0.1.20` help case, source-manifest identity checks, and full skill validation against frozen, built CLI release merge `c498906a13fa345eebebbadc87e3a773abb1be6a` from canonical `tiangong-lca/cli`. The published Foundry bootstrap/provenance remains bound to its own qualified release source (0.1.12, bundled CLI 0.1.19).
 - Validate the installed CLI 0.1.20 + SDK 0.3.0 Process/Flow context packs with the retired mixed SDK JSON/schema absent, and reject altered public-rule source identity. The earlier SDK 0.2.2 static-import limitation is historical evidence, not an active requirement.
 - Launcher filesystem fixtures and expected paths must use the host `node:path` implementation. A test that passes a synthetic `platform` may validate executable dispatch, but must not combine that target platform with host-resolved fake paths.
 - Repo-wide Markdown guards inventory only root-repository Git-tracked `*.md` paths through argv-based `git -C <root> ls-files -z`. Fixture and validator Git children remove inherited repository-location `GIT_*` variables first, so hook context cannot redirect their index or worktree; untracked or nested CI checkouts are not part of the Skills documentation contract.
@@ -92,7 +92,7 @@ The `pre-push` hook runs `scripts/docpact-gate.sh`, which delegates CLI lookup t
 
 The semantic-only Foundry authoring package is included in default validation. Validate a copied isolated package for its entry metadata and local reference closure; it intentionally has no wrapper script or bootstrap runtime. Runtime/F1 and ordinary entry bootstrap qualification remain separate requirements of the full migration.
 
-Default validation now includes all 23 source skill directories: the original 21 plus the ordinary Foundry entry and internal authoring package. Validate the entry after an isolated copy and check its task/semantic field contracts against the selected Foundry source. Source validation is supplemented by original-script equality, the independently verified final Foundry 0.1.8 lock and the four-platform copied public cold/warm/bootstrap test.
+Default validation now includes all 23 source skill directories: the original 21 plus the ordinary Foundry entry and internal authoring package. Validate the entry after an isolated copy and check its task/semantic field contracts against the selected Foundry source. Source validation is supplemented by original-script equality, the independently verified final Foundry 0.1.12 lock and the four-platform copied public cold/warm/bootstrap test.
 
 `test/foundry-bootstrap-package.test.mjs` checks both script SHA-256 values against the immutable C1 source and executes an isolated host bootstrap without its lock to prove refusal before installation or application launch. POSIX syntax is checked with `sh -n`; Run the PowerShell execution case on Windows without execution-policy bypass. These negative/source checks do not count as final public bootstrap qualification.
 
@@ -102,7 +102,7 @@ For retained import/source-evidence helpers, review both invocation contexts: an
 
 `test/foundry-public-install.test.mjs` executes an isolated copy of the shipped Foundry entry against its adjacent final release lock. It begins with an empty private home/cache and a system-only PATH, verifies the downloaded manifest and actual Foundry/CLI/Node/TIDAS identities, performs a local cleanup task through start/status/resume, and rejects developer commands, changed scripts, a missing lock, changed cached manifests and changed base inventories. It restores the isolated altered bytes and verifies the runtime again. This credential-free installation proof is separate from the final live account RC01–RC06 evidence.
 
-For Skills #118, the copied entry also carries a synthetic Process interaction fixture. While the adjacent lock remains at 0.1.10, that successor-only part of the test is gated and is preparatory evidence only. After a qualified successor lock lands, it must demonstrate a brief, question, an `investigate` disposition retaining the original words, superseding decided reply, fresh-process persistence, exact interaction-state and applicable decision-ID semantic binding, indexed adoption and honest partial recap. A read-only mine-water replay may additionally show how the installed interaction handles a real source ambiguity and missing references; it does not validate or deliver the separate `tiangong-lca/data#33` XML repair. No synthetic or read-only result supplies scientific measurements or write permission.
+For Skills #118, the copied entry's synthetic Process interaction fixture is now mandatory under the adjacent qualified 0.1.12 lock. It demonstrates a brief, question, an `investigate` disposition retaining the original words, superseding decided reply, fresh-process persistence, exact interaction-state and applicable decision-ID semantic binding, indexed adoption and honest partial recap. The separate Foundry #197 read-only mine-water replay shows how the installed interaction handles a real source ambiguity and missing references; it does not validate or deliver the separate `tiangong-lca/data#33` XML repair. No synthetic or read-only result supplies scientific measurements or write permission.
 
 The relevant pull-request/manual matrix runs the same test on all four supported native platforms and retains one `tiangong-skills.foundry-public-install.v1` report per platform. `FOUNDRY_INSTALL_PROOF_DIR` optionally selects an absolute output directory for these test reports; it is not forwarded to the installed runtime and cannot select its manifest or credentials. The report binds the independently qualified release expectation, shipped lock digest, observed runtime identity and individual check outcomes.
 
