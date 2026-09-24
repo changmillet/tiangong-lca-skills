@@ -5,7 +5,7 @@ import os from "node:os";
 import path from "node:path";
 import { spawnSync } from "node:child_process";
 import test from "node:test";
-import { fileURLToPath } from "node:url";
+import { fileURLToPath, pathToFileURL } from "node:url";
 
 const entry = fileURLToPath(new URL("../foundry-tidas-import/", import.meta.url));
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
@@ -14,7 +14,7 @@ const source = "0733a8c7688f8ad85215fdead19aba99bab3d723";
 
 test("copied Foundry skill runs the public locked runtime and rejects changed installation inputs", {
   timeout: 1_800_000,
-}, (t) => {
+}, async (t) => {
   const lockPath = path.join(entry, "scripts", "bootstrap-lock.json");
   assert.ok(fs.existsSync(lockPath), "The final independently verified F1 bootstrap lock must be shipped.");
   const lock = JSON.parse(fs.readFileSync(lockPath, "utf8"));
@@ -139,6 +139,66 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
   assert.equal(provenance.cli.source.ref, "refs/tags/cli-v0.1.19");
   assert.equal(provenance.cli.source.gitCommit, "7f7b313cebc30c96154860df30f5d666963bc0b7");
 
+  const diagnoseNativeAssessment = async (prior, taskId) => {
+    const rows = artifact(prior, "process.rows.json");
+    if (!rows?.path) return { error: "no-indexed-process-rows" };
+    const tidasComponent = manifest.components.find((component) =>
+      component.id === "tidas" && component.platform === platform);
+    const tidasMatches = componentKeys.filter((key) => {
+      const receipt = JSON.parse(fs.readFileSync(path.join(cache, "components", key, "receipt.json"), "utf8"));
+      return receipt.archive_sha256 === tidasComponent?.archive.sha256
+        && receipt.content_sha256 === tidasComponent?.content_sha256;
+    });
+    if (tidasMatches.length !== 1) return { error: "no-unique-installed-tidas", matches: tidasMatches.length };
+    const tidasBin = path.join(cache, "components", tidasMatches[0], "root", "bin",
+      windows ? "tidas.exe" : "tidas");
+    const foundryRoot = path.join(cache, "components", matches[0], "root", "node_modules",
+      "@tiangong-lca", "foundry");
+    const { runTidasRowsValidation } = await import(pathToFileURL(path.join(foundryRoot,
+      "package-dist", "scripts", "lib", "tidas-adapter.js")).href);
+    const shallowRoot = fs.mkdtempSync(path.join(temporary, "tidas-short-"));
+    t.after(() => fs.rmSync(shallowRoot, { recursive: true, force: true }));
+    const assessmentRoot = path.join(workspace, ".foundry", "workspaces", taskId,
+      "outputs", "assessment");
+    const runDirs = fs.readdirSync(assessmentRoot).flatMap((generation) => {
+      const generationRoot = path.join(assessmentRoot, generation);
+      return fs.statSync(generationRoot).isDirectory()
+        ? fs.readdirSync(generationRoot).filter((name) => name.startsWith("run-"))
+          .map((name) => path.join(generationRoot, name)) : [];
+    });
+    if (!runDirs.length) return { error: "no-assessment-run-directory" };
+    const deepOutDir = path.join(runDirs.at(-1), "process", "schema-diagnostic");
+    const { createFoundryIsolatedChildEnvironment } = await import(pathToFileURL(path.join(foundryRoot,
+      "package-dist", "scripts", "lib", "foundry-runtime-environment.js")).href);
+    const isolatedEnv = createFoundryIsolatedChildEnvironment({ tempRoot: path.join(
+      workspace, ".foundry", "workspaces", taskId, "tmp", "assessment-diagnostic"),
+      sourceEnv: env });
+    const probe = (outDir, environment) => {
+      try {
+        const result = runTidasRowsValidation({ repoRoot: foundryRoot,
+          options: { tidasBin, rowsFile: rows.path, type: "process", outDir }, environment });
+        return { exit_code: result.exit_code, exit_class: result.report?.exit_class ?? null,
+          status: result.report?.status ?? null, diagnostics: result.report?.diagnostics ?? null,
+          stderr: String(result.stderr ?? "").slice(0, 4096), report_file: result.report_file ?? null };
+      } catch (error) {
+        return { error: `${error?.name ?? "Error"}: ${error?.message ?? String(error)}` };
+      }
+    };
+    const diagnostic = { schema: "tiangong-skills.native-assessment-diagnostic.v1", platform,
+      task_id: taskId, path_lengths: { rows: rows.path.length, shallow_output: shallowRoot.length,
+        deep_output: deepOutDir.length, isolated_temp: isolatedEnv.TMPDIR.length },
+      shallow: probe(path.join(shallowRoot, "schema"), env),
+      deep: probe(deepOutDir, env),
+      deep_with_isolated_env: probe(path.join(runDirs.at(-1), "process",
+        "schema-isolated-diagnostic"), isolatedEnv) };
+    if (process.env.FOUNDRY_INSTALL_PROOF_DIR) {
+      fs.mkdirSync(process.env.FOUNDRY_INSTALL_PROOF_DIR, { recursive: true });
+      fs.writeFileSync(path.join(process.env.FOUNDRY_INSTALL_PROOF_DIR,
+        `${platform}-native-diagnostic.json`), JSON.stringify(diagnostic, null, 2) + "\n");
+    }
+    return diagnostic;
+  };
+
   // The installed 0.1.12 copied entry must prove interaction and adoption.
   {
     const actor = "synthetic-skill-qualifier";
@@ -231,14 +291,23 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
 
     let assessmentArtifact;
     let assessment;
+    let lastGood = persisted;
     for (let step = 1; step <= 4; step += 1) {
-      const progressed = operation(`interaction-assess-${step}`, ["task", "resume", ...args, "--json"], [0, 2]);
+      const progressed = operation(`interaction-assess-${step}`, ["task", "resume", ...args, "--json"], [0, 1, 2]);
+      if (progressed.status === "failed") {
+        const diagnostic = windows ? await diagnoseNativeAssessment(lastGood, started.task_id) : null;
+        assert.fail(`interaction-assess-${step}: ${JSON.stringify({ blockers: progressed.blockers,
+          diagnostic })}`);
+      }
+      assert.ok(["ready", "needs_input"].includes(progressed.status),
+        `interaction-assess-${step}: unexpected status ${progressed.status}`);
       const current = artifact(progressed, "foundry-assessment.json");
       if (current) {
         ({ item: assessmentArtifact, value: assessment } = indexedJson(progressed, "foundry-assessment.json"));
         if (assessment.sets.some((set) => set.type === "process"
           && set.decisions.some((item) => item.kind === "classification"))) break;
       }
+      lastGood = progressed;
     }
     assert.ok(assessmentArtifact, "The installed runtime must register a Process assessment.");
     const processSet = assessment.sets.find((set) => set.type === "process");

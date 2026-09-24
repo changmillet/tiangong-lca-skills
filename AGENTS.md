@@ -40,7 +40,7 @@ checkPaths:
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
 lastReviewedAt: 2026-09-24
-lastReviewedCommit: df3d541c2a40592101c8d015046e63d33b7ae320
+lastReviewedCommit: a941e664a413f1791dbbb6104a9659c2b11e0370
 lastReviewedNote: 'Reviewed Skills #118 adoption of the independently verified Foundry 0.1.12 lock and installed copied-entry interaction proof; the wrapper CLI 0.1.20 pin, original bootstrap scripts, and owner boundaries remain unchanged.'
 related:
   - .docpact/config.yaml

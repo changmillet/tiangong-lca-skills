@@ -33,7 +33,7 @@ checkPaths:
   - package.json
   - pnpm-lock.yaml
 lastReviewedAt: 2026-09-24
-lastReviewedCommit: df3d541c2a40592101c8d015046e63d33b7ae320
+lastReviewedCommit: a941e664a413f1791dbbb6104a9659c2b11e0370
 lastReviewedNote: 'Reviewed Skills #118 final 0.1.12 lock, copied-entry interaction proof and the read-only qualification versus data#33 repair boundary; package ownership and CLI boundary are unchanged.'
 related:
   - AGENTS.md
