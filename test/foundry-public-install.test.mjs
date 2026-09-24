@@ -9,8 +9,8 @@ import { fileURLToPath } from "node:url";
 
 const entry = fileURLToPath(new URL("../foundry-tidas-import/", import.meta.url));
 const hash = (bytes) => createHash("sha256").update(bytes).digest("hex");
-const version = "0.1.10";
-const source = "1e4f48bf8359f5e9bacba5741d15b7ff78f2eb41";
+const version = "0.1.12";
+const source = "0733a8c7688f8ad85215fdead19aba99bab3d723";
 
 test("copied Foundry skill runs the public locked runtime and rejects changed installation inputs", {
   timeout: 1_800_000,
@@ -139,9 +139,8 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
   assert.equal(provenance.cli.source.ref, "refs/tags/cli-v0.1.19");
   assert.equal(provenance.cli.source.gitCommit, "7f7b313cebc30c96154860df30f5d666963bc0b7");
 
-  // The checked-in 0.1.10 lock predates human interaction. This public-bin
-  // scenario becomes mandatory as soon as the qualified successor lock lands.
-  if (version !== "0.1.10") {
+  // The installed 0.1.12 copied entry must prove interaction and adoption.
+  {
     const actor = "synthetic-skill-qualifier";
     const id = "66666666-6666-4666-8666-666666666666";
     const rawAnswer = "For this synthetic test, use a schema-valid category after review; this is my test choice.";

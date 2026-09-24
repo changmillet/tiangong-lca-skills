@@ -211,7 +211,7 @@ const benignFixtures = [
   'If the installed runtime still emits a numeric sentinel such as `9999`, or its report carries no validation-layer fields, stop and report that qualified adoption is incomplete.',
   'Never hand-fabricate, overwrite or delete the empty array in the dataset.',
   'Never edit or discard the runtime report. Never bypass its gate.',
-  'The pinned published CLI `0.1.20` and the qualified Foundry `0.1.10` lock predate nothing that matters here; the installed runtime is still the authority to observe.',
+  'The pinned published CLI `0.1.20` and the qualified Foundry `0.1.12` lock are separate owner versions; the installed runtime is still the authority to observe.',
 ];
 
 test('negative fixtures: the detectors reject the pre-#104 guidance and its paraphrases', () => {
