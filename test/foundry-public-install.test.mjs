@@ -586,6 +586,16 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
     const afterP1Rows = currentRows(applied);
     assert.deepEqual(afterP1Rows[1], afterP2Rows[1]);
     assert.notEqual(rowHash(afterP1Rows[0]), scope.row_sha256);
+    const successor = operation("object-adopted-successor-review", ["task", "resume", ...args,
+      "--json"], [0, 1, 2]);
+    if (successor.status === "failed") {
+      const diagnostic = windows ? await diagnoseNativeAssessment(applied, started.task_id) : null;
+      assert.fail(`object-adopted-successor-review: ${JSON.stringify({
+        blockers: successor.blockers, diagnostic })}`);
+    }
+    assert.ok(artifact(successor, "foundry-assessment.json"));
+    assert.deepEqual(artifact(successor, "decision_recap").value.user_decisions[0].applied_to
+      .map((item) => item.after_row_sha256), [rowHash(afterP1Rows[0])]);
     const revised = interact("object-p1-after-adoption-correction", correctedState.item.sha256, {
       kind: "answer", question_id: "p1-category", decision_id: "p1-review-again",
       supersedes_decision_id: "p1-corrected-category",
