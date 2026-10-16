@@ -34,9 +34,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-10-09
-lastReviewedCommit: 8cea578a18534dc413fcde48d24ab955d4d4abfb
-lastReviewedNote: 'Reviewed scoped Process purpose/use-text authoring and semantic review guidance against 8cea578a; package-local delivery, supplied-context provenance, scientific limits and existing runtime/write boundaries are preserved. No wrapper, pin, public-rule asset or validation behavior changed.'
+lastReviewedAt: 2026-10-16
+lastReviewedCommit: dd851cb680d973dc9792c58fadb26a04e9f14d1a
+lastReviewedNote: 'Skills #129: Actions and dependency-input PRs reuse the existing exact-head four-platform proof; copied packages, CLI/Foundry pins and execution authority remain unchanged.'
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -52,7 +52,7 @@ pnpm install --frozen-lockfile
 pnpm prepush:gate
 ```
 
-The local `pre-push` hook runs docpact first, validates Node `24.19.0` / pnpm `11.24.0`, installs Skills from its frozen lockfile, and defaults to published CLI `0.1.24`. A matching-release local `tiangong-lca/cli` is installed/built only when explicitly selected and only after package/engine/lock/source-manifest evidence succeeds. A different candidate must already be prepared and pass the reviewed file/digest qualification before execution; the hook does not eagerly reinstall it. The hook then runs the repository test/validation gate. The GitHub `validate-skills` workflow runs the four-platform contract matrix for runtime/launcher/inspection changes, Foundry package/test pull requests and manual dispatch; its exact release pin remains independent of local candidates.
+The local `pre-push` hook runs docpact first, validates Node `24.19.0` / pnpm `11.24.0`, installs Skills from its frozen lockfile, and defaults to published CLI `0.1.24`. A matching-release local `tiangong-lca/cli` is installed/built only when explicitly selected and only after package/engine/lock/source-manifest evidence succeeds. A different candidate must already be prepared and pass the reviewed file/digest qualification before execution; the hook does not eagerly reinstall it. The hook then runs the repository test/validation gate. The GitHub `validate-skills` workflow runs the four-platform contract matrix for runtime/launcher/inspection changes, Foundry package/test and dependency/configuration/Actions pull requests and manual dispatch; its exact release pin remains independent of local candidates.
 
 You may pass one or more skill directories to validate only the touched skill packages.
 

@@ -2,9 +2,9 @@ version: 1
 layout: repo
 # Current release proof, 2026-09-10: Skills #94 aligns wrappers and all three identical bundles to verified CLI 0.1.13 / cli-v0.1.13 / b5e209259d3bb06205b9af131b1c0edc3fba6da2, including its original permission-preserving POSIX bootstrap. The adjacent final Foundry 0.1.7 lock is byte-identical to the independently verified public release; the copied-entry native matrix proves the installed package.
 # Release proof, 2026-09-02: Skills #91 pins verified CLI 0.1.8 / b4701984b4a86fe4680fa5995d0a0b6753dbdfd6; all three bundled launchers must remain byte-identical to their root authority.
-lastReviewedAt: 2026-10-09
-lastReviewedCommit: 8cea578a18534dc413fcde48d24ab955d4d4abfb
-lastReviewedNote: 'Reviewed scoped Process purpose/use-text authoring and semantic review guidance against 8cea578a; package-local delivery, supplied-context provenance, scientific limits and existing runtime/write boundaries are preserved. No wrapper, pin, public-rule asset or validation behavior changed.'
+lastReviewedAt: 2026-10-16
+lastReviewedCommit: dd851cb680d973dc9792c58fadb26a04e9f14d1a
+lastReviewedNote: 'Skills #129: Actions and dependency-input PRs reuse the existing exact-head four-platform proof; copied packages, CLI/Foundry pins and execution authority remain unchanged.'
 
 catalog:
   repos:
@@ -28,6 +28,7 @@ ownership:
           - .docpact/config.yaml
           - .gitignore
           - docs/agents/**
+          - .github/dependabot.yml
           - .github/workflows/ai-doc-lint.yml
       ownerRepo: skills
     - id: skill-packages
@@ -66,6 +67,7 @@ ownership:
 
 coverage:
   include:
+    - .github/dependabot.yml
     - .claude-plugin/marketplace.json
     - .gitattributes
     - .gitignore
@@ -164,6 +166,7 @@ routing:
 
 docInventory:
   include:
+    - docs/agents/dependency-maintenance.md
     - AGENTS.md
     - README.md
     - README.zh-CN.md
@@ -316,3 +319,16 @@ rules:
       - path: docs/agents/repo-validation.md
         mode: review_or_update
     reason: Local push documentation governance gates must stay aligned with repo validation guidance and docpact configuration.
+
+  - id: skills-dependency-maintenance
+    scope: repo
+    repo: skills
+    triggers:
+      - path: .github/dependabot.yml
+        kind: dependency-monitoring
+      - path: docs/agents/dependency-maintenance.md
+        kind: maintenance-guide
+    requiredDocs:
+      - path: docs/agents/dependency-maintenance.md
+        mode: review_or_update
+    reason: Monitoring scope and traffic must agree with focused guidance without changing runtime adoption authority.
