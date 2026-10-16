@@ -19,11 +19,18 @@ on:
       - "README.md"
       - "README.zh-CN.md"
       - "docs/agents/**"
-      - ".github/workflows/validate-skills.yml"
+      - "package.json"
+      - "pnpm-lock.yaml"
+      - ".github/dependabot.yml"
+      - ".github/workflows/**"
   workflow_dispatch:
 
 permissions:
   contents: read
+
+concurrency:
+  group: skills-validation-${{ github.event_name }}-${{ github.event.pull_request.number || github.run_id }}
+  cancel-in-progress: ${{ github.event_name == 'pull_request' }}
 
 jobs:
   validate:
@@ -44,10 +51,14 @@ jobs:
     steps:
       - name: Checkout skills
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
+        with:
+          ref: ${{ github.event.pull_request.head.sha || github.sha }}
+          persist-credentials: false
 
       - name: Checkout tiangong-lca-cli
         uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7
         with:
+          persist-credentials: false
           repository: tiangong-lca/cli
           ref: 89c71772ca1afcfc09705f8c27a9703c6bf8ccf6
           path: .ci/tiangong-lca-cli

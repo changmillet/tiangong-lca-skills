@@ -41,9 +41,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-10-09
-lastReviewedCommit: 8cea578a18534dc413fcde48d24ab955d4d4abfb
-lastReviewedNote: 'Reviewed scoped Process purpose/use-text authoring and semantic review guidance against 8cea578a; package-local delivery, supplied-context provenance, scientific limits and existing runtime/write boundaries are preserved. No wrapper, pin, public-rule asset or validation behavior changed.'
+lastReviewedAt: 2026-10-16
+lastReviewedCommit: dd851cb680d973dc9792c58fadb26a04e9f14d1a
+lastReviewedNote: 'Skills #129: Actions and dependency-input PRs reuse the existing exact-head four-platform proof; copied packages, CLI/Foundry pins and execution authority remain unchanged.'
 related:
   - .docpact/config.yaml
   - docs/agents/repo-architecture.md
@@ -147,7 +147,7 @@ Install the versioned local hook once per checkout:
 ./scripts/install-git-hooks.sh
 ```
 
-The `pre-push` hook runs `scripts/docpact-gate.sh`, which delegates CLI lookup to `scripts/docpact` and performs strict config validation plus enforced lint before the push leaves the machine. It validates Node `24.19.0` / pnpm `11.24.0` and installs Skills from its frozen lockfile. The hook defaults to exact published CLI `0.1.24`; when `TIANGONG_LCA_CLI_DIR` is explicitly set, it validates matching-release evidence or the complete reviewed candidate evidence before permitting local execution. An already qualified candidate is not eagerly reinstalled by the hook; wrapper preparation still rechecks it before dispatch. It then runs `pnpm prepush:gate`. The wrapper checks `DOCPACT_BIN`, Cargo install locations, Homebrew install locations, and then `PATH`, so local agent shells should not fail only because bare `docpact` is unavailable. The default comparison base is `origin/main`. Override it for unusual stacks with `DOCPACT_BASE_REF=<ref>` or `scripts/docpact-gate.sh --base <ref>`. The gate writes its detailed report to a temporary file so normal pushes do not create `.docpact/runs/` artifacts. Any separately retained local generated reports under `.docpact/runs/` are ignored through `.gitignore`, not delivery artifacts. The GitHub `validate-skills` workflow runs the four-platform contract matrix for runtime/launcher/inspection changes, Foundry package/test pull requests, and manual dispatch.
+The `pre-push` hook runs `scripts/docpact-gate.sh`, which delegates CLI lookup to `scripts/docpact` and performs strict config validation plus enforced lint before the push leaves the machine. It validates Node `24.19.0` / pnpm `11.24.0` and installs Skills from its frozen lockfile. The hook defaults to exact published CLI `0.1.24`; when `TIANGONG_LCA_CLI_DIR` is explicitly set, it validates matching-release evidence or the complete reviewed candidate evidence before permitting local execution. An already qualified candidate is not eagerly reinstalled by the hook; wrapper preparation still rechecks it before dispatch. It then runs `pnpm prepush:gate`. The wrapper checks `DOCPACT_BIN`, Cargo install locations, Homebrew install locations, and then `PATH`, so local agent shells should not fail only because bare `docpact` is unavailable. The default comparison base is `origin/main`. Override it for unusual stacks with `DOCPACT_BASE_REF=<ref>` or `scripts/docpact-gate.sh --base <ref>`. The gate writes its detailed report to a temporary file so normal pushes do not create `.docpact/runs/` artifacts. Any separately retained local generated reports under `.docpact/runs/` are ignored through `.gitignore`, not delivery artifacts. The GitHub `validate-skills` workflow runs the four-platform contract matrix for runtime/launcher/inspection changes, Foundry package/test and dependency/configuration/Actions pull requests, and manual dispatch.
 
 `foundry-tidas-authoring` is an internal on-demand semantic package. It reads supplied current task/context evidence and returns decision/patch files; it owns no runtime, credential parsing, deterministic apply or database operation. Its explicit-only policy is part of the approved Foundry entry migration.
 
