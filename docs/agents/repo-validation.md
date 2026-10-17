@@ -34,9 +34,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-10-16
-lastReviewedCommit: dd851cb680d973dc9792c58fadb26a04e9f14d1a
-lastReviewedNote: 'Skills #129: Actions and dependency-input PRs reuse the existing exact-head four-platform proof; copied packages, CLI/Foundry pins and execution authority remain unchanged.'
+lastReviewedAt: 2026-10-17
+lastReviewedCommit: 836238cb81379b4729e7a307b64d40ae2d15366b
+lastReviewedNote: "Reviewed Skills #132 / original #131: immutable pnpm/setup v3.1.1 and upload-artifact v7.0.2 pins plus the matching exact assertion preserve Node 24.19.0, pnpm 11.24.0, CLI/Foundry/bootstrap identities, copied-install evidence, credential boundaries and all existing gates. Document bodies and shipped skills remain unchanged; full qualification, fresh four-platform proof, independent review and integration remain required."
 related:
   - AGENTS.md
   - .docpact/config.yaml

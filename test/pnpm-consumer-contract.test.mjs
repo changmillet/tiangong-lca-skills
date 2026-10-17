@@ -182,7 +182,7 @@ test('validation CI installs the exact CLI checkout through frozen pnpm only', (
   assert.match(workflow, /ref: 89c71772ca1afcfc09705f8c27a9703c6bf8ccf6/u);
   assert.match(
     workflow,
-    /uses: pnpm\/setup@84cb39b217b10273981911c288cd62326dc7c6d2/u,
+    /uses: pnpm\/setup@a0881977cd8ea73b1ed212236c99ca10dcc80cf4/u,
   );
   assert.match(workflow, /runtime: node@24\.19\.0/u);
   assert.match(workflow, /version: 11\.24\.0/u);
