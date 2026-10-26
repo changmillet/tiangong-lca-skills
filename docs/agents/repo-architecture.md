@@ -37,7 +37,7 @@ checkPaths:
   - pnpm-lock.yaml
 lastReviewedAt: 2026-10-26
 lastReviewedCommit: 9df2c07d8b32237bc390e018eb989d2d842af7f1
-lastReviewedNote: "Reviewed Skills #132 / original #131: immutable pnpm/setup v3.1.1 and upload-artifact v7.0.2 pins plus the matching exact assertion preserve Node 24.19.0, pnpm 11.24.0, CLI/Foundry/bootstrap identities, copied-install evidence, credential boundaries and all existing gates. Document bodies and shipped skills remain unchanged; full qualification, fresh four-platform proof, independent review and integration remain required."
+lastReviewedNote: "Reviewed Skills #133 / PR #134: configured installed execution delegates identity to the public CLI runtime API; source-candidate preparation remains isolated and unchanged. Direct/wrapped selection, copied packages, error propagation and installed-consumer tests agree. No task migration, production adoption or dependency qualification is implied."
 related:
   - AGENTS.md
   - .docpact/config.yaml

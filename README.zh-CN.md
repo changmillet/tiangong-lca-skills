@@ -22,7 +22,7 @@ checkPaths:
   - "*/scripts/**"
 lastReviewedAt: 2026-10-26
 lastReviewedCommit: 9df2c07d8b32237bc390e018eb989d2d842af7f1
-lastReviewedNote: 'Reviewed Skills #123 combined adoption of independently verified public CLI 0.1.24 and final Foundry 0.1.15 source 0ab6b545: original C1 scripts/license, Node 24.19.0, TIDAS 0.3.3 and auth/task/write/no-replay boundaries are unchanged.'
+lastReviewedNote: "Reviewed Skills #133 / PR #134: configured installed execution delegates identity to the public CLI runtime API; source-candidate preparation remains isolated and unchanged. Direct/wrapped selection, copied packages, error propagation and installed-consumer tests agree. No task migration, production adoption or dependency qualification is implied."
 ---
 
 # 天工 LCA Skills
