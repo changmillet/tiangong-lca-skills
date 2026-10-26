@@ -4,7 +4,7 @@ import process from 'node:process';
 import { fileURLToPath } from 'node:url';
 import {
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
+  renderCliRuntimeHelp,
   runTiangongCommand,
 } from '../../scripts/lib/cli-launcher.mjs';
 
@@ -43,7 +43,7 @@ Wrapper options:
   -h, --help
 
 Runtime:
-  default                ${publishedCliCommand}
+  default                ${renderCliRuntimeHelp()}
   local override         --cli-dir /path/to/tiangong-cli or TIANGONG_LCA_CLI_DIR
 
 Examples:

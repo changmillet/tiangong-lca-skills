@@ -49,7 +49,8 @@ ownership:
           - pnpm-lock.yaml
           - scripts/check-toolchain.mjs
           - scripts/inspect-local-cli.mjs
-          - scripts/lib/cli-launcher.mjs
+          - scripts/lib/**
+          - scripts/run-cli.mjs
           - scripts/sync-tidas-public-rules.mjs
           - scripts/validate-skills.mjs
           - test/**
@@ -79,7 +80,8 @@ coverage:
     - pnpm-lock.yaml
     - scripts/check-toolchain.mjs
     - scripts/inspect-local-cli.mjs
-    - scripts/lib/cli-launcher.mjs
+    - scripts/lib/**
+    - scripts/run-cli.mjs
     - scripts/sync-tidas-public-rules.mjs
     - AGENTS.md
     - README.md
@@ -134,7 +136,8 @@ routing:
         - pnpm-lock.yaml
         - scripts/check-toolchain.mjs
         - scripts/inspect-local-cli.mjs
-        - scripts/lib/cli-launcher.mjs
+        - scripts/lib/**
+        - scripts/run-cli.mjs
         - scripts/sync-tidas-public-rules.mjs
         - scripts/validate-skills.mjs
         - test/**
@@ -155,7 +158,8 @@ routing:
         - pnpm-lock.yaml
         - scripts/check-toolchain.mjs
         - scripts/inspect-local-cli.mjs
-        - scripts/lib/cli-launcher.mjs
+        - scripts/lib/**
+        - scripts/run-cli.mjs
         - scripts/sync-tidas-public-rules.mjs
         - scripts/validate-skills.mjs
         - test/**
@@ -267,7 +271,9 @@ rules:
         kind: toolchain-validation
       - path: scripts/inspect-local-cli.mjs
         kind: local-cli-candidate-inspection
-      - path: scripts/lib/cli-launcher.mjs
+      - path: scripts/lib/**
+        kind: cli-launcher
+      - path: scripts/run-cli.mjs
         kind: cli-launcher
       - path: scripts/sync-tidas-public-rules.mjs
         kind: public-rule-packaging

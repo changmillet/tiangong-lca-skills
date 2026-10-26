@@ -1,4 +1,4 @@
 interface:
   display_name: "Process Dedup Review"
   short_description: "Review duplicate process candidates with CLI-owned evidence gates"
-  default_prompt: "Use $process-dedup-review for grouped duplicate-process JSON. Before remote enrichment check CLI auth status, hand login to the human, keep account sessions separate, and never request a password, code, token, or legacy API key."
+  default_prompt: "Use $process-dedup-review for grouped duplicate-process JSON. Before remote enrichment check CLI auth status, hand login to the human, keep account sessions separate, and never request a password, code, token, or legacy API key. Use scripts/run-cli.mjs for direct CLI calls and --runtime-info for identity; inherit the configured installed CLI environment without reselecting a version. Preserve original managed-task runtime and UNKNOWN recovery actions."

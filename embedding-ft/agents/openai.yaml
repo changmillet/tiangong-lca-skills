@@ -1,4 +1,4 @@
 interface:
   display_name: "Embedding FT Worker"
   short_description: "Debug and run embedding worker jobs"
-  default_prompt: "Use $embedding-ft to validate an embedding job and run the remote smoke through the pinned CLI OAuth session. Run `tiangong-lca auth doctor-auth --json` first; if login is required, hand the trusted terminal to the human and never request a password, code, token, or legacy API key."
+  default_prompt: "Use $embedding-ft to validate an embedding job and run the remote smoke through the pinned CLI OAuth session. Run `tiangong-lca auth doctor-auth --json` first; if login is required, hand the trusted terminal to the human and never request a password, code, token, or legacy API key. Use scripts/run-cli.mjs for direct CLI calls and --runtime-info for identity; inherit the configured installed CLI environment without reselecting a version. Preserve original managed-task runtime and UNKNOWN recovery actions."

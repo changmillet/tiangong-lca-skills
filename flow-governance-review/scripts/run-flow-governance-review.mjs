@@ -2,7 +2,7 @@
 import process from "node:process";
 import {
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
+  renderCliRuntimeHelp,
   runTiangongCommand,
 } from "../../scripts/lib/cli-launcher.mjs";
 import { resolveFlowGovernanceCliArgv } from "./lib/cli-command-manifest.mjs";
@@ -55,7 +55,7 @@ CLI-backed commands:
   validate-processes        Delegate to tiangong-lca flow validate-processes
 
 Notes:
-  - default runtime is ${publishedCliCommand}
+  - default runtime is ${renderCliRuntimeHelp()}
   - no shell compatibility shim is kept; call this .mjs entrypoint directly
   - the wrapper is now CLI-only; it no longer exposes any Python fallback path
   - publish-reviewed-data now uses the CLI for both local preparation and commit-time process publish

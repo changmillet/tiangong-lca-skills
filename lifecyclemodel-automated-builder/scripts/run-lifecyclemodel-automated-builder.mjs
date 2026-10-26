@@ -3,7 +3,7 @@ import process from 'node:process';
 import {
   buildTiangongInvocation,
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
+  renderCliRuntimeHelp,
   renderShellCommand,
   runTiangongCommand,
 } from '../../scripts/lib/cli-launcher.mjs';
@@ -33,7 +33,7 @@ Canonical CLI commands:
   tiangong-lca lifecyclemodel publish-build --run-dir <dir>
 
 Runtime:
-  default                  ${publishedCliCommand}
+  default                  ${renderCliRuntimeHelp()}
   local override           --cli-dir /path/to/tiangong-lca-cli or TIANGONG_LCA_CLI_DIR
 
 Notes:

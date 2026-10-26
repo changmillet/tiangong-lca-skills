@@ -20,8 +20,8 @@ checkPaths:
   - scripts/validate-skills.mjs
   - "*/SKILL.md"
   - "*/scripts/**"
-lastReviewedAt: 2026-10-03
-lastReviewedCommit: e13d3d80ff16a9ee125c7ccf8856f65361db47c0
+lastReviewedAt: 2026-10-26
+lastReviewedCommit: 9df2c07d8b32237bc390e018eb989d2d842af7f1
 lastReviewedNote: 'Reviewed Skills #123 combined adoption of independently verified public CLI 0.1.24 and final Foundry 0.1.15 source 0ab6b545: original C1 scripts/license, Node 24.19.0, TIDAS 0.3.3 and auth/task/write/no-replay boundaries are unchanged.'
 ---
 
@@ -126,12 +126,31 @@ The existing skills retain their independent uses:
 - `$source-evidence-dataset-development`: evidence-driven data creation or update from PDFs, Word files, URLs, APIs, reports, database references, or scientific literature.
 - `$dataset-rls-maintenance`: current-user RLS-scoped cleanup, delete/retire, reference repair, and redo planning for previously imported rows; orchestrates CLI maintenance plans and readback verification without private database access.
 
+## Use one configured CLI entry
+
+For an already installed, independently qualified CLI (including 0.1.28), configure its launch environment once. The environment/installation owner supplies the existing CLI public runtime expectation and its independently approved file-byte digest:
+
+```sh
+export TIANGONG_LCA_CLI_INSTALLATION=/absolute/path/to/installed/cli
+export TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_FILE=/absolute/path/to/approved-cli-expectation.json
+export TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256='<approved-64-character-sha256>'
+node scripts/run-cli.mjs --runtime-info
+node scripts/run-cli.mjs auth status --json
+node lifecycleinventory-review/scripts/run-review.mjs --rows-file /absolute/path/rows.json --out-dir /absolute/path/qa
+```
+
+In PowerShell set the same three `$env:TIANGONG_LCA_...` variables to the approved absolute paths/digest. Persist them in the consuming application's launch configuration when calls span shells. No project-path discovery or `.env` parsing is added. Skill-local `scripts/run-cli.mjs` selects exactly the same runtime as its wrapper. `--runtime-info` exposes the selected identity/source without writing a report; its observation cannot approve its own qualification.
+
+Run the wrappers with the Node executable qualified by the supplied expectation. Normal configured calls need neither Git, source files nor pnpm and perform no install/build. The CLI owns its public identity verification; Skills does not fix its internal schemas or build layout. Changed/missing qualification fails without fallback. The environment owner remains responsible for installation provenance and dependencies beyond the public CLI-package identity scope.
+
+Without this configuration, independent installations keep the exact 0.1.24 distribution default. `--published-cli` explicitly requests that default; `--cli-dir` explicitly selects the unchanged development/candidate path. An explicit `--cli-installation <absolute-dir>` requires its matching `--cli-runtime-expectation-file` and `--cli-runtime-expectation-sha256`. Never substitute this independent entry for an existing task's owner-returned continuation or UNKNOWN recovery action.
+
 ## Remote authentication
 
 Remote skills use the CLI-owned Supabase OAuth session. Official Production requires no public environment setup or dashboard/client-ID handoff. The published CLI owns its public URL/key/client/callback profile; Skills do not copy it. Start with:
 
 ```bash
-pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca auth status --json
+node scripts/run-cli.mjs auth status --json
 ```
 
 If the result is `login-required`, stop the agent workflow and let the human user run `tiangong-lca auth login` in a trusted terminal. Skills and agents must never request a username, password, authorization code, access token, refresh token, or the deprecated encoded API key. Use `tiangong-lca auth doctor-auth --json` before account-sensitive reads or commits.
@@ -168,7 +187,7 @@ Skills in this repository are expected to be thin wrappers over the unified `tia
 
 Current rules:
 
-- wrappers default to the exact published CLI through `pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca`; sibling directories are never auto-discovered
+- without configured installed selection, wrappers default to the exact published CLI through `pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca`; sibling directories are never auto-discovered
 - local execution is opt-in only through `--cli-dir` or `TIANGONG_LCA_CLI_DIR`
 - use `--published-cli` to override local directory and candidate settings for an explicit published-package case; nested wrappers propagate that selection
 - a matching-release local checkout still uses `--cli-dir` alone and must identify `@tiangong-lca/cli@0.1.24` with its exact Node/pnpm engines, v9 `pnpm-lock.yaml` and published TIDAS source manifest (spec 0.2.3)

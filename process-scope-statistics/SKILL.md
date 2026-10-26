@@ -81,3 +81,9 @@ Read `references/metric-definitions.md` when you need the exact counting rules f
 - Use a separate private session file per account/project/client. Headless execution may use only an orchestrator-injected short-lived access token that never enters argv, prompts, logs, or artifacts.
 - The skill is a thin wrapper over `tiangong-lca process scope-statistics`; it does not carry a separate remote runtime or private `.env` parser.
 - The metric layer is deterministic and string-based. It does not try to semantically merge cross-language variants unless they already share the same stable identifier.
+
+## CLI selection
+
+Use `node scripts/run-cli.mjs` for direct CLI calls so they share this skill wrapper's runtime selection. A consumer may configure `TIANGONG_LCA_CLI_INSTALLATION`, `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_FILE` and `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256` once in its launch environment. These select an already installed and independently qualified CLI through its public runtime API; normal calls need no per-invocation overrides, Git checkout, pnpm or build. Inspect actual identity and selection source with `node scripts/run-cli.mjs --runtime-info`. Invalid configured evidence fails without falling back.
+
+Without an installed selection, the standalone distribution default remains pinned. `--cli-dir` is an explicit development-source path; `--published-cli` explicitly selects the distribution default. Continue existing managed tasks through their original owner-returned actions; do not replace their runtime or replay UNKNOWN operations with this standalone entry.

@@ -1,4 +1,4 @@
 interface:
   display_name: "LCA Publish Executor"
   short_description: "Publish LCA artifact bundles through CLI verification gates"
-  default_prompt: "Use $lca-publish-executor through CLI OAuth. Require doctor-auth before publish, keep account sessions separate, hand login to the human, never request credentials/codes/tokens/API keys, then read publish and verification reports and stop on blockers."
+  default_prompt: "Use $lca-publish-executor through CLI OAuth. Require doctor-auth before publish, keep account sessions separate, hand login to the human, never request credentials/codes/tokens/API keys, then read publish and verification reports and stop on blockers. Use scripts/run-cli.mjs for direct CLI calls and --runtime-info for identity; inherit the configured installed CLI environment without reselecting a version. Preserve original managed-task runtime and UNKNOWN recovery actions."

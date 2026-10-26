@@ -6,7 +6,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
+  renderCliRuntimeHelp,
   withCliRuntimeEnv,
 } from "./lib/cli-launcher.mjs";
 import { flowGovernanceCliCommandEntries } from "../flow-governance-review/scripts/lib/cli-command-manifest.mjs";
@@ -444,7 +444,7 @@ What this validates:
   - targeted doc guards that prevent stale shell/Python migration wording
 
 CLI runtime:
-  - default validation uses ${publishedCliCommand}
+  - default validation uses ${renderCliRuntimeHelp()}
   - local CLI execution is opt-in only through --cli-dir or TIANGONG_LCA_CLI_DIR
   - use --published-cli to override a local CLI environment and verify the exact published package
 `.trim(),

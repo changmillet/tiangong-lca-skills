@@ -101,3 +101,9 @@ node scripts/run-review.mjs \
 - flow QA 已完全移出本 skill，由 `flow-governance-review` 单独承担。
 - `profiles/process/references/process-review-rules.md`：沉淀 process 维度的默认 QA rubric、输出合同和远端 snapshot 特殊约束。
 - `profiles/lifecyclemodel`：沉淀 lifecycle model 维度 QA 规则与 CLI 输出约定。
+
+## CLI selection
+
+Use `node scripts/run-cli.mjs` for direct CLI calls so they share this skill wrapper's runtime selection. A consumer may configure `TIANGONG_LCA_CLI_INSTALLATION`, `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_FILE` and `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256` once in its launch environment. These select an already installed and independently qualified CLI through its public runtime API; normal calls need no per-invocation overrides, Git checkout, pnpm or build. Inspect actual identity and selection source with `node scripts/run-cli.mjs --runtime-info`. Invalid configured evidence fails without falling back.
+
+Without an installed selection, the standalone distribution default remains pinned. `--cli-dir` is an explicit development-source path; `--published-cli` explicitly selects the distribution default. Continue existing managed tasks through their original owner-returned actions; do not replace their runtime or replay UNKNOWN operations with this standalone entry.

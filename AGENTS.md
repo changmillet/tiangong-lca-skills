@@ -31,7 +31,8 @@ checkPaths:
   - scripts/validate-skills.mjs
   - scripts/check-toolchain.mjs
   - scripts/inspect-local-cli.mjs
-  - scripts/lib/cli-launcher.mjs
+  - scripts/lib/**
+  - scripts/run-cli.mjs
   - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
@@ -41,8 +42,8 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-10-17
-lastReviewedCommit: 836238cb81379b4729e7a307b64d40ae2d15366b
+lastReviewedAt: 2026-10-26
+lastReviewedCommit: 9df2c07d8b32237bc390e018eb989d2d842af7f1
 lastReviewedNote: "Reviewed Skills #132 / original #131: immutable pnpm/setup v3.1.1 and upload-artifact v7.0.2 pins plus the matching exact assertion preserve Node 24.19.0, pnpm 11.24.0, CLI/Foundry/bootstrap identities, copied-install evidence, credential boundaries and all existing gates. Document bodies and shipped skills remain unchanged; full qualification, fresh four-platform proof, independent review and integration remain required."
 related:
   - .docpact/config.yaml
@@ -106,13 +107,13 @@ Route those tasks to:
 - Current-account dataset review skills may orchestrate frozen local inputs through public CLI commands, but must not own direct database access, credential parsing, or private account runtime logic.
 - Active remote skills must check `tiangong-lca auth status --json`, hand `auth login` to a human-controlled trusted terminal when required, and use `auth doctor-auth` before account-sensitive commits. They never collect or emit usernames, passwords, authorization codes, tokens, or legacy API keys.
 - Official Production public configuration belongs to the CLI and needs no Skills env setup. Only complete custom project URL/key/client/callback tuples override it; headless tokens require an explicit destination/key and must not implicitly select Production.
-- The three independently installable hybrid-search packages carry byte-identical `scripts/lib/cli-launcher.mjs` bundles inside their own directories. The root launcher remains the only source authority; update the bundles together and retain the isolated copied-package plus byte-equality regression. Do not add authentication or transport logic to those bundles.
+- The three independently installable hybrid-search packages carry byte-identical `scripts/lib/cli-launcher.mjs` bundles inside their own directories. The root `scripts/lib/cli-{launcher,installed,development}.mjs` and `scripts/run-cli.mjs` remain the only source authorities; update all bundled files together and retain the isolated copied-package plus byte-equality regression. Do not add authentication or transport logic to those bundles.
 - Headless tokens are orchestrator-injected, short-lived, and absent from argv/prompts/logs/artifacts. Multi-account work uses a distinct private `TIANGONG_LCA_SESSION_FILE` per account/project/client and preserves expected identity evidence.
 - Source-evidence import skills may instruct agents to resolve external research skills with `npx skills`, but this repository should not mirror or pin those external skill packages.
 - `external-dataset-curated-import`, `source-evidence-dataset-development`, and `dataset-rls-maintenance` are top-level workflow skills only; executable conversion, queue state, validation, QA, write/delete/redo, and verify behavior stays in CLI/Foundry-owned commands.
 - Dataset maintenance under user RLS must use CLI-owned maintenance plans and readback verification. Skills must not add direct Supabase CRUD, service-role paths, or broad delete filters.
-- Node package execution is pinned to Node `24.19.0` and pnpm `11.24.0`; the default runtime is the exact published `@tiangong-lca/cli@0.1.24` and must never float through `@latest`.
-- Never auto-discover or execute a sibling CLI checkout. Local execution is opt-in only through `--cli-dir` or `TIANGONG_LCA_CLI_DIR`; `--published-cli` explicitly overrides a local CLI environment.
+- Repository validation and the unconfigured distribution path pin Node `24.19.0` / pnpm `11.24.0`; the standalone distribution default remains exact `@tiangong-lca/cli@0.1.24`, never `@latest`. Configured installed execution instead uses the CLI-owned public runtime expectation and needs no pnpm or source checkout.
+- Never auto-discover a PATH or sibling CLI. Ordinary consumers may set `TIANGONG_LCA_CLI_INSTALLATION`, `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_FILE` and `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256` once in their launch environment; direct `scripts/run-cli.mjs` and skill wrappers share that selection. `--cli-installation` plus the two `--cli-runtime-expectation-*` flags explicitly select another qualified installation. `--cli-dir` remains the development-source path; `--published-cli` explicitly selects the standalone distribution default. Ambiguous inherited installed/development selections fail.
 - A local checkout matching pinned CLI 0.1.24 retains the existing `--cli-dir` selection and package/engine/lock/source-manifest checks. Selecting another literal package version also requires both `--cli-candidate-file` and `--cli-candidate-sha256`, supplied from independently reviewed caller evidence. The paired environment variables are `TIANGONG_LCA_CLI_CANDIDATE_FILE` and `TIANGONG_LCA_CLI_CANDIDATE_SHA256`; pass them with the selected directory through the same wrapper invocation. `--published-cli` clears all candidate selection.
 - Candidate inspection requires the approved canonical source commit/version, a clean checkout, the fixed toolchain, the actual 18 pinned TIDAS schema contents, and already prepared `dist`/`node_modules` trees. It does not install, build, grant execution/data permission, or automatically qualify its own output. Review the inventory against the assignment and verified frozen-install/build evidence before independently binding its exact file-byte SHA-256.
 - Candidate preflight rejects missing or changed source, package, lock, manifest, dependency or build evidence before preparation. It never repairs that failure. After successful preflight, the existing source-mtime preparation path remains: install with `pnpm install --frozen-lockfile` before `pnpm run build` when needed, then recheck every candidate identity before dispatch. There is no public no-install mode; internal `prepareLocalCli: false` does not bypass qualification. Recovery preserves a failed/UNKNOWN original task and qualifies a newly prepared isolated checkout, without version spoofing, editing an old qualification or silently falling back to published CLI.
@@ -120,6 +121,12 @@ Route those tasks to:
 - The canonical local validation command is `pnpm validate` after `pnpm install --frozen-lockfile`.
 - You may pass one or more skill paths to validate only the touched skills
 - For documentation-governance changes, run `scripts/docpact validate-config --root . --strict` and `scripts/docpact lint --root . --base origin/main --head HEAD --mode enforce`
+
+## Installed runtime boundary
+
+`cli-launcher.mjs` owns selection, environment propagation and argv dispatch. `cli-installed.mjs` uses only `@tiangong-lca/cli/runtime` and its existing `tiangong-lca.cli-runtime-expectation.v1`; installation provenance/qualification belongs to the environment owner. The expectation file and independently approved digest must come from that owner, never self-approval of `--runtime-info`. Its `cli-package` scope does not attest the transitive dependency graph or grant data permission. The selected public API verifies package/content/platform/Node identity; Skills does not duplicate its file inventory, TIDAS schema or compatibility semantics.
+
+Installed calls never install, build, scan Git or fall back. The existing source-candidate checks and source-mtime preparation are retained unchanged in `cli-development.mjs` and reached only for explicit development selection; the unconfigured published path retains its existing distribution behavior. New task selection is not old-task migration: resume only owner-returned actions, preserving bound runtime, attempt and UNKNOWN semantics. `scripts/run-cli.mjs --runtime-info` is read-only identity inspection, not another execution ledger or business report.
 
 ## Hard Boundaries
 
