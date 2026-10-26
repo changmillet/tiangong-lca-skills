@@ -2,7 +2,7 @@
 import process from 'node:process';
 import {
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
+  renderCliRuntimeHelp,
   runTiangongCommand,
 } from '../../scripts/lib/cli-launcher.mjs';
 
@@ -25,7 +25,7 @@ Profiles:
   lifecyclemodel           Delegate to tiangong-lca qa lifecyclemodel
 
 Runtime:
-  default                  ${publishedCliCommand}
+  default                  ${renderCliRuntimeHelp()}
   local override           --cli-dir /path/to/tiangong-lca-cli or TIANGONG_LCA_CLI_DIR
 
 Examples:

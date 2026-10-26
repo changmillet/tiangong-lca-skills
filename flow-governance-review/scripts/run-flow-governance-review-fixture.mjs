@@ -9,7 +9,7 @@ import process from "node:process";
 import { fileURLToPath } from "node:url";
 import {
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
+  renderCliRuntimeHelp,
   withCliRuntimeEnv,
 } from "../../scripts/lib/cli-launcher.mjs";
 
@@ -29,7 +29,7 @@ What this verifies:
   - the whole chain runs against a local Supabase-shaped fixture server, not a real remote
 
 Runtime:
-  default                  ${publishedCliCommand}
+  default                  ${renderCliRuntimeHelp()}
   local override           --cli-dir /path/to/tiangong-lca-cli or TIANGONG_LCA_CLI_DIR
 `.trim();
 }

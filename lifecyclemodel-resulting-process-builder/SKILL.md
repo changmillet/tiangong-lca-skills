@@ -9,7 +9,7 @@ Use this skill when the source of truth is already a lifecycle model `json_order
 
 ## Run Workflow
 
-1. By default the wrapper runs the exact published CLI through `pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca`. Use `TIANGONG_LCA_CLI_DIR` or `--cli-dir` only for local dev/CI overrides.
+1. By default the wrapper runs the exact published CLI through `node scripts/run-cli.mjs`. Use `TIANGONG_LCA_CLI_DIR` or `--cli-dir` only for local dev/CI overrides.
 2. Use `node scripts/run-lifecyclemodel-resulting-process-builder.mjs build ...` to delegate to `tiangong-lca lifecyclemodel build-resulting-process`.
 3. Use `node scripts/run-lifecyclemodel-resulting-process-builder.mjs publish ...` to delegate to `tiangong-lca lifecyclemodel publish-resulting-process`.
 4. Confirm the local artifacts in the run directory before any later `tiangong-lca publish run` step.
@@ -110,3 +110,9 @@ They are different pipelines and should stay separate.
 - `references/projection-contract.md`: bundle shape and relation semantics
 - `references/builder-invocation-contract.md`: caller/callee contract
 - `references/integration-notes.md`: current cross-project architecture notes
+
+## CLI selection
+
+Use `node scripts/run-cli.mjs` for direct CLI calls so they share this skill wrapper's runtime selection. A consumer may configure `TIANGONG_LCA_CLI_INSTALLATION`, `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_FILE` and `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256` once in its launch environment. These select an already installed and independently qualified CLI through its public runtime API; normal calls need no per-invocation overrides, Git checkout, pnpm or build. Inspect actual identity and selection source with `node scripts/run-cli.mjs --runtime-info`. Invalid configured evidence fails without falling back.
+
+Without an installed selection, the standalone distribution default remains pinned. `--cli-dir` is an explicit development-source path; `--published-cli` explicitly selects the distribution default. Continue existing managed tasks through their original owner-returned actions; do not replace their runtime or replay UNKNOWN operations with this standalone entry.

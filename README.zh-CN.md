@@ -20,9 +20,9 @@ checkPaths:
   - scripts/validate-skills.mjs
   - "*/SKILL.md"
   - "*/scripts/**"
-lastReviewedAt: 2026-10-03
-lastReviewedCommit: e13d3d80ff16a9ee125c7ccf8856f65361db47c0
-lastReviewedNote: 'Reviewed Skills #123 combined adoption of independently verified public CLI 0.1.24 and final Foundry 0.1.15 source 0ab6b545: original C1 scripts/license, Node 24.19.0, TIDAS 0.3.3 and auth/task/write/no-replay boundaries are unchanged.'
+lastReviewedAt: 2026-10-26
+lastReviewedCommit: 9df2c07d8b32237bc390e018eb989d2d842af7f1
+lastReviewedNote: "Reviewed Skills #133 / PR #134: configured installed execution delegates identity to the public CLI runtime API; source-candidate preparation remains isolated and unchanged. Direct/wrapped selection, copied packages, error propagation and installed-consumer tests agree. No task migration, production adoption or dependency qualification is implied."
 ---
 
 # 天工 LCA Skills
@@ -126,12 +126,31 @@ npx skills add https://github.com/tiangong-lca/agent-skills --skill foundry-tida
 - `$source-evidence-dataset-development`：从 PDF、Word、URL、API、报告、数据库引用或科学文献进行 evidence-driven 数据新增或更新。
 - `$dataset-rls-maintenance`：在当前用户 RLS 可见范围内，对历史错误导入数据做清理、删除/退役、引用修复和 redo 计划；只编排 CLI maintenance plan 与 readback verification，不实现私有数据库访问。
 
+## 统一使用已配置的 CLI 入口
+
+对已经安装并独立验证的正式 CLI（包括 0.1.28），只需在消费环境配置一次安装目录、CLI 既有公开运行时身份文件及其独立核准的 SHA-256：
+
+```sh
+export TIANGONG_LCA_CLI_INSTALLATION=/absolute/path/to/installed/cli
+export TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_FILE=/absolute/path/to/approved-cli-expectation.json
+export TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256='<approved-64-character-sha256>'
+node scripts/run-cli.mjs --runtime-info
+node scripts/run-cli.mjs auth status --json
+node lifecycleinventory-review/scripts/run-review.mjs --rows-file /absolute/path/rows.json --out-dir /absolute/path/qa
+```
+
+PowerShell 使用同名 `$env:TIANGONG_LCA_...` 变量。跨终端或进程调用时，由消费应用的启动配置持久提供这些值；不要求本地数据工作区，也不自动读取 `.env` 或搜索 PATH。各 Skill 的 `scripts/run-cli.mjs` 与普通 wrapper 复用同一选择。`--runtime-info` 只读显示实际身份和选择来源，不写额外报告，其观察结果不能自行批准资格。
+
+使用该身份文件已核准的 Node 可执行文件启动 wrapper。正式调用不需要 Git、源码、pnpm，不安装或构建。公开身份检查由 CLI 负责，Skills 不绑定内部 schema 或构建布局；配置或资格漂移时停止，不静默回退。安装来源和传递依赖的完整资格仍由安装/环境所有者负责，不能用公开 `cli-package` 身份观察替代。
+
+未配置时保留独立分发默认 0.1.24。`--published-cli` 明确选择该默认；`--cli-dir` 仍是原有源码候选开发路径。显式 `--cli-installation <absolute-dir>` 必须同时提供对应的 `--cli-runtime-expectation-file` 和 `--cli-runtime-expectation-sha256`。已有任务继续使用原 owner 返回的固定入口和 UNKNOWN 恢复动作，不能被这个独立调用默认覆盖。
+
 ## 远程认证
 
 远程 skill 统一使用 CLI 管理的 Supabase OAuth session。官方 Production 不需要 public 环境变量、Dashboard 或额外索取 client ID；公开 URL/key/client/callback profile 由 CLI 唯一维护，Skills 不复制。先运行：
 
 ```bash
-pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca auth status --json
+node scripts/run-cli.mjs auth status --json
 ```
 
 若结果是 `login-required`，停止 agent workflow，把可信终端交给人类运行 `tiangong-lca auth login`。skill/agent 不得索取用户名、密码、authorization code、access token、refresh token 或旧编码 API key。账号敏感读取和 commit 前运行 `tiangong-lca auth doctor-auth --json`。

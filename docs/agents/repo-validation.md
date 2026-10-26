@@ -23,7 +23,8 @@ checkPaths:
   - scripts/validate-skills.mjs
   - scripts/check-toolchain.mjs
   - scripts/inspect-local-cli.mjs
-  - scripts/lib/cli-launcher.mjs
+  - scripts/lib/**
+  - scripts/run-cli.mjs
   - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
@@ -34,9 +35,9 @@ checkPaths:
   - scripts/docpact
   - scripts/docpact-gate.sh
   - scripts/install-git-hooks.sh
-lastReviewedAt: 2026-10-17
-lastReviewedCommit: 836238cb81379b4729e7a307b64d40ae2d15366b
-lastReviewedNote: "Reviewed Skills #132 / original #131: immutable pnpm/setup v3.1.1 and upload-artifact v7.0.2 pins plus the matching exact assertion preserve Node 24.19.0, pnpm 11.24.0, CLI/Foundry/bootstrap identities, copied-install evidence, credential boundaries and all existing gates. Document bodies and shipped skills remain unchanged; full qualification, fresh four-platform proof, independent review and integration remain required."
+lastReviewedAt: 2026-10-26
+lastReviewedCommit: 9df2c07d8b32237bc390e018eb989d2d842af7f1
+lastReviewedNote: "Reviewed Skills #133 / PR #134: configured installed execution delegates identity to the public CLI runtime API; source-candidate preparation remains isolated and unchanged. Direct/wrapped selection, copied packages, error propagation and installed-consumer tests agree. No task migration, production adoption or dependency qualification is implied."
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -71,6 +72,12 @@ You may pass one or more skill directories to validate only the touched skill pa
 - Documentation-governance changes require docpact validation.
 - Remote-auth instruction changes require `test/oauth-skill-contract.test.mjs`, the repository-wide password-equivalent doc guard, validation against the exact OAuth-capable local CLI, and the full `pnpm prepush:gate` once the published CLI pin is updated.
 - First-install bootstrap changes require `test/installed-hybrid-bootstrap.test.mjs`: copy each of the three hybrid-search skill directories into a fresh isolated directory, clear public auth/CLI overrides, run the real pinned published wrapper without login, inspect its Production dry-run, reject an incomplete custom URL, and prove no session file or outside repository launcher is used. Bundled launchers must match the root authority byte-for-byte. A separate human-controlled fresh browser login plus live redacted doctor/read-only search remains release acceptance, never a repository test credential.
+
+## Installed consumer regression
+
+`test/installed-cli-selection.test.mjs` runs a real isolated official CLI 0.1.28 install. The test-owned expected package digest is fixed independently of the consumer observation; the Node digest comes from the test host. This regression fixture is not production qualification. It copies QA and all three hybrid packages, removes executable search paths, compares a nonempty frozen Process QA result against the shared direct entry (excluding only `generated_at_utc`), checks unchanged input bytes and reads actual CLI version/selection provenance. No credentials or production data are used; search is dry-run only.
+
+Synthetic public-owner fixtures exercise changed internal asset/layout identities without Skills edits, native nonzero stdout/stderr and UNKNOWN byte preservation, no replay, incomplete/ambiguous selection, changed expectation bytes, owner identity drift and missing installations. Existing source-candidate regressions remain mandatory. Both copied installed selection and the unconfigured 0.1.24 distribution path run on the existing four-platform matrix. All library bundles and the direct entry must be byte-identical to their root authority.
 
 ## Local Candidate Qualification and Acceptance
 

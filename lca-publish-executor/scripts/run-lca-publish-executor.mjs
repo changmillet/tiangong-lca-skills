@@ -2,7 +2,7 @@
 import process from 'node:process';
 import {
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
+  renderCliRuntimeHelp,
   runTiangongCommand,
 } from '../../scripts/lib/cli-launcher.mjs';
 
@@ -30,7 +30,7 @@ Examples:
   node scripts/run-lca-publish-executor.mjs publish --request assets/example-request.json --commit --json
 
 Notes:
-  - default runtime is ${publishedCliCommand}
+  - default runtime is ${renderCliRuntimeHelp()}
   - this wrapper is CLI-only; there is no Python or MCP fallback path
   - publish execution is unified under tiangong-lca publish run
 `.trim();

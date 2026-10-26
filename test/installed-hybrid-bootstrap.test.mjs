@@ -42,6 +42,12 @@ for (const entity of ['flow', 'process', 'lifecyclemodel']) {
         readFileSync(path.join(repoRoot, 'scripts', 'lib', 'cli-launcher.mjs'), 'utf8'),
         'bundled launcher must remain byte-identical to the one repository authority',
       );
+      for (const library of ['cli-development.mjs', 'cli-installed.mjs']) {
+        assert.equal(readFileSync(path.join(installed, 'scripts', 'lib', library), 'utf8'),
+          readFileSync(path.join(repoRoot, 'scripts', 'lib', library), 'utf8'));
+      }
+      assert.equal(readFileSync(path.join(installed, 'scripts', 'run-cli.mjs'), 'utf8'),
+        readFileSync(path.join(repoRoot, 'scripts', 'run-cli.mjs'), 'utf8'));
       const custom = run(['--base-url', 'https://custom.supabase.co']);
       assert.ifError(custom.error);
       assert.equal(custom.status, 2, custom.stderr || custom.stdout);

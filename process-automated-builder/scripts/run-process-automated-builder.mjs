@@ -11,7 +11,7 @@ import path from "node:path";
 import process from "node:process";
 import {
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
+  renderCliRuntimeHelp,
   runTiangongCommand,
 } from "../../scripts/lib/cli-launcher.mjs";
 
@@ -60,7 +60,7 @@ auto-build compatibility options:
   --operation <mode>        produce | treat (default: produce)
 
 Runtime:
-  default                  ${publishedCliCommand}
+  default                  ${renderCliRuntimeHelp()}
   local override           --cli-dir /path/to/tiangong-lca-cli or TIANGONG_LCA_CLI_DIR
 
 Notes:

@@ -30,13 +30,14 @@ checkPaths:
   - scripts/install-git-hooks.sh
   - scripts/check-toolchain.mjs
   - scripts/inspect-local-cli.mjs
-  - scripts/lib/cli-launcher.mjs
+  - scripts/lib/**
+  - scripts/run-cli.mjs
   - scripts/sync-tidas-public-rules.mjs
   - package.json
   - pnpm-lock.yaml
-lastReviewedAt: 2026-10-17
-lastReviewedCommit: 836238cb81379b4729e7a307b64d40ae2d15366b
-lastReviewedNote: "Reviewed Skills #132 / original #131: immutable pnpm/setup v3.1.1 and upload-artifact v7.0.2 pins plus the matching exact assertion preserve Node 24.19.0, pnpm 11.24.0, CLI/Foundry/bootstrap identities, copied-install evidence, credential boundaries and all existing gates. Document bodies and shipped skills remain unchanged; full qualification, fresh four-platform proof, independent review and integration remain required."
+lastReviewedAt: 2026-10-26
+lastReviewedCommit: 9df2c07d8b32237bc390e018eb989d2d842af7f1
+lastReviewedNote: "Reviewed Skills #133 / PR #134: configured installed execution delegates identity to the public CLI runtime API; source-candidate preparation remains isolated and unchanged. Direct/wrapped selection, copied packages, error propagation and installed-consumer tests agree. No task migration, production adoption or dependency qualification is implied."
 related:
   - AGENTS.md
   - .docpact/config.yaml
@@ -55,7 +56,7 @@ related:
 - `scripts/validate-skills.mjs` and `test/**` define repo-level validation for wrappers and packaging rules.
 - `scripts/sync-tidas-public-rules.mjs` binds the selected skill-local public-rule copies to one exact published `tidas-spec` source/version/hash; package-local readers fail closed on altered assets or overrides.
 - `package.json` and `pnpm-lock.yaml` pin the validation-only Node `24.19.0` / pnpm `11.24.0` package contract; this does not turn the skill packages into a TypeScript runtime.
-- `scripts/lib/cli-launcher.mjs` owns exact local/published CLI selection, release/candidate evidence checks, frozen local preparation, and argv-only process dispatch.
+- `scripts/lib/cli-launcher.mjs` owns installed/development/distribution selection, nested environment propagation and argv-only dispatch. `cli-installed.mjs` delegates installed identity to the CLI public runtime API. `cli-development.mjs` retains the existing explicit source-candidate evidence and preparation path. `scripts/run-cli.mjs` is the shared direct entry and read-only runtime identity inspection surface.
 - `scripts/inspect-local-cli.mjs` owns observation of a prepared local CLI against caller-supplied source/version expectations; independent caller review and qualification remain outside the tool.
 - `README.md` and `README.zh-CN.md` explain installation and usage.
 - `.claude-plugin/marketplace.json` groups the existing skill packages for discovery. Its Foundry group lists the ordinary entry first, the on-demand authoring role, and the retained specialized workflows.
@@ -82,7 +83,17 @@ If a Foundry/source-evidence workflow needs an external Tiangong KB research ski
 
 Current-account dataset review is owned here only as a skill package and wrapper contract. Its durable runtime behavior belongs in public `tiangong-lca` CLI commands such as dataset validation, reference rewriting, lifecyclemodel save-draft, and lifecyclemodel graph export.
 
-The shared wrapper launcher defaults to pinned published `@tiangong-lca/cli@0.1.24` and never discovers sibling directories. CI checks out canonical `tiangong-lca/cli` at release merge `89c71772ca1afcfc09705f8c27a9703c6bf8ccf6`, which carries package version 0.1.24 and the source-bound TIDAS manifest for spec `f118660dbcbfbf736be74837cce0bf26cd177245` (0.2.3) and semantic source `9c0d8b1c8ceb1841074f5bc6de5fbb7fcc9318f5`. An explicit `--cli-dir` or `TIANGONG_LCA_CLI_DIR` may still select a matching-release local checkout without a candidate file. Its existing package/engine/lock/source-manifest checks and source-mtime-based frozen preparation remain supported. All execution stays argv-authoritative with `shell: false`, using native `pnpm.exe` on Windows.
+Without an installed environment selection, the shared wrapper launcher defaults to pinned published `@tiangong-lca/cli@0.1.24` and never discovers sibling directories. CI checks out canonical `tiangong-lca/cli` at release merge `89c71772ca1afcfc09705f8c27a9703c6bf8ccf6`, which carries package version 0.1.24 and the source-bound TIDAS manifest for spec `f118660dbcbfbf736be74837cce0bf26cd177245` (0.2.3) and semantic source `9c0d8b1c8ceb1841074f5bc6de5fbb7fcc9318f5`. An explicit `--cli-dir` or `TIANGONG_LCA_CLI_DIR` may still select a matching-release local checkout without a candidate file. Its existing package/engine/lock/source-manifest checks and source-mtime-based frozen preparation remain supported. All execution stays argv-authoritative with `shell: false`, using native `pnpm.exe` on Windows.
+
+### Configured installed execution
+
+The consumer launch environment supplies an absolute `TIANGONG_LCA_CLI_INSTALLATION` package directory and `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_FILE`, plus its independently trusted `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256`. This is environment configuration, not a Skills runtime registry. No local data workspace is required. All normal wrappers, nested calls and the direct `scripts/run-cli.mjs` share it. Explicit installed/source/distribution choices replace inherited selection; changing the installation requires its own explicit expectation pair. Conflicting inherited installed and source selections fail.
+
+The thin installed adapter passes the approved existing CLI expectation bytes through stdin to `@tiangong-lca/cli/runtime.assertCliRuntimeMatches`, in the selected package scope, then dispatches its public executable/argv. Identity checks remain CLI-owned. Skills verifies the external evidence digest and returned package/root/command envelope, preserves business stdout/stderr/exit and does not load `.env`, install, build, interpret schemas or read Task/attempt state. Invalid selections fail without fallback. Package qualification/complete dependency provenance stays with the installer; the public expectation's `cli-package` scope is not a substitute for it.
+
+`--runtime-info` on the direct entry returns the native descriptor plus selection source and expectation digest without executing a business operation. It creates no report files or registry. Existing task continuations retain their original owner's runtime; the independent environment default cannot change original managed commands or authorize UNKNOWN replay.
+
+The three copied hybrid packages bundle all three library modules plus `scripts/run-cli.mjs` byte-for-byte. Other repository-backed skills expose a three-line `scripts/run-cli.mjs` delegator to the same repository entry, matching their existing wrapper packaging boundary.
 
 ### Explicit local candidate boundary
 

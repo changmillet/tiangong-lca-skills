@@ -128,7 +128,7 @@ The wrapper intentionally requires `--out-dir` / `--run-dir` instead of letting 
 
 ## Required Env
 
-- Wrappers use `pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca` by default.
+- Wrappers use `node scripts/run-cli.mjs` by default.
 - Set `TIANGONG_LCA_CLI_DIR` only when you need a local CLI working tree for dev/CI.
 
 The canonical commands above do not require any legacy provider, transport, or OCR env stack.

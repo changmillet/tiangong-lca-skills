@@ -2,7 +2,7 @@
 import process from 'node:process';
 import {
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
+  renderCliRuntimeHelp,
   runTiangongCommand,
 } from '../../scripts/lib/cli-launcher.mjs';
 
@@ -31,7 +31,7 @@ Examples:
   node scripts/run-lifecyclemodel-recursive-orchestrator.mjs publish --run-dir /abs/path/run-001 --publish-lifecyclemodels --publish-resulting-process-relations --json
 
 Notes:
-  - default runtime is ${publishedCliCommand}
+  - default runtime is ${renderCliRuntimeHelp()}
   - this wrapper is CLI-only; there is no Python fallback path
   - recursive orchestration now lives in tiangong-lca lifecyclemodel orchestrate
 `.trim();

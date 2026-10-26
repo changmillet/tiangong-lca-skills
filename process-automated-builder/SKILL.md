@@ -186,7 +186,7 @@ node scripts/run-process-automated-builder.mjs evidence-search plan --query "中
 
 ## Runtime Requirements
 
-- The wrapper runs the exact published CLI by default through `pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca`.
+- The wrapper runs the exact published CLI by default through `node scripts/run-cli.mjs`.
 - Set `TIANGONG_LCA_CLI_DIR` or pass `--cli-dir` only when you need a local CLI working tree for dev/CI.
 - The wrapper requires explicit output paths instead of relying on `cwd/artifacts/...` defaults.
 - For repeatable runs, use an explicit output root such as `/abs/path/artifacts/<case_slug>/...`.
@@ -219,3 +219,9 @@ node scripts/run-process-automated-builder.mjs evidence-search plan --query "中
 
 - `references/workflow-map.md`: current CLI-only execution map and output layout.
 - `references/operations-playbook.md`: concise command examples and troubleshooting.
+
+## CLI selection
+
+Use `node scripts/run-cli.mjs` for direct CLI calls so they share this skill wrapper's runtime selection. A consumer may configure `TIANGONG_LCA_CLI_INSTALLATION`, `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_FILE` and `TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256` once in its launch environment. These select an already installed and independently qualified CLI through its public runtime API; normal calls need no per-invocation overrides, Git checkout, pnpm or build. Inspect actual identity and selection source with `node scripts/run-cli.mjs --runtime-info`. Invalid configured evidence fails without falling back.
+
+Without an installed selection, the standalone distribution default remains pinned. `--cli-dir` is an explicit development-source path; `--published-cli` explicitly selects the distribution default. Continue existing managed tasks through their original owner-returned actions; do not replace their runtime or replay UNKNOWN operations with this standalone entry.
