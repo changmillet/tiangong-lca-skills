@@ -218,7 +218,7 @@ function subprocessEnv(fixture) {
   const env = sanitizedEnv();
   const existingPath = Object.entries(env).find(([name]) => name.toUpperCase() === 'PATH')?.[1] ?? '';
   for (const name of Object.keys(env)) {
-    if (name.toUpperCase() === 'PATH' || /^TIANGONG_LCA_CLI_(?:DIR|MODE|CANDIDATE_FILE|CANDIDATE_SHA256)$/u.test(name)) delete env[name];
+    if (name.toUpperCase() === 'PATH' || /^TIANGONG_LCA_CLI_/u.test(name)) delete env[name];
   }
   // Normal CI supplies the exact repository toolchain on PATH. A local caller
   // may explicitly supply its exact toolchain directory without committing it.
