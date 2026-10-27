@@ -6,8 +6,7 @@ import process from 'node:process';
 
 export const expectedNodeVersion = '24.19.0';
 export const expectedPnpmVersion = '11.24.0';
-export const publishedCliPackageSpec = '@tiangong-lca/cli@0.1.24';
-export const publishedCliCommand = `pnpm dlx --package=${publishedCliPackageSpec} tiangong-lca`;
+export const missingCliMessage = 'No CLI installation configured. Ask the installation owner to configure TIANGONG_LCA_CLI_INSTALLATION, TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_FILE and TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256. Skills does not install or select a CLI version. For source development, explicitly use --cli-dir.';
 
 const expectedCliPackageName = '@tiangong-lca/cli';
 const expectedCliPackageVersion = '0.1.24';
@@ -281,16 +280,15 @@ function resolvePnpmCommand(platform = process.platform) {
 
 export function normalizeCliRuntimeArgs(rawArgs, options = {}) {
   const env = options.env ?? process.env;
-  let cliDir =
-    env.TIANGONG_LCA_CLI_MODE === 'published'
-      ? null
-      : normalizeCliDir(env.TIANGONG_LCA_CLI_DIR);
+  if (env.TIANGONG_LCA_CLI_MODE === 'published' || rawArgs.some((arg) => arg.split('=', 1)[0] === '--published-cli')) {
+    throw new Error('Published CLI selection has been removed. Remove --published-cli / TIANGONG_LCA_CLI_MODE=published and configure the installed CLI entry.');
+  }
+  let cliDir = normalizeCliDir(env.TIANGONG_LCA_CLI_DIR);
   const envCliDir = cliDir;
   let cliCandidateFile = cliDir ? normalizeCliDir(env[candidateFileEnv]) : null;
   let cliCandidateSha256 = cliDir ? env[candidateHashEnv]?.trim() || null : null;
   let explicitCandidateFile = false;
   let explicitCandidateHash = false;
-  let explicitPublished = env.TIANGONG_LCA_CLI_MODE === 'published';
   const args = [];
 
   for (let index = 0; index < rawArgs.length; index += 1) {
@@ -301,7 +299,6 @@ export function normalizeCliRuntimeArgs(rawArgs, options = {}) {
         throw new Error('--cli-dir requires a value');
       }
       cliDir = normalizeCliDir(rawArgs[index + 1]);
-      explicitPublished = false;
       index += 1;
       continue;
     }
@@ -309,17 +306,6 @@ export function normalizeCliRuntimeArgs(rawArgs, options = {}) {
     if (arg.startsWith('--cli-dir=')) {
       cliDir = normalizeCliDir(arg.slice('--cli-dir='.length));
       if (!cliDir) throw new Error('--cli-dir requires a value');
-      explicitPublished = false;
-      continue;
-    }
-
-    if (arg === '--published-cli') {
-      cliDir = null;
-      cliCandidateFile = null;
-      cliCandidateSha256 = null;
-      explicitCandidateFile = false;
-      explicitCandidateHash = false;
-      explicitPublished = true;
       continue;
     }
 
@@ -352,7 +338,7 @@ export function normalizeCliRuntimeArgs(rawArgs, options = {}) {
     if (!explicitCandidateHash) cliCandidateSha256 = null;
   }
   if (!cliDir) {
-    if (!explicitPublished && (explicitCandidateFile || explicitCandidateHash)) {
+    if (explicitCandidateFile || explicitCandidateHash) {
       candidateError('candidate qualification requires an explicit --cli-dir selection');
     }
     cliCandidateFile = null;
@@ -460,12 +446,7 @@ export function buildTiangongInvocation(tiangongArgs, options = {}) {
     };
   }
 
-  return {
-    mode: 'published',
-    command: resolvePnpmCommand(options.platform),
-    args: ['dlx', `--package=${publishedCliPackageSpec}`, 'tiangong-lca', ...tiangongArgs],
-    packageSpec: publishedCliPackageSpec,
-  };
+  throw new Error(missingCliMessage);
 }
 
 function newestMtimeMs(targetPath, options) {
@@ -665,7 +646,7 @@ export function withCliRuntimeEnv(baseEnv, cliDir, options = {}) {
     if (options.cliCandidateSha256) env[candidateHashEnv] = options.cliCandidateSha256;
   } else {
     delete env.TIANGONG_LCA_CLI_DIR;
-    env.TIANGONG_LCA_CLI_MODE = 'published';
+    delete env.TIANGONG_LCA_CLI_MODE;
   }
 
   return env;

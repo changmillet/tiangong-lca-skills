@@ -8,8 +8,6 @@ import {
   expectedPnpmVersion,
   expectedTidasSpecSource,
   normalizeCliRuntimeArgs,
-  publishedCliCommand,
-  publishedCliPackageSpec,
   runTiangongCommand,
   withCliRuntimeEnv,
 } from '../scripts/lib/cli-launcher.mjs';
@@ -68,6 +66,11 @@ function localCliFixture(cliDir, overrides = {}) {
   };
 }
 
+function selectedSourceFixture() {
+  const cliDir = fixturePath('selected source');
+  return { cliDir, ...localCliFixture(cliDir), prepareLocalCli: false };
+}
+
 function passingToolchain() {
   return {
     nodeVersion: expectedNodeVersion,
@@ -88,7 +91,7 @@ test('local CLI fixture declarations do not hard-code POSIX roots', () => {
   );
 });
 
-test('normalizeCliRuntimeArgs defaults to the published CLI even when a sibling exists', () => {
+test('normalizeCliRuntimeArgs leaves runtime unselected even when a sibling exists', () => {
   const repoRoot = fixturePath('tiangong-lca-skills');
   const siblingCliDir = fixturePath('tiangong-cli');
   const { cliDir, args } = normalizeCliRuntimeArgs(['embedding-ft', '--help'], {
@@ -100,14 +103,10 @@ test('normalizeCliRuntimeArgs defaults to the published CLI even when a sibling 
   assert.equal(cliDir, null);
   assert.deepEqual(args, ['embedding-ft', '--help']);
 
-  const invocation = buildTiangongInvocation(args, {
-    repoRoot,
-    pathExists: (candidate) => candidate === siblingCliDir,
-  });
-  assert.equal(invocation.mode, 'published');
+  assert.throws(() => buildTiangongInvocation(args, { repoRoot, pathExists: () => true }), /No CLI installation configured/);
 });
 
-test('normalizeCliRuntimeArgs keeps explicit cli-dir overrides above the published default', () => {
+test('normalizeCliRuntimeArgs keeps explicit source selection', () => {
   const manualCliDir = fixturePath('manual cli');
   const { cliDir, args } = normalizeCliRuntimeArgs(
     ['--cli-dir', manualCliDir, 'embedding-ft', '--help'],
@@ -121,27 +120,14 @@ test('normalizeCliRuntimeArgs keeps explicit cli-dir overrides above the publish
   assert.deepEqual(args, ['embedding-ft', '--help']);
 });
 
-test('normalizeCliRuntimeArgs can explicitly select the published CLI', () => {
-  const { cliDir, args } = normalizeCliRuntimeArgs(
-    ['--published-cli', 'embedding-ft', '--help'],
-    {
-      repoRoot: fixturePath('tiangong-lca-skills'),
-      pathExists: () => true,
-    },
-  );
-
-  assert.equal(cliDir, null);
-  assert.deepEqual(args, ['embedding-ft', '--help']);
-
-  const invocation = buildTiangongInvocation(args, {
-    cliDir,
-    repoRoot: fixturePath('tiangong-lca-skills'),
-    pathExists: () => true,
-  });
-  assert.equal(invocation.mode, 'published');
+test('retired published selection is rejected instead of selecting another runtime', () => {
+  for (const args of [['--published-cli'], ['--published-cli=true'], ['--published-cli', '--cli-dir', fixturePath('source')]]) {
+    assert.throws(() => normalizeCliRuntimeArgs(args, { env: {} }), /selection has been removed/);
+  }
+  assert.throws(() => normalizeCliRuntimeArgs(['--help'], { env: { TIANGONG_LCA_CLI_MODE: 'published' } }), /selection has been removed/);
 });
 
-test('published CLI selection propagates through nested wrapper environments', () => {
+test('cleared nested selection stays unconfigured without a published fallback', () => {
   const oldCliDir = fixturePath('old-cli');
   const exactCliDir = fixturePath('exact-cli');
   const publishedEnv = withCliRuntimeEnv(
@@ -151,7 +137,7 @@ test('published CLI selection propagates through nested wrapper environments', (
     null,
   );
   assert.equal(publishedEnv.TIANGONG_LCA_CLI_DIR, undefined);
-  assert.equal(publishedEnv.TIANGONG_LCA_CLI_MODE, 'published');
+  assert.equal(publishedEnv.TIANGONG_LCA_CLI_MODE, undefined);
 
   const publishedRuntime = normalizeCliRuntimeArgs(['qa', 'process'], {
     env: publishedEnv,
@@ -235,41 +221,6 @@ test('normalizeCliRuntimeArgs inherits candidate evidence only for the selected 
   }
 });
 
-test('published selection clears inherited and explicit candidate evidence', () => {
-  const cliDir = fixturePath('candidate cli');
-  const cliCandidateFile = fixturePath('qualified', 'candidate.json');
-  const cliCandidateSha256 = 'c'.repeat(64);
-  const env = {
-    TIANGONG_LCA_CLI_DIR: cliDir,
-    TIANGONG_LCA_CLI_CANDIDATE_FILE: cliCandidateFile,
-    TIANGONG_LCA_CLI_CANDIDATE_SHA256: cliCandidateSha256,
-  };
-  assert.deepEqual(normalizeCliRuntimeArgs(['--published-cli', '--help'], { env }), {
-    cliDir: null,
-    cliCandidateFile: null,
-    cliCandidateSha256: null,
-    args: ['--help'],
-  });
-  assert.deepEqual(normalizeCliRuntimeArgs([
-    '--cli-candidate-file', cliCandidateFile,
-    '--cli-candidate-sha256', cliCandidateSha256,
-    '--published-cli', '--help',
-  ], { env }), {
-    cliDir: null,
-    cliCandidateFile: null,
-    cliCandidateSha256: null,
-    args: ['--help'],
-  });
-  assert.deepEqual(normalizeCliRuntimeArgs(['--help'], {
-    env: { ...env, TIANGONG_LCA_CLI_MODE: 'published' },
-  }), {
-    cliDir: null,
-    cliCandidateFile: null,
-    cliCandidateSha256: null,
-    args: ['--help'],
-  });
-});
-
 test('candidate runtime flags require a nonempty value', () => {
   for (const name of ['--cli-candidate-file', '--cli-candidate-sha256']) {
     assert.throws(() => normalizeCliRuntimeArgs([name], { env: {} }), /requires a value/u);
@@ -278,7 +229,7 @@ test('candidate runtime flags require a nonempty value', () => {
   }
 });
 
-test('candidate qualification propagates through a copied environment and is removed by published mode', () => {
+test('candidate qualification propagates through a copied environment and clears with the selection', () => {
   const cliDir = fixturePath('candidate cli');
   const cliCandidateFile = fixturePath('qualified', 'candidate.json');
   const cliCandidateSha256 = 'd'.repeat(64);
@@ -306,7 +257,7 @@ test('candidate qualification propagates through a copied environment and is rem
   assert.equal(publishedEnv.TIANGONG_LCA_CLI_DIR, undefined);
   assert.equal(publishedEnv.TIANGONG_LCA_CLI_CANDIDATE_FILE, undefined);
   assert.equal(publishedEnv.TIANGONG_LCA_CLI_CANDIDATE_SHA256, undefined);
-  assert.equal(publishedEnv.TIANGONG_LCA_CLI_MODE, 'published');
+  assert.equal(publishedEnv.TIANGONG_LCA_CLI_MODE, undefined);
   const unqualifiedEnv = withCliRuntimeEnv(localEnv, fixturePath('different cli'));
   assert.equal(unqualifiedEnv.TIANGONG_LCA_CLI_CANDIDATE_FILE, undefined);
   assert.equal(unqualifiedEnv.TIANGONG_LCA_CLI_CANDIDATE_SHA256, undefined);
@@ -315,27 +266,13 @@ test('candidate qualification propagates through a copied environment and is rem
   assert.equal(sameDirWithoutQualification.TIANGONG_LCA_CLI_CANDIDATE_SHA256, undefined);
 });
 
-test('buildTiangongInvocation uses exact pnpm dlx argv for the published CLI contract', () => {
-  const invocation = buildTiangongInvocation(['qa', 'process', '--help'], {
-    repoRoot: fixturePath('tiangong-lca-skills'),
-    pathExists: () => false,
-  });
-
-  assert.equal(publishedCliPackageSpec, '@tiangong-lca/cli@0.1.24');
-  assert.equal(invocation.mode, 'published');
-  assert.equal(invocation.command, process.platform === 'win32' ? 'pnpm.exe' : 'pnpm');
-  assert.deepEqual(invocation.args, [
-    'dlx',
-    '--package=@tiangong-lca/cli@0.1.24',
-    'tiangong-lca',
-    'qa',
-    'process',
-    '--help',
-  ]);
-  assert.equal(
-    publishedCliCommand,
-    'pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca',
-  );
+test('missing selection rejects before any toolchain, install, build or business child', () => {
+  let called = false;
+  const unexpected = () => { called = true; throw new Error('unexpected child'); };
+  assert.throws(() => runTiangongCommand(['qa', 'process'], {
+    toolchainSpawnImpl: unexpected, buildSpawnImpl: unexpected, spawnImpl: unexpected,
+  }), /No CLI installation configured/);
+  assert.equal(called, false);
 });
 
 test('buildTiangongInvocation preserves spaces as one authoritative argv value', () => {
@@ -344,7 +281,7 @@ test('buildTiangongInvocation preserves spaces as one authoritative argv value',
     ['dataset', 'validate', '--input', inputPath],
     {
       repoRoot: fixturePath('skills with spaces'),
-      pathExists: () => false,
+      ...selectedSourceFixture(),
     },
   );
 
@@ -352,22 +289,10 @@ test('buildTiangongInvocation preserves spaces as one authoritative argv value',
   assert.equal(invocation.args.filter((arg) => arg === inputPath).length, 1);
 });
 
-test('buildTiangongInvocation dispatches native pnpm.exe on Windows without changing argv', () => {
-  const invocation = buildTiangongInvocation(['qa', 'process', '--help'], {
-    platform: 'win32',
-  });
-
-  assert.equal(invocation.command, 'pnpm.exe');
-  assert.deepEqual(invocation.args.slice(0, 3), [
-    'dlx',
-    '--package=@tiangong-lca/cli@0.1.24',
-    'tiangong-lca',
-  ]);
-});
-
-test('runTiangongCommand uses native Windows pnpm without a command shell', () => {
+test('source execution uses native Windows pnpm for the toolchain and Node for dispatch', () => {
   const observed = [];
   const exitCode = runTiangongCommand(['qa', 'process', '--help'], {
+    ...selectedSourceFixture(),
     platform: 'win32',
     nodeVersion: expectedNodeVersion,
     toolchainSpawnImpl: (command, args, options) => {
@@ -390,15 +315,8 @@ test('runTiangongCommand uses native Windows pnpm without a command shell', () =
     },
     {
       phase: 'run',
-      command: 'pnpm.exe',
-      args: [
-        'dlx',
-        '--package=@tiangong-lca/cli@0.1.24',
-        'tiangong-lca',
-        'qa',
-        'process',
-        '--help',
-      ],
+      command: process.execPath,
+      args: [path.join(fixturePath('selected source'), 'bin', 'tiangong-lca.js'), 'qa', 'process', '--help'],
       shell: false,
     },
   ]);
@@ -490,7 +408,7 @@ test('runTiangongCommand preserves exact exit, stdout, and stderr and forbids sh
     ['dataset', 'validate', '--input', inputPath],
     {
       repoRoot: fixturePath('skills'),
-      pathExists: () => false,
+      ...selectedSourceFixture(),
       ...passingToolchain(),
       spawnOptions: { shell: true },
       spawnImpl: (_command, _args, options) => {
@@ -520,7 +438,7 @@ test('runTiangongCommand preserves a successful no-output result', () => {
   let stderr = '';
   const exitCode = runTiangongCommand(['qa', 'process', '--help'], {
     repoRoot: fixturePath('tiangong-lca-skills'),
-    pathExists: () => false,
+    ...selectedSourceFixture(),
     ...passingToolchain(),
     spawnImpl: () => ({ status: 0, stdout: '', stderr: '' }),
     stderrWrite: (text) => {
@@ -539,7 +457,7 @@ test('runTiangongCommand rejects a mismatched pnpm runtime before CLI dispatch',
     () =>
       runTiangongCommand(['--help'], {
         repoRoot: fixturePath('skills'),
-        pathExists: () => false,
+        ...selectedSourceFixture(),
         nodeVersion: expectedNodeVersion,
         toolchainSpawnImpl: () => ({ status: 0, stdout: '11.22.0\n', stderr: '' }),
         spawnImpl: () => {
@@ -561,7 +479,7 @@ test('runTiangongCommand caches one successful toolchain verification per proces
   };
   const options = {
     repoRoot: fixturePath('skills'),
-    pathExists: () => false,
+    ...selectedSourceFixture(),
     nodeVersion: expectedNodeVersion,
     toolchainSpawnImpl,
     spawnImpl: () => {
@@ -590,7 +508,7 @@ test('runTiangongCommand revalidates pnpm when the execution PATH changes', () =
   };
   const shared = {
     repoRoot: fixturePath('skills'),
-    pathExists: () => false,
+    ...selectedSourceFixture(),
     nodeVersion: expectedNodeVersion,
     toolchainSpawnImpl,
     spawnImpl: () => ({ status: 0, stdout: '', stderr: '' }),

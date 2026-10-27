@@ -20,9 +20,9 @@ checkPaths:
   - scripts/validate-skills.mjs
   - "*/SKILL.md"
   - "*/scripts/**"
-lastReviewedAt: 2026-10-26
-lastReviewedCommit: 9df2c07d8b32237bc390e018eb989d2d842af7f1
-lastReviewedNote: "Reviewed Skills #133 / PR #134: configured installed execution delegates identity to the public CLI runtime API; source-candidate preparation remains isolated and unchanged. Direct/wrapped selection, copied packages, error propagation and installed-consumer tests agree. No task migration, production adoption or dependency qualification is implied."
+lastReviewedAt: 2026-10-27
+lastReviewedCommit: fa367bddb429dd0e0aee99e1e47af52b62694daf
+lastReviewedNote: "Reviewed Skills #135: ordinary CLI calls require the configured installed entry; no published download/default remains. Source-development and owner-specific release/test pins remain isolated. Offline help and missing/retired selection regressions cover copied packages."
 ---
 
 # 天工 LCA Skills
@@ -116,7 +116,7 @@ npx skills add https://github.com/tiangong-lca/agent-skills --skill foundry-tida
 
 `lca-foundry-workflows` marketplace 包首先列出此入口。`foundry-tidas-authoring` 仅在当前语义工作项需要时加载，是内部角色；日常入口也能直接使用运行时提供的工作项说明，无须依赖另一个已安装技能目录。
 
-完整入口随包提供 [Foundry 0.1.15](https://github.com/tiangong-lca/foundry/releases/tag/foundry-runtime-v0.1.15)（release source `0ab6b54513acccfe3253ea583b4f6b2e678c0485`）的最终发行锁，其中自带 CLI 0.1.24、Node 24.19.0 和 TIDAS 0.3.3。公开运行时已通过 macOS arm64、Linux x64/arm64 和 Windows x64 验证。此版本支持绑定任务简介、即时人类提问、持久保存原话、按范围采用语义决定及如实呈现部分完成回顾。共享 wrapper 与 hybrid-search 包当前固定已发布 CLI 0.1.24；Foundry 入口自己的 bootstrap 脚本/lock 与活动 wrapper 相互独立，两个 owner 的 CLI 版本不得互相套用。安装或复制入口时，保持随包脚本与相邻 lock 完整。安装、登录不授予数据写入权限；继续执行任务当前的授权与恢复动作。
+完整入口随包提供 [Foundry 0.1.15](https://github.com/tiangong-lca/foundry/releases/tag/foundry-runtime-v0.1.15)（release source `0ab6b54513acccfe3253ea583b4f6b2e678c0485`）的最终发行锁，其中自带 CLI 0.1.24、Node 24.19.0 和 TIDAS 0.3.3。公开运行时已通过 macOS arm64、Linux x64/arm64 和 Windows x64 验证。此版本支持绑定任务简介、即时人类提问、持久保存原话、按范围采用语义决定及如实呈现部分完成回顾。共享 wrapper 与 hybrid-search 包使用环境统一配置的已安装 CLI；Foundry 入口自己的 bootstrap 脚本/lock 与活动 wrapper 相互独立，两个 owner 的 CLI 版本不得互相套用。安装或复制入口时，保持随包脚本与相邻 lock 完整。安装、登录不授予数据写入权限；继续执行任务当前的授权与恢复动作。
 
 ### 专项工作流
 
@@ -128,7 +128,7 @@ npx skills add https://github.com/tiangong-lca/agent-skills --skill foundry-tida
 
 ## 统一使用已配置的 CLI 入口
 
-对已经安装并独立验证的正式 CLI（包括 0.1.28），只需在消费环境配置一次安装目录、CLI 既有公开运行时身份文件及其独立核准的 SHA-256：
+对已经安装并独立验证的正式 CLI，只需在消费环境配置一次安装目录、CLI 既有公开运行时身份文件及其独立核准的 SHA-256：
 
 ```sh
 export TIANGONG_LCA_CLI_INSTALLATION=/absolute/path/to/installed/cli
@@ -143,7 +143,7 @@ PowerShell 使用同名 `$env:TIANGONG_LCA_...` 变量。跨终端或进程调�
 
 使用该身份文件已核准的 Node 可执行文件启动 wrapper。正式调用不需要 Git、源码、pnpm，不安装或构建。公开身份检查由 CLI 负责，Skills 不绑定内部 schema 或构建布局；配置或资格漂移时停止，不静默回退。安装来源和传递依赖的完整资格仍由安装/环境所有者负责，不能用公开 `cli-package` 身份观察替代。
 
-未配置时保留独立分发默认 0.1.24。`--published-cli` 明确选择该默认；`--cli-dir` 仍是原有源码候选开发路径。显式 `--cli-installation <absolute-dir>` 必须同时提供对应的 `--cli-runtime-expectation-file` 和 `--cli-runtime-expectation-sha256`。已有任务继续使用原 owner 返回的固定入口和 UNKNOWN 恢复动作，不能被这个独立调用默认覆盖。
+未配置时停止执行并提示完成 CLI 配置。Skill 依赖 CLI 的公开能力，不绑定具体包版本；版本选择与发行锁由安装环境负责。Skill 不会安装默认版本或 latest。已移除的 `--published-cli` 和 `TIANGONG_LCA_CLI_MODE=published` 会明确报错。`--help` 可离线查看配置指引；CLI 原生命令帮助需要先配置入口。`--cli-dir` 仍是源码候选开发路径。显式 `--cli-installation <absolute-dir>` 必须同时提供对应的 `--cli-runtime-expectation-file` 和 `--cli-runtime-expectation-sha256`。已有任务继续使用原 owner 返回的固定入口和 UNKNOWN 恢复动作，不能被这个独立调用默认覆盖。
 
 ## 远程认证
 
@@ -169,7 +169,7 @@ node scripts/run-cli.mjs auth status --json
   ```bash
   pnpm validate
   ```
-- 若要联调与默认 CLI 0.1.24 发行版匹配的本地 checkout:
+- 若要联调与开发验证基线 CLI 0.1.24 发行版匹配的本地 checkout:
   ```bash
   TIANGONG_LCA_CLI_DIR=/path/to/tiangong-lca-cli \
   pnpm validate
@@ -178,7 +178,7 @@ node scripts/run-cli.mjs auth status --json
   ```bash
   pnpm validate lifecycleinventory-qa process-hybrid-search
   ```
-- CI 会在 `.github/workflows/validate-skills.yml` 中 checkout 活动 CLI commit `89c71772ca1afcfc09705f8c27a9703c6bf8ccf6`（发布包 0.1.24），用 frozen pnpm lockfile 安装两个仓库并构建 CLI，然后运行同一套校验；Foundry 入口的 bootstrap 按它自己已认证的 0.1.15 发行锁与自带 CLI 0.1.24 测试。
+- CI 会在 `.github/workflows/validate-skills.yml` 中 checkout 开发测试 CLI commit `89c71772ca1afcfc09705f8c27a9703c6bf8ccf6`（发布包 0.1.24），用 frozen pnpm lockfile 安装两个仓库并构建 CLI，然后运行同一套校验；Foundry 入口的 bootstrap 按它自己已认证的 0.1.15 发行锁与自带 CLI 0.1.24 测试。
 - 其他本地候选版本必须使用下述已评阅清单与独立摘要。验收还需要真实资格失败测试、独立安装包与嵌套 wrapper 传播测试，以及原调用方验证；生成清单或仅通过 fixture 测试不能完成验收。
 
 ## 执行说明
@@ -187,9 +187,9 @@ node scripts/run-cli.mjs auth status --json
 
 当前约定：
 
-- skill wrapper 默认使用精确版本的已发布 CLI：`pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca`；不会自动发现任何 sibling 目录
-- 本地执行只能通过 `--cli-dir` / `TIANGONG_LCA_CLI_DIR` 显式启用
-- 使用 `--published-cli` 可清除本地目录与候选设置并显式执行 published-package case；嵌套 wrapper 会继续传播该选择
+- 普通 Skill 使用统一配置的已安装 CLI；缺少配置时停止，不下载包、不搜索 PATH 或 sibling 目录
+- 源码开发执行通过 `--cli-dir` / `TIANGONG_LCA_CLI_DIR` 显式启用
+- 直接调用和嵌套 wrapper 传播同一安装入口；已移除的 published 选择会明确报错
 - 匹配发行版的本地 checkout 仍只需要 `--cli-dir`，且必须是带精确 Node/pnpm engines、v9 `pnpm-lock.yaml` 和已发布 TIDAS source manifest（spec 0.2.3）的 `@tiangong-lca/cli@0.1.24`
 - 其他本地包版本必须提供下述已评阅 candidate 文件与外部给定摘要；显式本地选择失败不会静默回退已发布包
 - 本地 pre-push hook 先验证匹配发行版或候选证据；wrapper 在源码 mtime 要求时仍先执行 `pnpm install --frozen-lockfile` 再 `pnpm run build`，并在 dispatch 前复核候选身份

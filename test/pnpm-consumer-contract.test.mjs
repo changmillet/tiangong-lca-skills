@@ -190,7 +190,7 @@ test('validation CI installs the exact CLI checkout through frozen pnpm only', (
   assert.match(workflow, /cache: true/u);
   assert.match(workflow, /pnpm install --frozen-lockfile/u);
   assert.match(workflow, /pnpm run build/u);
-  assert.match(workflow, /run-process-hybrid-search\.mjs --published-cli --help/u);
+  assert.doesNotMatch(workflow, /--published-cli/u);
   assert.equal(
     workflow.match(
       /uses: actions\/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1/gu,
@@ -203,13 +203,13 @@ test('validation CI installs the exact CLI checkout through frozen pnpm only', (
   );
 });
 
-test('local push gate defaults published and validates explicit local evidence before mutation', () => {
+test('local push gate requires a selected runtime and validates local evidence before mutation', () => {
   const hook = read('.githooks/pre-push');
 
   assert.match(hook, /pnpm install --frozen-lockfile/u);
   assert.match(hook, /pnpm run build/u);
   assert.match(hook, /pnpm prepush:gate/u);
-  assert.match(hook, /TIANGONG_LCA_CLI_MODE=published/u);
+  assert.doesNotMatch(hook, /TIANGONG_LCA_CLI_MODE=published/u);
   assert.doesNotMatch(hook, /\.\.\/tiangong-lca-cli|\.\.\/tiangong-cli/u);
   const evidenceIndex = hook.indexOf(
     'node "$repo_root/scripts/check-toolchain.mjs" --cli-dir "$cli_dir"',
@@ -236,8 +236,7 @@ test('qualified candidates reach the shared toolchain validator and avoid a seco
   assert.ok(qualificationValidator >= 0 && qualificationValidator < qualifiedBranch);
   assert.ok(qualifiedBranch >= 0 && qualifiedBranch < ordinaryRebuild);
   assert.match(hook.slice(qualifiedBranch, ordinaryRebuild), /\belse\b/u);
-  assert.match(hook, /unset TIANGONG_LCA_CLI_CANDIDATE_FILE/u);
-  assert.match(hook, /unset TIANGONG_LCA_CLI_CANDIDATE_SHA256/u);
+  assert.doesNotMatch(hook, /TIANGONG_LCA_CLI_MODE=published/u);
 });
 
 test('nested validation, QA and fixture wrappers propagate the complete normalized candidate runtime', () => {
@@ -253,12 +252,12 @@ test('nested validation, QA and fixture wrappers propagate the complete normaliz
   }
 });
 
-test('checked-in docs pin the TianGong CLI while preserving external skills npx governance', () => {
+test('checked-in docs use configured CLI execution while preserving external skills npx governance', () => {
   for (const filePath of collectMarkdown(repoRoot)) {
     const text = readFileSync(filePath, 'utf8');
     assert.doesNotMatch(
       text,
-      /@tiangong-lca\/cli@latest|(?:npm exec|npx)[^\n]*@tiangong-lca\/cli/u,
+      /@tiangong-lca\/cli@latest|(?:pnpm dlx|npm exec|npx)[^\n]*@tiangong-lca\/cli/u,
       path.relative(repoRoot, filePath),
     );
   }

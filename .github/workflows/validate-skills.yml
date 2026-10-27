@@ -95,10 +95,6 @@ jobs:
           if-no-files-found: error
           retention-days: 30
 
-      - name: Validate exact published CLI fallback
-        if: matrix.os == 'ubuntu-latest' && matrix.arch == 'x64'
-        run: node process-hybrid-search/scripts/run-process-hybrid-search.mjs --published-cli --help
-
       - name: Validate skills
         env:
           TIANGONG_LCA_CLI_DIR: ${{ github.workspace }}/.ci/tiangong-lca-cli

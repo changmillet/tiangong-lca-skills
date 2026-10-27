@@ -18,7 +18,7 @@ function renderHelp() {
 
 Wrapper options:
   --profile <name>         process | lifecyclemodel (default: process)
-  --cli-dir <dir>          Override the published CLI and use a local tiangong-lca-cli repository path
+  --cli-dir <dir>          Select an explicit development source tiangong-lca-cli repository path
 
 Profiles:
   process                  Delegate to tiangong-lca qa process for either --rows-file or --run-root input

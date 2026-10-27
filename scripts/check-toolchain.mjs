@@ -19,7 +19,7 @@ console.log(`Validated Node ${expectedNodeVersion} and pnpm ${expectedPnpmVersio
 if (runtime.cliInstallation) {
   const invocation = buildTiangongInvocation([], runtime);
   console.log(`Validated configured installed CLI ${invocation.runtime.package.version} via its public runtime API.`);
-} else if (runtime.cliDir !== null) {
+} else {
   const invocation = buildTiangongInvocation([], runtime);
   if (invocation.mode !== 'local') {
     throw new Error('--cli-dir must identify a non-empty local TianGong CLI path.');

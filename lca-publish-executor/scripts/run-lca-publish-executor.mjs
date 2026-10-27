@@ -17,7 +17,7 @@ function renderHelp() {
   node scripts/run-lca-publish-executor.mjs publish [options]
 
 Wrapper options:
-  --cli-dir <dir>           Override the published CLI and use a local tiangong-lca-cli repository path
+  --cli-dir <dir>           Select an explicit development source tiangong-lca-cli repository path
 
 Canonical CLI command:
   tiangong-lca publish run --input <file> [options]

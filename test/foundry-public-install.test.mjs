@@ -138,7 +138,7 @@ test("copied Foundry skill runs the public locked runtime and rejects changed in
   assert.equal(provenance.package.version, version);
   assert.equal(provenance.published_package.source.gitCommit, source);
   // The Foundry owner binds its own CLI 0.1.24 provenance independently, even
-  // when its version matches the wrapper launcher's published pin.
+  // independently of the configured installation used by ordinary Skills.
   assert.equal(provenance.cli.package.version, "0.1.24");
   assert.equal(provenance.cli.source.ref, "refs/tags/cli-v0.1.24");
   assert.equal(provenance.cli.source.gitCommit, "89c71772ca1afcfc09705f8c27a9703c6bf8ccf6");

@@ -293,7 +293,7 @@ test('immutable identities, property conversion and private runtime boundaries s
 
 test('the pinned-runtime gap is an explicit stop condition, never a hand-fabrication instruction', () => {
   const skill = read('process-automated-builder/SKILL.md');
-  assert.match(skill, /pinned published CLI `0\.1\.24`/iu);
+  assert.match(skill, /runtime you actually invoke is the authority/iu);
   assert.match(skill, /qualified adoption is incomplete/iu);
   assert.match(skill, /merged source behavior and published support separate/iu);
 
@@ -308,7 +308,7 @@ test('the pinned-runtime gap is an explicit stop condition, never a hand-fabrica
 
   const importSkill = read('foundry-tidas-import/SKILL.md');
   assert.match(importSkill, /qualified adoption (as )?incomplete/iu);
-  assert.match(importSkill, /pinned published CLI `0\.1\.24`/iu);
+  assert.match(importSkill, /runtime you actually invoke is the authority/iu);
 
   const playbook = read('process-automated-builder/references/operations-playbook.md');
   assert.match(playbook, /qualified adoption as incomplete/iu);

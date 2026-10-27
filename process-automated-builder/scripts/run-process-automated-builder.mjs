@@ -38,7 +38,7 @@ function renderHelp() {
   node scripts/run-process-automated-builder.mjs <command> [options]
 
 Wrapper options:
-  --cli-dir <dir>           Override the published CLI and use a local tiangong-lca-cli repository path
+  --cli-dir <dir>           Select an explicit development source tiangong-lca-cli repository path
 
 Canonical commands:
   identity-preflight        Delegate to tiangong-lca process identity-preflight

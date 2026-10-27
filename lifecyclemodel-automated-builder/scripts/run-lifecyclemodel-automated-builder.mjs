@@ -20,7 +20,7 @@ function printHelp() {
   node scripts/run-lifecyclemodel-automated-builder.mjs publish [options]
 
 Wrapper options:
-  --cli-dir <dir>           Override the published CLI and use a local tiangong-lca-cli repository path
+  --cli-dir <dir>           Select an explicit development source tiangong-lca-cli repository path
 
 Build compatibility options:
   --manifest <file>         Alias for the CLI's --input <file>

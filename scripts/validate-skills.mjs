@@ -6,6 +6,7 @@ import { spawnSync } from "node:child_process";
 import { fileURLToPath } from "node:url";
 import {
   normalizeCliRuntimeArgs,
+  buildTiangongInvocation,
   renderCliRuntimeHelp,
   withCliRuntimeEnv,
 } from "./lib/cli-launcher.mjs";
@@ -73,7 +74,7 @@ const historicalValidatePyCurrentPathPattern = new RegExp(
   "iu",
 );
 const legacyPublishedCliInvocationPattern =
-  /@tiangong-lca\/cli@latest|npm exec[^\n]*@tiangong-lca\/cli|npx[^\n]*@tiangong-lca\/cli/iu;
+  /@tiangong-lca\/cli@latest|(?:pnpm dlx|npm exec)[^\n]*@tiangong-lca\/cli|npx[^\n]*@tiangong-lca\/cli/iu;
 const passwordEquivalentAuthInvocationPattern =
   /TIANGONG_LCA_API_KEY\s*=|--api-key(?:\s|`)|Authorization:\s*Bearer\s*<TIANGONG_LCA_API_KEY>|Auth variable:\s*`TIANGONG_LCA_API_KEY`/iu;
 
@@ -319,9 +320,9 @@ const requiredDocPatterns = [
   },
   {
     file: "process-automated-builder/SKILL.md",
-    pattern: /pinned published CLI `?0\.1\.24/iu,
+    pattern: /runtime you actually invoke is the authority/iu,
     message:
-      "process-automated-builder should distinguish the pinned published CLI from the merged source behavior (Issue #104).",
+      "process-automated-builder should distinguish actual runtime capability from the merged source behavior (Issue #104).",
   },
   {
     file: "foundry-tidas-import/SKILL.md",
@@ -365,7 +366,7 @@ const repoWideDocGuards = [
   {
     pattern: legacyPublishedCliInvocationPattern,
     message:
-      "Skill docs should use the pinned pnpm CLI invocation from cli-launcher.mjs instead of a floating or npm-based TianGong CLI fallback.",
+      "Skill docs should use the configured CLI entry, never a package-download fallback.",
   },
   {
     pattern: passwordEquivalentAuthInvocationPattern,
@@ -429,7 +430,7 @@ function parseArgs(rawArgs) {
 function printHelp() {
   console.log(
     `Usage:
-  pnpm validate [--cli-dir <dir> | --published-cli] [skill-path ...]
+  pnpm validate [--cli-dir <dir>] [skill-path ...]
 
 Examples:
   pnpm validate
@@ -444,9 +445,9 @@ What this validates:
   - targeted doc guards that prevent stale shell/Python migration wording
 
 CLI runtime:
-  - default validation uses ${renderCliRuntimeHelp()}
-  - local CLI execution is opt-in only through --cli-dir or TIANGONG_LCA_CLI_DIR
-  - use --published-cli to override a local CLI environment and verify the exact published package
+  - selected entry: ${renderCliRuntimeHelp()}
+  - source development is opt-in only through --cli-dir or TIANGONG_LCA_CLI_DIR
+  - configure the installed CLI once, or explicitly select a source checkout; no package is downloaded by default
 `.trim(),
   );
 }
@@ -663,6 +664,7 @@ function main() {
   runRepoWideDocGuards();
   runRequiredDocPatterns();
 
+  buildTiangongInvocation([], runtime);
   const skillDirs = (targets.length ? targets : defaultSkillNames)
     .map((target) => normalizeSkillTarget(target))
     .sort((left, right) => left.localeCompare(right));
