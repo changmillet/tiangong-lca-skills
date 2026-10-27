@@ -34,7 +34,7 @@ function renderHelp() {
   node scripts/run-flow-governance-review.mjs <command> [args...]
 
 Wrapper options:
-  --cli-dir <dir>           Override the published CLI and use a local tiangong-lca-cli repository path
+  --cli-dir <dir>           Select an explicit development source tiangong-lca-cli repository path
 
 CLI-backed commands:
   identity-preflight        Delegate to tiangong-lca flow identity-preflight

@@ -5,14 +5,14 @@ import {
   buildTiangongInvocation as buildDevelopmentInvocation,
   executeTiangongCommand as executeDevelopmentCommand,
   withCliRuntimeEnv as developmentRuntimeEnv,
-  renderShellCommand,
+  missingCliMessage,
 } from './cli-development.mjs';
 import { installedInvocation } from './cli-installed.mjs';
 
-// Retain the explicit development and standalone-distribution contracts.
+// Retain the explicit source-development contract.
 export {
   expectedNodeVersion, expectedPnpmVersion, expectedTidasSpecSource,
-  publishedCliPackageSpec, publishedCliCommand, localCliCandidateSchema,
+  localCliCandidateSchema,
   assertSupportedToolchain, assertTidasSpecSourceManifest, inspectLocalCliCandidate,
   renderShellCommand,
 } from './cli-development.mjs';
@@ -25,6 +25,9 @@ const installedFlags = new Map([
 
 export function normalizeCliRuntimeArgs(rawArgs, options = {}) {
   const env = options.env ?? process.env;
+  if (env.TIANGONG_LCA_CLI_MODE === 'published' || rawArgs.some((arg) => arg.split('=', 1)[0] === '--published-cli')) {
+    throw new Error('Published CLI selection has been removed. Remove --published-cli / TIANGONG_LCA_CLI_MODE=published and configure the installed CLI entry.');
+  }
   const filtered = [];
   const explicit = {};
   let selected = null;
@@ -39,18 +42,18 @@ export function normalizeCliRuntimeArgs(rawArgs, options = {}) {
       if (flag === '--cli-installation') selected = 'installed';
       continue;
     }
-    if (flag === '--cli-dir') selected = 'development';
-    if (arg === '--published-cli') selected = 'published';
-    filtered.push(arg);
-    if (flag === '--cli-dir' && arg === flag && index + 1 < rawArgs.length) {
-      filtered.push(rawArgs[++index]);
-    }
+    if (['--cli-dir', '--cli-candidate-file', '--cli-candidate-sha256'].includes(flag)) {
+      const value = arg === flag ? rawArgs[++index] : arg.slice(flag.length + 1);
+      if (!value?.trim() || value.startsWith('--')) throw new Error(`${flag} requires a value`);
+      if (flag === '--cli-dir') selected = 'development';
+      filtered.push(`${flag}=${value}`);
+    } else filtered.push(arg);
   }
   const installed = {};
   for (const [key, variable] of installedFlags.values()) {
     installed[key] = explicit[key] ?? env[variable]?.trim() ?? null;
   }
-  const inherited = selected === null && env.TIANGONG_LCA_CLI_MODE !== 'published' &&
+  const inherited = selected === null &&
     Object.values(installed).some(Boolean);
   if (inherited && env.TIANGONG_LCA_CLI_DIR?.trim()) {
     throw new Error('Both installed and development CLI environments are configured. Select one explicitly; no implicit precedence or fallback is allowed.');
@@ -64,10 +67,15 @@ export function normalizeCliRuntimeArgs(rawArgs, options = {}) {
     if (Object.values(installed).some((value) => !value)) {
       throw new Error('Installed CLI selection requires installation, runtime expectation file and independently trusted expectation SHA-256 together.');
     }
-    // Strip development-only selection flags through their existing parser, but never execute it.
-    const cleanEnv = { ...env, TIANGONG_LCA_CLI_MODE: 'published' };
-    const development = normalizeDevelopmentArgs([...filtered, '--published-cli'], { ...options, env: cleanEnv });
-    return { args: development.args, cliDir: null, cliCandidateFile: null, cliCandidateSha256: null,
+    // The installed path consumes source-selection flags without validating source evidence.
+    const args = [];
+    for (let index = 0; index < filtered.length; index += 1) {
+      const flag = filtered[index].split('=', 1)[0];
+      if (['--cli-dir', '--cli-candidate-file', '--cli-candidate-sha256'].includes(flag)) {
+        if (filtered[index] === flag) index += 1;
+      } else args.push(filtered[index]);
+    }
+    return { args, cliDir: null, cliCandidateFile: null, cliCandidateSha256: null,
       ...installed, cliSelectionSource: selected === 'installed' ? 'explicit' : 'environment' };
   }
   if (selected === null && Object.keys(explicit).length) {
@@ -92,6 +100,10 @@ export function executeTiangongCommand(args, options = {}) {
 }
 
 export function runTiangongCommand(args, options = {}) {
+  if (!options.cliInstallation && !options.cliDir && args.some((arg) => ['--help', '-h'].includes(arg))) {
+    (options.stdoutWrite ?? ((text) => process.stdout.write(text)))(`CLI setup required for native command help.\n${missingCliMessage}\n`);
+    return 0;
+  }
   const result = executeTiangongCommand(args, options);
   if (result.stdout) (options.stdoutWrite ?? ((text) => process.stdout.write(text)))(result.stdout);
   if (result.stderr) (options.stderrWrite ?? ((text) => process.stderr.write(text)))(result.stderr);
@@ -115,7 +127,5 @@ export function renderCliRuntimeHelp(rawArgs = process.argv.slice(2), options = 
   const selected = normalizeCliRuntimeArgs(rawArgs, options);
   if (selected.cliInstallation) return `configured installation ${selected.cliInstallation} (${selected.cliSelectionSource}); inspect with scripts/run-cli.mjs --runtime-info`;
   if (selected.cliDir) return `explicit development checkout ${selected.cliDir}`;
-  // Construction of the distribution command performs no install or invocation.
-  const invocation = buildDevelopmentInvocation([], selected);
-  return renderShellCommand(invocation.command, invocation.args);
+  return missingCliMessage;
 }

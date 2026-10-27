@@ -20,9 +20,9 @@ checkPaths:
   - scripts/validate-skills.mjs
   - "*/SKILL.md"
   - "*/scripts/**"
-lastReviewedAt: 2026-10-26
-lastReviewedCommit: 9df2c07d8b32237bc390e018eb989d2d842af7f1
-lastReviewedNote: "Reviewed Skills #133 / PR #134: configured installed execution delegates identity to the public CLI runtime API; source-candidate preparation remains isolated and unchanged. Direct/wrapped selection, copied packages, error propagation and installed-consumer tests agree. No task migration, production adoption or dependency qualification is implied."
+lastReviewedAt: 2026-10-27
+lastReviewedCommit: fa367bddb429dd0e0aee99e1e47af52b62694daf
+lastReviewedNote: "Reviewed Skills #135: ordinary CLI calls require the configured installed entry; no published download/default remains. Source-development and owner-specific release/test pins remain isolated. Offline help and missing/retired selection regressions cover copied packages."
 ---
 
 # Tiangong LCA Skills
@@ -116,7 +116,7 @@ npx skills add https://github.com/tiangong-lca/agent-skills --skill foundry-tida
 
 The `lca-foundry-workflows` marketplace package lists this entry first. `foundry-tidas-authoring` is an internal role loaded only for a current semantic work item; it is not a second task entry. The ordinary entry can use the runtime's work-item instructions when that internal role is not installed.
 
-The complete entry bundles the final release lock for [Foundry 0.1.15](https://github.com/tiangong-lca/foundry/releases/tag/foundry-runtime-v0.1.15) (release source `0ab6b54513acccfe3253ea583b4f6b2e678c0485`), with its bundled CLI 0.1.24, Node 24.19.0 and TIDAS 0.3.3. Its public runtime is qualified for macOS arm64, Linux x64/arm64 and Windows x64. This release supports bound task briefs, immediate human questions, persistent user answers, scoped semantic decision adoption and an honest partial recap. The shared wrappers and hybrid-search packages target published CLI 0.1.24; keep the Foundry entry's own bootstrap scripts/lock separate from those active wrappers, and never read one owner's CLI version as the other's. Keep the bundled scripts and adjacent lock together when installing or copying the entry. Installation and login do not grant permission to write data; continue the task's current authorization and recovery actions.
+The complete entry bundles the final release lock for [Foundry 0.1.15](https://github.com/tiangong-lca/foundry/releases/tag/foundry-runtime-v0.1.15) (release source `0ab6b54513acccfe3253ea583b4f6b2e678c0485`), with its bundled CLI 0.1.24, Node 24.19.0 and TIDAS 0.3.3. Its public runtime is qualified for macOS arm64, Linux x64/arm64 and Windows x64. This release supports bound task briefs, immediate human questions, persistent user answers, scoped semantic decision adoption and an honest partial recap. The shared wrappers and hybrid-search packages use the environment-selected installed CLI; keep the Foundry entry's own bootstrap scripts/lock separate from those active wrappers, and never read one owner's CLI version as the other's. Keep the bundled scripts and adjacent lock together when installing or copying the entry. Installation and login do not grant permission to write data; continue the task's current authorization and recovery actions.
 
 ### Specialized workflows
 
@@ -128,7 +128,7 @@ The existing skills retain their independent uses:
 
 ## Use one configured CLI entry
 
-For an already installed, independently qualified CLI (including 0.1.28), configure its launch environment once. The environment/installation owner supplies the existing CLI public runtime expectation and its independently approved file-byte digest:
+For an already installed, independently qualified CLI, configure its launch environment once. The environment/installation owner supplies the existing CLI public runtime expectation and its independently approved file-byte digest:
 
 ```sh
 export TIANGONG_LCA_CLI_INSTALLATION=/absolute/path/to/installed/cli
@@ -143,7 +143,7 @@ In PowerShell set the same three `$env:TIANGONG_LCA_...` variables to the approv
 
 Run the wrappers with the Node executable qualified by the supplied expectation. Normal configured calls need neither Git, source files nor pnpm and perform no install/build. The CLI owns its public identity verification; Skills does not fix its internal schemas or build layout. Changed/missing qualification fails without fallback. The environment owner remains responsible for installation provenance and dependencies beyond the public CLI-package identity scope.
 
-Without this configuration, independent installations keep the exact 0.1.24 distribution default. `--published-cli` explicitly requests that default; `--cli-dir` explicitly selects the unchanged development/candidate path. An explicit `--cli-installation <absolute-dir>` requires its matching `--cli-runtime-expectation-file` and `--cli-runtime-expectation-sha256`. Never substitute this independent entry for an existing task's owner-returned continuation or UNKNOWN recovery action.
+Without this configuration, execution stops with setup guidance. Skills depend on public CLI capabilities, not a literal package version; the installation owner selects and locks that version. Skills never installs a default or latest package. The retired `--published-cli` and `TIANGONG_LCA_CLI_MODE=published` selections report an explicit error. `--help` provides offline setup guidance; native CLI help requires configuration. `--cli-dir` explicitly selects the development/candidate path. An explicit `--cli-installation <absolute-dir>` requires its matching `--cli-runtime-expectation-file` and `--cli-runtime-expectation-sha256`. Never substitute this independent entry for an existing task's owner-returned continuation or UNKNOWN recovery action.
 
 ## Remote authentication
 
@@ -169,7 +169,7 @@ The three hybrid-search skill folders are independently installable: each includ
   ```bash
   pnpm validate
   ```
-- Validate against a local checkout matching the pinned CLI 0.1.24 release:
+- Validate against a local checkout matching the CLI 0.1.24 development-test baseline:
   ```bash
   TIANGONG_LCA_CLI_DIR=/path/to/tiangong-lca-cli \
   pnpm validate
@@ -178,7 +178,7 @@ The three hybrid-search skill folders are independently installable: each includ
   ```bash
   pnpm validate lifecycleinventory-qa process-hybrid-search
   ```
-- CI runs the same validation in `.github/workflows/validate-skills.yml` after checking out immutable active CLI commit `89c71772ca1afcfc09705f8c27a9703c6bf8ccf6` (published package 0.1.24), installing both repositories with frozen pnpm lockfiles, and building the CLI. The Foundry entry's bootstrap is tested against its own qualified 0.1.15 release lock and its bundled CLI 0.1.24.
+- CI runs the same validation in `.github/workflows/validate-skills.yml` after checking out immutable development-test CLI commit `89c71772ca1afcfc09705f8c27a9703c6bf8ccf6` (published package 0.1.24), installing both repositories with frozen pnpm lockfiles, and building the CLI. The Foundry entry's bootstrap is tested against its own qualified 0.1.15 release lock and its bundled CLI 0.1.24.
 - A different local candidate requires the reviewed inventory and independent digest described below. Local candidate acceptance also requires real qualification failures, isolated bundled and nested-wrapper propagation, and validation by the original consumer; a generated inventory or fixture-only result does not complete that acceptance.
 
 ## Execution note
@@ -187,9 +187,9 @@ Skills in this repository are expected to be thin wrappers over the unified `tia
 
 Current rules:
 
-- without configured installed selection, wrappers default to the exact published CLI through `pnpm dlx --package=@tiangong-lca/cli@0.1.24 tiangong-lca`; sibling directories are never auto-discovered
-- local execution is opt-in only through `--cli-dir` or `TIANGONG_LCA_CLI_DIR`
-- use `--published-cli` to override local directory and candidate settings for an explicit published-package case; nested wrappers propagate that selection
+- ordinary wrappers use the configured installed CLI; missing configuration stops execution without package download or PATH/sibling discovery
+- source-development execution is opt-in only through `--cli-dir` or `TIANGONG_LCA_CLI_DIR`
+- direct and nested wrappers propagate the same configured installation; retired published selection is rejected
 - a matching-release local checkout still uses `--cli-dir` alone and must identify `@tiangong-lca/cli@0.1.24` with its exact Node/pnpm engines, v9 `pnpm-lock.yaml` and published TIDAS source manifest (spec 0.2.3)
 - other local package versions require the reviewed candidate file and externally supplied digest below; an explicit local failure never silently falls back to the published package
 - the local pre-push hook validates local release or candidate evidence first; wrapper preparation installs with `pnpm install --frozen-lockfile` before `pnpm run build` when source mtimes require it and rechecks candidate identity before dispatch

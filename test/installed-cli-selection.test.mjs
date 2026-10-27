@@ -45,7 +45,7 @@ export function assertCliRuntimeMatches(expected){
   return {dir,installation,file,env};
 }
 
-test('environment selection survives nested wrappers; explicit source/task and distribution selections remain separate', () => {
+test('environment selection survives nested wrappers; explicit source/task selection remains separate', () => {
   const f=fixture();
   try {
     const selected=normalizeCliRuntimeArgs(['qa','process'],{env:f.env});
@@ -53,13 +53,15 @@ test('environment selection survives nested wrappers; explicit source/task and d
     assert.deepEqual(normalizeCliRuntimeArgs(['qa','process'],{env:withCliRuntimeEnv(f.env,selected.cliDir,selected)}),selected);
     const explicit=['--cli-installation',f.installation,'--cli-runtime-expectation-file',f.file,'--cli-runtime-expectation-sha256',f.env.TIANGONG_LCA_CLI_RUNTIME_EXPECTATION_SHA256];
     assert.equal(normalizeCliRuntimeArgs(explicit,{env:{}}).cliSelectionSource,'explicit');
+    assert.throws(()=>normalizeCliRuntimeArgs(['--cli-candidate-file','--help',...explicit],{env:{}}),/requires a value/);
     assert.equal(normalizeCliRuntimeArgs(['--cli-dir',f.dir,'--cli-candidate-file','old','--cli-candidate-sha256','stale',...explicit],{env:{}}).cliInstallation,f.installation);
-    assert.equal(normalizeCliRuntimeArgs([...explicit,'--published-cli'],{env:{}}).cliInstallation,undefined);
+    assert.throws(()=>normalizeCliRuntimeArgs([...explicit,'--published-cli'],{env:{}}),/selection has been removed/);
     const legacy=normalizeCliRuntimeArgs(['--cli-dir',f.dir,'original-task','resume'],{env:f.env});
     assert.equal(legacy.cliDir,f.dir);assert.equal(legacy.cliInstallation,undefined);
     const inherited=withCliRuntimeEnv(f.env,legacy.cliDir,legacy);
     assert.equal(inherited.TIANGONG_LCA_CLI_INSTALLATION,undefined);
-    assert.equal(normalizeCliRuntimeArgs(['--published-cli'],{env:f.env}).cliInstallation,undefined);
+    assert.throws(()=>normalizeCliRuntimeArgs(['--published-cli'],{env:f.env}),/selection has been removed/);
+    assert.throws(()=>normalizeCliRuntimeArgs([],{env:{...f.env,TIANGONG_LCA_CLI_MODE:'published'}}),/selection has been removed/);
     assert.throws(()=>normalizeCliRuntimeArgs([],{env:{...f.env,TIANGONG_LCA_CLI_DIR:f.dir}}),/Both installed and development/);
     assert.throws(()=>normalizeCliRuntimeArgs([],{env:{TIANGONG_LCA_CLI_INSTALLATION:f.installation}}),/together/);
     assert.throws(()=>normalizeCliRuntimeArgs(['--cli-installation',path.join(f.dir,'other')],{env:f.env}),/together/);
@@ -79,11 +81,11 @@ test('installed owner runs without Git, pnpm, source or build; stdout/exit/UNKNO
     for(const name of ['.git','src','dist','node_modules','pnpm-lock.yaml'])assert.equal(existsSync(path.join(f.installation,name)),false);
     // A new independently qualified owner asset identity needs no Skills edit.
     writeFileSync(path.join(f.installation,'method-assets.json'),'{"unrelated":"schema-v-next"}');
-    const expected=JSON.parse(readFileSync(f.file));expected.content_sha256=hash(readFileSync(path.join(f.installation,'method-assets.json')));
+    const expected=JSON.parse(readFileSync(f.file));expected.package_version='1.2.3';expected.content_sha256=hash(readFileSync(path.join(f.installation,'method-assets.json')));
     writeFileSync(f.file,JSON.stringify(expected));
     const env={...f.env,...fields(f.installation,f.file,hash(readFileSync(f.file)))};
     const next=normalizeCliRuntimeArgs([],{env});
-    assert.equal(buildTiangongInvocation([],{...next,spawnOptions:{env}}).runtime.package.version,'0.1.28');
+    assert.equal(buildTiangongInvocation([],{...next,spawnOptions:{env}}).runtime.package.version,'1.2.3');
   } finally {rmSync(f.dir,{recursive:true,force:true});}
 });
 
@@ -148,8 +150,14 @@ test('copied skills and direct entry consume real installed CLI 0.1.28 from one 
     for(const entity of ['flow','process','lifecyclemodel']) {
       const name=`${entity}-hybrid-search`;cpSync(path.join(root,name),path.join(dir,name),{recursive:true});
       for(const lib of ['cli-launcher.mjs','cli-development.mjs','cli-installed.mjs'])assert.equal(readFileSync(path.join(dir,name,'scripts','lib',lib),'utf8'),readFileSync(path.join(root,'scripts','lib',lib),'utf8'));
-      const result=run(path.join(dir,name,'scripts',`run-${name}.mjs`),['--dry-run','--json'],env,dir);
+      const wrapper=path.join(dir,name,'scripts',`run-${name}.mjs`);
+      const result=run(wrapper,['--dry-run','--json'],env,dir);
       assert.equal(result.status,0,result.stderr);assert.equal(JSON.parse(result.stdout).dryRun,true);
+      const planned=JSON.parse(result.stdout).request;
+      assert.equal(planned.url,`https://qgzvkongdjqiiamzbbts.supabase.co/functions/v1/${entity}_hybrid_search`);
+      assert.equal(planned.headers['x-region'],'us-east-1');
+      const custom=run(wrapper,['--dry-run','--json','--base-url','https://custom.supabase.co'],env,dir);
+      assert.equal(custom.status,2,custom.stderr || custom.stdout);
       const localInfo=run(path.join(dir,name,'scripts','run-cli.mjs'),['--runtime-info'],env,dir);
       assert.equal(localInfo.status,0,localInfo.stderr);assert.equal(JSON.parse(localInfo.stdout).runtime.package.version,'0.1.28');
     }

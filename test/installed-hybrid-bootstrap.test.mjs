@@ -9,7 +9,7 @@ import { fileURLToPath } from 'node:url';
 const repoRoot = path.resolve(path.dirname(fileURLToPath(import.meta.url)), '..');
 
 for (const entity of ['flow', 'process', 'lifecyclemodel']) {
-  test(`independently installed ${entity} skill resolves Production without env or a checkout`, () => {
+  test(`independently installed ${entity} skill requires configured CLI and offers offline help without a checkout`, () => {
     const sandbox = mkdtempSync(path.join(tmpdir(), 'skills-installed-bootstrap-'));
     const name = `${entity}-hybrid-search`;
     const installed = path.join(sandbox, name);
@@ -23,6 +23,8 @@ for (const entity of ['flow', 'process', 'lifecyclemodel']) {
         ),
       );
       env.TIANGONG_LCA_SESSION_FILE = sessionFile;
+      for (const key of Object.keys(env)) if (key.toLowerCase() === 'path') delete env[key];
+      env.PATH = ''; // No package manager, Git, or external CLI can be discovered.
       const run = (extra = [], overrides = {}) => spawnSync(
         process.execPath,
         [path.join(installed, 'scripts', `run-${name}.mjs`), '--dry-run', '--json', ...extra],
@@ -30,11 +32,22 @@ for (const entity of ['flow', 'process', 'lifecyclemodel']) {
       );
       const result = run();
       assert.ifError(result.error);
-      assert.equal(result.status, 0, result.stderr || result.stdout);
-      assert.equal(JSON.parse(result.stdout).dryRun, true);
-      const planned = JSON.parse(result.stdout).request;
-      assert.equal(planned.url, `https://qgzvkongdjqiiamzbbts.supabase.co/functions/v1/${entity}_hybrid_search`);
-      assert.equal(planned.headers['x-region'], 'us-east-1');
+      assert.notEqual(result.status, 0);
+      assert.match(result.stderr, /No CLI installation configured/);
+      const help = spawnSync(process.execPath, [path.join(installed, 'scripts', `run-${name}.mjs`), '--help'], {
+        cwd: sandbox, env, encoding: 'utf8', shell: false, timeout: 10_000,
+      });
+      assert.equal(help.status, 0, help.stderr);
+      assert.match(help.stdout, /TIANGONG_LCA_CLI_INSTALLATION/);
+      const direct = path.join(installed, 'scripts', 'run-cli.mjs');
+      for (const args of [['--runtime-info'], ['auth', 'status', '--json'], ['--published-cli']]) {
+        const failed = spawnSync(process.execPath, [direct, ...args], { cwd: sandbox, env, encoding: 'utf8', shell: false });
+        assert.notEqual(failed.status, 0);
+        assert.match(failed.stderr, /No CLI installation configured|selection has been removed/);
+      }
+      const directHelp = spawnSync(process.execPath, [direct, '--help'], { cwd: sandbox, env, encoding: 'utf8', shell: false });
+      assert.equal(directHelp.status, 0, directHelp.stderr);
+      assert.match(directHelp.stdout, /TIANGONG_LCA_CLI_INSTALLATION/);
       assert.equal(existsSync(sessionFile), false, 'dry-run must not create an OAuth session');
       assert.equal(existsSync(path.join(sandbox, 'scripts')), false, 'no repository launcher is installed');
       assert.equal(
@@ -48,10 +61,6 @@ for (const entity of ['flow', 'process', 'lifecyclemodel']) {
       }
       assert.equal(readFileSync(path.join(installed, 'scripts', 'run-cli.mjs'), 'utf8'),
         readFileSync(path.join(repoRoot, 'scripts', 'run-cli.mjs'), 'utf8'));
-      const custom = run(['--base-url', 'https://custom.supabase.co']);
-      assert.ifError(custom.error);
-      assert.equal(custom.status, 2, custom.stderr || custom.stdout);
-      assert.equal(existsSync(sessionFile), false);
     } finally {
       rmSync(sandbox, { recursive: true, force: true });
     }

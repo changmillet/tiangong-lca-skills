@@ -39,7 +39,7 @@ Actions:
   graph-lifecyclemodels Delegate to tiangong-lca lifecyclemodel graph
 
 Wrapper options:
-  --cli-dir <dir>        Override the published CLI and use a local tiangong-cli repository path
+  --cli-dir <dir>        Select an explicit development source tiangong-cli repository path
   -h, --help
 
 Runtime:

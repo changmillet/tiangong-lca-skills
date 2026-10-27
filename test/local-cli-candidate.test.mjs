@@ -296,18 +296,16 @@ test('inspection observes a complete candidate but cannot authorize its invocati
   }), /expectedVersion|expected.*version/u);
 }));
 
-test('a qualified explicit candidate is accepted without changing the published version', () => withFixture((fixture) => {
+test('a qualified explicit candidate is accepted without selecting a default installation', () => withFixture((fixture) => {
   const local = invocation(fixture);
   assert.equal(local.mode, 'local');
   assert.equal(local.packageVersion, candidateVersion);
   assert.equal(local.command, process.execPath);
   assert.deepEqual(local.args, [path.join(fixture.cliDir, 'bin', 'tiangong-lca.js'), '--help']);
-  const published = buildTiangongInvocation(['--help'], {
+  assert.throws(() => buildTiangongInvocation(['--help'], {
     cliCandidateFile: fixture.cliCandidateFile,
     cliCandidateSha256: fixture.cliCandidateSha256,
-  });
-  assert.equal(published.mode, 'published');
-  assert.deepEqual(published.args, ['dlx', '--package=@tiangong-lca/cli@0.1.24', 'tiangong-lca', '--help']);
+  }), /No CLI installation configured/);
   let prepared = false;
   const status = runTiangongCommand(['--help'], candidateOptions(fixture, {
     buildSpawnImpl: () => { prepared = true; return { status: 0, stdout: '', stderr: '' }; },
@@ -566,7 +564,7 @@ test('inspection rejects pnpm install-state evidence from a different package ma
   }), /pnpm|packageManager|modules/iu);
 }));
 
-test('the toolchain checker accepts candidate flags and environment evidence and clears them in published mode', () => withFixture((fixture) => {
+test('the toolchain checker accepts candidate flags and environment evidence and rejects retired published mode', () => withFixture((fixture) => {
   const checker = path.join(repoRoot, 'scripts', 'check-toolchain.mjs');
   const fromEnv = subprocess(fixture, checker, []);
   assert.equal(fromEnv.status, 0, fromEnv.stderr);
@@ -586,7 +584,8 @@ test('the toolchain checker accepts candidate flags and environment evidence and
   assert.notEqual(invalid.status, 0);
   assert.match(invalid.stderr, /candidate.*(?:SHA-?256|digest)/iu);
   const published = subprocess(fixture, checker, ['--published-cli'], invalidEnv);
-  assert.equal(published.status, 0, published.stderr);
+  assert.notEqual(published.status, 0);
+  assert.match(published.stderr, /selection has been removed/);
   assert.doesNotMatch(published.stdout, /Validated explicit local/u);
 }));
 

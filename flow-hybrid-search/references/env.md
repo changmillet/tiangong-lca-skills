@@ -1,6 +1,6 @@
 # Env (caller side)
 
-Official Production uses the public profile bundled by the pinned CLI; no `.env`, dashboard access, or separately supplied client ID is required. Skills do not copy Production URL/key/client values. The CLI resolves `/flow_hybrid_search`; use `--dry-run` to inspect the planned endpoint without network access.
+Official Production uses the public profile bundled by the configured CLI; no `.env`, dashboard access, or separately supplied client ID is required. Skills do not copy Production URL/key/client values. The CLI resolves `/flow_hybrid_search`; use `--dry-run` to inspect the planned endpoint without network access.
 
 ## Custom environments only
 
@@ -17,8 +17,8 @@ The callback must be registered exactly. Partial custom settings and `--base-url
 
 ## Wrapper and session behavior
 
-- The individually installed skill bundles a byte-identical copy of `scripts/lib/cli-launcher.mjs`, the repository authority. It invokes the exact published CLI and supplies the packaged example input when none is given.
-- Local CLI execution is opt-in through `TIANGONG_LCA_CLI_DIR` or `--cli-dir`; no sibling checkout is discovered. `--published-cli` explicitly selects the published package.
+- The individually installed skill bundles a byte-identical copy of `scripts/lib/cli-launcher.mjs`, the repository authority. It invokes the configured installed CLI and supplies the packaged example input when none is given.
+- Source development is opt-in through `TIANGONG_LCA_CLI_DIR` or `--cli-dir`; no sibling checkout is discovered. Missing installed selection requires setup; there is no published-package fallback.
 - Other flags are forwarded unchanged to `tiangong-lca search flow`; the CLI owns authentication and refresh.
 - Run `tiangong-lca auth status --json` before remote work. If `login-required`, a human runs `auth login` in a trusted terminal; use `auth doctor-auth --json` for live redacted verification.
 - Use a separate private `TIANGONG_LCA_SESSION_FILE` per account/project/client context.

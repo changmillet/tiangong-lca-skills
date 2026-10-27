@@ -9,7 +9,7 @@
 
 Wrapper behavior:
 
-- the Node `.mjs` wrapper runs the published CLI by default and injects the example `--input` file when none is provided
+- the Node `.mjs` wrapper uses the configured CLI and injects the example `--input` file when none is provided
 - set `TIANGONG_LCA_CLI_DIR` or pass `--cli-dir` only when you need a local CLI working tree
 - all other flags are the standard `tiangong-lca admin embedding-run` flags
 - internally it forwards to `tiangong-lca admin embedding-run`

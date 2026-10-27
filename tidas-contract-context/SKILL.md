@@ -10,7 +10,7 @@ Use this skill when an agent needs the authoritative TIDAS contract for AI data 
 ## Boundaries
 
 - This skill is a thin wrapper over `tiangong-lca dataset context-pack` and `tiangong-lca dataset contract get`.
-- Public rule definitions are sourced from released TIDAS spec assets; profile policy and runtime-ruleset projection belong to the CLI. Published SDK 0.3.0 no longer imports or packages the retired mixed ruleset file; the active CLI 0.1.24 context pack uses the public contract API.
+- Public rule definitions are sourced from released TIDAS spec assets; profile policy and runtime-ruleset projection belong to the CLI. Published SDK 0.3.0 no longer imports or packages the retired mixed ruleset file; the configured CLI must expose the public contract context commands used below; its version is selected by the installation owner.
 - Do not copy schema, methodology YAML, or ruleset files into this skill.
 - Do not generate or mutate TIDAS rows here. Authoring and conversion should use CLI or Foundry workflows after the context pack exists.
 

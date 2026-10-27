@@ -1,11 +1,11 @@
 # Testing
 
-Run from the independently installed skill directory, without a CLI or Data Foundry checkout and without public environment variables.
+First configure the installed CLI entry described in `SKILL.md`. Run from the independently installed skill directory; no CLI or Data Foundry source checkout or custom Production profile is needed.
 
 ## Dry run (no login or network request)
 
 ```bash
-node scripts/run-process-hybrid-search.mjs --published-cli --dry-run --json
+node scripts/run-process-hybrid-search.mjs --dry-run --json
 ```
 
 Confirm the CLI's Production endpoint and region in the planned request. This must not create a session. A custom `--base-url` without its matching complete configuration must fail before network access.
@@ -16,11 +16,11 @@ Confirm the CLI's Production endpoint and region in the planned request. This mu
 node scripts/run-cli.mjs auth status --json
 ```
 
-A fresh install reports `login-required` (exit 1). The human user then runs the pinned CLI's `auth login` in a trusted terminal and completes browser consent. Never ask an agent to collect a password, code, or token. After login:
+After configuring the installed CLI entry described in `SKILL.md`, a fresh unauthenticated CLI reports `login-required` (exit 1). The human user then runs the configured CLI's `auth login` in a trusted terminal and completes browser consent. Never ask an agent to collect a password, code, or token. After login:
 
 ```bash
 node scripts/run-cli.mjs auth doctor-auth --json
-node scripts/run-process-hybrid-search.mjs --published-cli --json
+node scripts/run-process-hybrid-search.mjs --json
 ```
 
 ## Direct CLI equivalent

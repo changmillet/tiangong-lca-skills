@@ -22,7 +22,7 @@ function renderHelp() {
   node tiangong-lca-remote-ops/scripts/update-process-references.mjs --out-dir <dir> [options]
 
 Wrapper options:
-  --cli-dir <dir>         Override the published CLI and use a local tiangong-cli repository path
+  --cli-dir <dir>         Select an explicit development source tiangong-cli repository path
   -h, --help
 
 Delegates to:

@@ -45,7 +45,7 @@ Wrapper compatibility options for build:
   --projection-role <mode>  primary | all (maps to projection.mode)
 
 Wrapper options:
-  --cli-dir <dir>           Override the published CLI and use a local tiangong-lca-cli repository path
+  --cli-dir <dir>           Select an explicit development source tiangong-lca-cli repository path
 
 Canonical CLI commands:
   tiangong-lca lifecyclemodel build-resulting-process --input <file>

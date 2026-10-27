@@ -1,4 +1,4 @@
 interface:
   display_name: "Lifecycle Model Automated Builder"
   short_description: "Assemble local lifecyclemodels from process runs"
-  default_prompt: "Use $lifecyclemodel-automated-builder to assemble, validate, or publish-build local lifecyclemodel json_ordered artifacts from existing process build runs through the TianGong CLI. Use scripts/run-cli.mjs for direct CLI calls and --runtime-info for identity; inherit the configured installed CLI environment without reselecting a version. Preserve original managed-task runtime and UNKNOWN recovery actions."
+  default_prompt: "Use $lifecyclemodel-automated-builder to assemble, validate, or publish-build local lifecyclemodel json_ordered artifacts from existing process build runs through the TianGong CLI. Use scripts/run-cli.mjs for direct CLI calls and --runtime-info for identity; inherit the configured installed CLI environment without reselecting a version. Preserve original managed-task runtime and UNKNOWN recovery actions. Ordinary independent CLI calls require the configured installation; never select or download a CLI version from the skill."
